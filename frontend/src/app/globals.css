@@ -1,0 +1,338 @@
+/**
+ * Viewlytics — Sistema de Diseño Global
+ * 
+ * Este archivo establece la base visual completa para la plataforma Viewlytics.
+ * Todos los tokens de diseño, colores de marca y clases de utilidad se definen aquí.
+ * 
+ * Paleta de colores de marca:
+ *   - Deep Navy (#071426): Fondos principales, barra de navegación, superficies de paneles
+ *   - Premium Blue (#0F2747): Superficies secundarias, estados hover, gradientes
+ *   - Accent Orange (#FF7A00): CTAs, destacados, indicadores de crecimiento
+ *   - Soft White (#F5F7FA): Tipografía, iconos, superficies limpias
+ * 
+ * Filosofía de diseño: Premium oscuro, espaciado cinematográfico, movimiento sutil, interfaces minimalistas.
+ * Inspirado en: Stripe, Linear, Vercel, Arc Browser.
+ * 
+ * @see execution-pack/04-design-system.md
+ * @see execution-pack/12-branding-system.md
+ */
+
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ============================================================================
+ * TOKENS DE TEMA — Configuración de tema en línea de Tailwind v4
+ * 
+ * Mapea propiedades CSS personalizadas a clases de utilidad de Tailwind.
+ * Tokens semánticos de shadcn/ui + extensiones de marca de Viewlytics.
+ * ============================================================================ */
+@theme inline {
+  /* --- Tokens de color semánticos de shadcn/ui --- */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* --- Tokens de gráficos de shadcn/ui --- */
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  /* --- Tokens de barra lateral de shadcn/ui --- */
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* --- Tokens de color de la marca Viewlytics (acceso hexadecimal directo) --- */
+  --color-deep-navy: #071426;
+  --color-premium-blue: #0F2747;
+  --color-accent-orange: #FF7A00;
+  --color-accent-orange-hover: #FF9A33;
+  --color-accent-orange-active: #E56D00;
+  --color-soft-white: #F5F7FA;
+  --color-soft-white-muted: #B8C4D4;
+  --color-surface-elevated: #0A1B35;
+  --color-surface-glass: rgba(15, 39, 71, 0.6);
+
+  /* --- Tipografía --- */
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-inter);
+
+  /* --- Escala de radio de borde --- */
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/* ============================================================================
+ * TEMA OSCURO — Sobrescritura de marca Viewlytics
+ * 
+ * Viewlytics es una plataforma diseñada primeramente para modo oscuro. El tema oscuro ES el tema principal.
+ * Todos los colores se mapean a la paleta de marca de Viewlytics.
+ * ============================================================================ */
+:root {
+  /* Alternativa para modo claro (fallback): se mantiene mínima ya que el modo oscuro es el principal */
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --radius: 0.75rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+  /* Deep Navy — fondo principal (#071426) */
+  --background: oklch(0.13 0.03 250);
+  /* Soft White — texto principal (#F5F7FA) */
+  --foreground: oklch(0.97 0.005 250);
+  /* Premium Blue — superficies de tarjetas (#0F2747) */
+  --card: oklch(0.21 0.05 250);
+  --card-foreground: oklch(0.97 0.005 250);
+  /* Superficie elevada para ventanas emergentes (popovers) */
+  --popover: oklch(0.18 0.04 250);
+  --popover-foreground: oklch(0.97 0.005 250);
+  /* Accent Orange — interactivo principal (#FF7A00) */
+  --primary: oklch(0.72 0.19 55);
+  --primary-foreground: oklch(0.13 0.03 250);
+  /* Premium Blue — superficies secundarias */
+  --secondary: oklch(0.21 0.05 250);
+  --secondary-foreground: oklch(0.97 0.005 250);
+  /* Muted Navy — fondos sutiles */
+  --muted: oklch(0.18 0.04 250);
+  --muted-foreground: oklch(0.65 0.02 250);
+  /* Superficies de acento */
+  --accent: oklch(0.21 0.05 250);
+  --accent-foreground: oklch(0.97 0.005 250);
+  /* Destructive — estados de error */
+  --destructive: oklch(0.704 0.191 22.216);
+  /* Bordes sutiles */
+  --border: oklch(0.30 0.04 250);
+  --input: oklch(0.25 0.04 250);
+  --ring: oklch(0.72 0.19 55);
+  /* Paleta de gráficos — colores analíticos de Viewlytics */
+  --chart-1: oklch(0.72 0.19 55);
+  --chart-2: oklch(0.65 0.15 220);
+  --chart-3: oklch(0.75 0.12 160);
+  --chart-4: oklch(0.68 0.18 330);
+  --chart-5: oklch(0.80 0.10 85);
+  /* Barra lateral: coincide con la estética del panel de control */
+  --sidebar: oklch(0.15 0.035 250);
+  --sidebar-foreground: oklch(0.97 0.005 250);
+  --sidebar-primary: oklch(0.72 0.19 55);
+  --sidebar-primary-foreground: oklch(0.13 0.03 250);
+  --sidebar-accent: oklch(0.21 0.05 250);
+  --sidebar-accent-foreground: oklch(0.97 0.005 250);
+  --sidebar-border: oklch(0.30 0.04 250);
+  --sidebar-ring: oklch(0.72 0.19 55);
+}
+
+/* ============================================================================
+ * CAPA BASE — Reseteos y valores predeterminados globales
+ * ============================================================================ */
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    @apply scroll-smooth font-sans;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Estilos de encabezado premium: jerarquía cinematográfica de pesos */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading tracking-tight;
+  }
+}
+
+/* ============================================================================
+ * CLASES DE UTILIDAD — Utilidades específicas de Viewlytics
+ * 
+ * Estas clases extienden Tailwind con patrones visuales específicos de la plataforma.
+ * Se utilizan en todos los componentes para un efecto de vidrio, gradientes y efectos consistentes.
+ * ============================================================================ */
+@layer utilities {
+  /**
+   * Superficie de vidrio (Glassmorphic) — Efecto premium de vidrio esmerilado
+   * Uso: Tarjetas, modales, superposiciones que requieran profundidad
+   */
+  .glass {
+    background: rgba(15, 39, 71, 0.4);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(245, 247, 250, 0.08);
+  }
+
+  .glass-light {
+    background: rgba(15, 39, 71, 0.2);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(245, 247, 250, 0.05);
+  }
+
+  /**
+   * Gradiente de marca — Gradiente direccional principal
+   * Uso: Secciones hero, tarjetas destacadas, fondos de acento
+   */
+  .gradient-brand {
+    background: linear-gradient(135deg, #071426 0%, #0F2747 50%, #071426 100%);
+  }
+
+  /**
+   * Gradiente de acento — Gradiente con destacado naranja
+   * Uso: Botones CTA, indicadores de crecimiento, destacados
+   */
+  .gradient-accent {
+    background: linear-gradient(135deg, #FF7A00 0%, #FF9A33 100%);
+  }
+
+  /**
+   * Efecto de brillo — Brillo ambiental sutil
+   * Uso: Estados hover en tarjetas primarias, elementos destacados
+   */
+  .glow-orange {
+    box-shadow: 0 0 20px rgba(255, 122, 0, 0.15),
+                0 0 60px rgba(255, 122, 0, 0.05);
+  }
+
+  .glow-blue {
+    box-shadow: 0 0 20px rgba(15, 39, 71, 0.3),
+                0 0 60px rgba(15, 39, 71, 0.1);
+  }
+
+  /**
+   * Gradiente de texto — Efecto de texto con brillo animado
+   * Uso: Encabezados, textos de marca, etiquetas premium
+   */
+  .text-gradient {
+    background: linear-gradient(135deg, #F5F7FA 0%, #FF7A00 50%, #F5F7FA 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /**
+   * Sombra premium para tarjetas — Profundidad elevada en tarjetas
+   * Uso: Tarjetas de panel, widgets de analíticas
+   */
+  .shadow-premium {
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3),
+                0 4px 16px rgba(0, 0, 0, 0.2),
+                0 8px 32px rgba(0, 0, 0, 0.1);
+  }
+
+  /**
+   * Ajustes preestablecidos de transición suave — Temporización de animación consistente
+   * Uso: Todos los elementos interactivos
+   */
+  .transition-premium {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .transition-fast {
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+/* ============================================================================
+ * BARRA DE DESPLAZAMIENTO PERSONALIZADA — Estilos premium para barra oscura
+ * 
+ * Coincide con la estética de azul marino oscuro en todas las áreas desplazables.
+ * ============================================================================ */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(245, 247, 250, 0.12);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(245, 247, 250, 0.2);
+}
+
+/* Estilos de barra de desplazamiento para Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(245, 247, 250, 0.12) transparent;
+}
+
+/* ============================================================================
+ * ESTILO DE SELECCIÓN — Selección de texto con los colores de la marca
+ * ============================================================================ */
+::selection {
+  background: rgba(255, 122, 0, 0.3);
+  color: #F5F7FA;
+}
+
+::-moz-selection {
+  background: rgba(255, 122, 0, 0.3);
+  color: #F5F7FA;
+}

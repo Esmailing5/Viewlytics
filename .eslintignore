@@ -1,0 +1,18 @@
+# Dependencias
+node_modules/
+vendor/
+
+# Archivos de build
+dist/
+build/
+*.min.js
+
+# Archivos de configuración
+*.config.js
+webpack.config.js
+
+# Archivos del sistema
+.DS_Store
+
+# Logs
+*.log

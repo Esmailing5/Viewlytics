@@ -1,0 +1,21 @@
+# Dependencias
+node_modules/
+vendor/
+
+# Archivos de build
+dist/
+build/
+*.min.js
+*.min.css
+
+# Archivos de configuración
+package-lock.json
+yarn.lock
+composer.lock
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
