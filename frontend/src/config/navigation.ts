@@ -1,25 +1,69 @@
 /**
- * Viewlytics — Configuración de Navegación
+ * Viewlytics — Navigation Configuration (Phase 1.5)
  *
- * Controla todas las superficies de navegación: barra de navegación, pie de página y enlaces sociales.
- * La navegación se basa completamente en la configuración para soportar futuras integraciones con CMS
- * y modificaciones del panel de administración sin cambios de código.
+ * Controls all navigation surfaces: sidebar, topbar, footer, and social links.
+ * Navigation is fully config-driven for future CMS integration.
  *
- * @see types/navigation.types.ts — Definiciones de tipo
- * @see execution-pack/03-configuration-system.md — Arquitectura de configuración
+ * @see types/navigation.types.ts — Type definitions
  */
 
 import type { NavigationConfig } from '@/types';
 
 export const navigationConfig: NavigationConfig = {
   /**
-   * Elementos de la barra de navegación principal: se muestran en la barra de navegación superior.
-   * El orden determina el orden de visualización. Los elementos desactivados se ocultan.
+   * Sidebar navigation items — displayed in the fixed left sidebar.
+   * Section 'main' items appear at the top, 'bottom' items at the bottom.
+   */
+  sidebar: [
+    {
+      id: 'dashboard',
+      label: 'Dashboard',
+      href: '/',
+      icon: 'LayoutDashboard',
+      enabled: true,
+      section: 'main',
+    },
+    {
+      id: 'analytics',
+      label: 'Analytics',
+      href: '/analytics',
+      icon: 'BarChart3',
+      enabled: true,
+      section: 'main',
+    },
+    {
+      id: 'audience',
+      label: 'Audience',
+      href: '/audience',
+      icon: 'Users',
+      enabled: true,
+      section: 'main',
+    },
+    {
+      id: 'reports',
+      label: 'Reports',
+      href: '/reports',
+      icon: 'FileText',
+      enabled: true,
+      section: 'main',
+    },
+    {
+      id: 'settings',
+      label: 'Settings',
+      href: '/settings',
+      icon: 'Settings',
+      enabled: true,
+      section: 'bottom',
+    },
+  ],
+
+  /**
+   * Main navbar items — kept for backward compatibility.
    */
   navbar: [
     {
       id: 'home',
-      label: 'Inicio',
+      label: 'Home',
       href: '/',
       enabled: true,
     },
@@ -31,52 +75,50 @@ export const navigationConfig: NavigationConfig = {
     },
     {
       id: 'trending',
-      label: 'Tendencias',
+      label: 'Trending',
       href: '/trending',
       enabled: true,
-      badge: 'Nuevo',
+      badge: 'New',
     },
     {
       id: 'about',
-      label: 'Acerca de',
+      label: 'About',
       href: '/about',
       enabled: true,
     },
   ],
 
   /**
-   * Grupos de enlaces del pie de página: organizados por columna.
-   * Cada grupo tiene un título y una lista de elementos.
+   * Footer link groups organized by column.
    */
   footer: [
     {
-      title: 'Plataforma',
+      title: 'Platform',
       items: [
         { id: 'footer-rankings', label: 'Rankings', href: '/rankings', enabled: true },
-        { id: 'footer-trending', label: 'Tendencias', href: '/trending', enabled: true },
-        { id: 'footer-search', label: 'Buscar', href: '/search', enabled: true },
+        { id: 'footer-trending', label: 'Trending', href: '/trending', enabled: true },
+        { id: 'footer-search', label: 'Search', href: '/search', enabled: true },
       ],
     },
     {
-      title: 'Compañía',
+      title: 'Company',
       items: [
-        { id: 'footer-about', label: 'Acerca de', href: '/about', enabled: true },
-        { id: 'footer-contact', label: 'Contacto', href: '/contact', enabled: true },
+        { id: 'footer-about', label: 'About', href: '/about', enabled: true },
+        { id: 'footer-contact', label: 'Contact', href: '/contact', enabled: true },
         { id: 'footer-blog', label: 'Blog', href: '/blog', enabled: false },
       ],
     },
     {
       title: 'Legal',
       items: [
-        { id: 'footer-privacy', label: 'Privacidad', href: '/privacy', enabled: true },
-        { id: 'footer-terms', label: 'Términos', href: '/terms', enabled: true },
+        { id: 'footer-privacy', label: 'Privacy', href: '/privacy', enabled: true },
+        { id: 'footer-terms', label: 'Terms', href: '/terms', enabled: true },
       ],
     },
   ],
 
   /**
-   * Enlaces de redes sociales: se muestran en el pie de página y posiblemente en la barra de navegación.
-   * Los enlaces externos se abren en pestañas nuevas.
+   * Social media links — displayed in footer.
    */
   social: [
     {

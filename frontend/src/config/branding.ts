@@ -1,52 +1,49 @@
 /**
- * Viewlytics — Configuración de Marca (Branding Config)
+ * Viewlytics — Branding Configuration (Phase 1.5)
  *
- * Fuente única de verdad para todos los assets, colores y tokens de marca.
- * Importa desde aquí para garantizar coherencia de marca en toda la plataforma.
+ * Single source of truth for all brand assets, colors, and tokens.
+ * Updated to new Phase 1.5 SaaS palette while maintaining interface compat.
  *
- * Matches the BrandConfig interface from @/types/branding.types.ts
- *
- * @see execution-pack/12-branding-system.md — Reglas del sistema de marca
- * @see execution-pack/04-design-system.md — Sistema de diseño
+ * @see types/branding.types.ts — Type definitions
  */
 
 import type { BrandConfig } from '@/types';
 
-/** Config de marca completa — importa como `brandConfig` en toda la app */
+/** Complete brand config — import as `brandConfig` across the app */
 export const brandConfig: BrandConfig = {
   name: 'Viewlytics',
   regionalName: 'Viewlytics RD',
-  tagline: 'Inteligencia Analítica de Creadores',
+  tagline: 'Analytics for Streams & Video',
 
   colors: {
-    deepNavy: '#071426',
-    premiumBlue: '#0F2747',
-    accentOrange: '#FF7A00',
-    softWhite: '#F5F7FA',
+    deepNavy: '#0b0e14',
+    premiumBlue: '#161b22',
+    accentOrange: '#0072ff',
+    softWhite: '#ffffff',
   },
 
   colorVariants: {
-    accentOrangeHover: '#FF9A33',
-    accentOrangeActive: '#E56D00',
-    softWhiteMuted: '#B8C4D4',
-    surfaceElevated: '#0A1B35',
+    accentOrangeHover: '#00c6ff',
+    accentOrangeActive: '#6e45e2',
+    softWhiteMuted: '#8b949e',
+    surfaceElevated: '#161b22',
   },
 
   gradients: [
     {
       name: 'brand',
-      value: 'linear-gradient(135deg, #071426 0%, #0F2747 50%, #071426 100%)',
-      usage: 'Hero backgrounds, main sections',
+      value: 'linear-gradient(135deg, #0b0e14 0%, #161b22 50%, #0b0e14 100%)',
+      usage: 'Dashboard backgrounds, main sections',
     },
     {
       name: 'accent',
-      value: 'linear-gradient(135deg, #FF7A00 0%, #FF9A33 100%)',
-      usage: 'CTA buttons, growth indicators',
+      value: 'linear-gradient(135deg, #00c6ff 0%, #0072ff 100%)',
+      usage: 'Primary buttons, accent indicators',
     },
     {
-      name: 'text',
-      value: 'linear-gradient(135deg, #F5F7FA 0%, #FF7A00 50%, #F5F7FA 100%)',
-      usage: 'Gradient text headings',
+      name: 'purple',
+      value: 'linear-gradient(135deg, #0072ff 0%, #6e45e2 100%)',
+      usage: 'Chart gradients, secondary accents',
     },
   ],
 
@@ -63,7 +60,7 @@ export const brandConfig: BrandConfig = {
   },
 
   watermark: {
-    text: 'Desarrollado por Viewlytics',
+    text: 'Powered by Viewlytics',
     position: 'bottom-center',
     opacity: 0.6,
   },
@@ -71,13 +68,13 @@ export const brandConfig: BrandConfig = {
   logo: {
     primary: '/branding/logo-horizontalF.png',
     favicon: '/branding/logo-icon.png',
-    alt: 'Viewlytics — Inteligencia Analítica de Creadores',
+    alt: 'Viewlytics — Analytics for Streams & Video',
   },
 };
 
 /**
- * Shortcuts para rutas de logo — para compatibilidad con componentes que
- * referencian brandConfig.logos directamente.
+ * Logo asset paths — theme-aware variants.
+ * The Logo component uses these to swap based on active theme.
  */
 export const logoAssets = {
   horizontal: '/branding/logo-horizontalF.png',
@@ -85,5 +82,5 @@ export const logoAssets = {
   white: '/branding/logo-white.png',
 } as const;
 
-/** Alias legacy */
+/** Legacy alias */
 export const branding = brandConfig;

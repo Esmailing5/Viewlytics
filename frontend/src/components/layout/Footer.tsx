@@ -1,27 +1,22 @@
 /**
- * Viewlytics — Footer
+ * Viewlytics — Footer (Phase 1.5)
  *
- * Footer premium de la plataforma. Incluye:
- * - Logo oficial horizontal
- * - Grupos de links del config (Platform, Company, Legal)
- * - Links de redes sociales con íconos de Lucide
- * - Copyright y "Powered by Viewlytics"
+ * Minimal footer with logo, copyright, links, and social icons.
+ * Config-driven, theme-aware.
  *
  * @see src/config/navigation.ts — Footer groups + social links
  * @see src/config/branding.ts — Logo + brand name
- * @see execution-pack/12-branding-system.md — Branding rules
  */
 
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
 import { navigationConfig } from '@/config/navigation';
-import { brandConfig, logoAssets } from '@/config/branding';
+import { brandConfig } from '@/config/branding';
 import { TwitterIcon, InstagramIcon, GithubIcon } from '@/components/shared/SocialIcons';
 import { Logo } from '@/components/shared/Logo';
 
-/** Mapa de íconos de redes sociales */
+/** Social icon component map */
 const SOCIAL_ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
   Twitter: TwitterIcon,
   Instagram: InstagramIcon,
@@ -29,7 +24,7 @@ const SOCIAL_ICON_MAP: Record<string, React.ComponentType<{ className?: string }
 };
 
 /**
- * Footer — Pie de página premium con branding, navigation y socials.
+ * Footer — Minimal premium footer.
  */
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -38,33 +33,23 @@ export function Footer() {
 
   return (
     <footer
-      className="
-        relative border-t border-white/[0.06]
-        bg-[#071426]
-      "
+      className="border-t border-[var(--border-color)] bg-[var(--bg-main)]"
       role="contentinfo"
     >
-      {/* Subtle top glow */}
-      <div
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-px"
-        style={{ background: 'linear-gradient(90deg, transparent, rgba(255,122,0,0.3), transparent)' }}
-        aria-hidden="true"
-      />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-8">
-        {/* ── Top Row: Logo + Links ── */}
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-10 mb-12">
-          {/* Brand column */}
-          <div className="col-span-2 md:col-span-2">
-            <Link href="/" id="footer-logo" aria-label={`${brandConfig.name} — Inicio`}>
-              <Logo className="h-10 w-auto mb-4" />
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        {/* Top row: Logo + Link Groups */}
+        <div className="flex flex-col sm:flex-row items-start justify-between gap-8 mb-8">
+          {/* Brand */}
+          <div className="flex-shrink-0">
+            <Link href="/" id="footer-logo" aria-label={`${brandConfig.name} — Home`}>
+              <Logo className="h-8 w-auto mb-3" variant="full" />
             </Link>
-            <p className="text-sm text-[#B8C4D4] leading-relaxed max-w-xs">
-              Inteligencia analítica premium para creadores dominicanos — podcasts, streamers y medios digitales.
+            <p className="text-sm text-[var(--text-secondary)] max-w-xs leading-relaxed">
+              Premium creator analytics intelligence platform.
             </p>
 
             {/* Social icons */}
-            <div className="flex items-center gap-3 mt-6">
+            <div className="flex items-center gap-2 mt-4">
               {enabledSocial.map((social) => {
                 const Icon = social.icon ? SOCIAL_ICON_MAP[social.icon] : undefined;
                 return (
@@ -76,10 +61,11 @@ export function Footer() {
                     rel="noopener noreferrer"
                     aria-label={social.label}
                     className="
-                      w-9 h-9 rounded-xl
+                      w-8 h-8 rounded-lg
                       flex items-center justify-center
-                      bg-white/[0.04] border border-white/[0.06]
-                      text-[#B8C4D4] hover:text-[#F5F7FA] hover:bg-white/[0.08]
+                      text-[var(--text-secondary)]
+                      hover:text-[var(--text-primary)]
+                      hover:bg-[var(--bg-surface)]
                       transition-all duration-200
                     "
                   >
@@ -90,42 +76,44 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Navigation link groups */}
-          {enabledFooterGroups.map((group) => (
-            <div key={group.title} className="col-span-1">
-              <h3 className="text-[#F5F7FA] text-sm font-semibold mb-4">{group.title}</h3>
-              <ul className="space-y-3" role="list">
-                {group.items
-                  .filter((item) => item.enabled)
-                  .map((item) => (
-                    <li key={item.id}>
-                      <Link
-                        href={item.href}
-                        id={item.id}
-                        className="
-                          text-sm text-[#B8C4D4]
-                          hover:text-[#F5F7FA]
-                          transition-colors duration-200
-                        "
-                      >
-                        {item.label}
-                      </Link>
-                    </li>
-                  ))}
-              </ul>
-            </div>
-          ))}
+          {/* Link groups */}
+          <div className="flex flex-wrap gap-12">
+            {enabledFooterGroups.map((group) => (
+              <div key={group.title}>
+                <h3 className="text-[var(--text-primary)] text-xs font-semibold uppercase tracking-wider mb-3">
+                  {group.title}
+                </h3>
+                <ul className="space-y-2" role="list">
+                  {group.items
+                    .filter((item) => item.enabled)
+                    .map((item) => (
+                      <li key={item.id}>
+                        <Link
+                          href={item.href}
+                          id={item.id}
+                          className="
+                            text-sm text-[var(--text-secondary)]
+                            hover:text-[var(--text-primary)]
+                            transition-colors duration-200
+                          "
+                        >
+                          {item.label}
+                        </Link>
+                      </li>
+                    ))}
+                </ul>
+              </div>
+            ))}
+          </div>
         </div>
 
-        {/* ── Bottom Row: Legal ── */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-white/[0.06]">
-          <p className="text-xs text-[#B8C4D4]/60">
-            © {currentYear} {brandConfig.name}. Todos los derechos reservados.
+        {/* Bottom row: Copyright */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-6 border-t border-[var(--border-color)]">
+          <p className="text-xs text-[var(--text-secondary)]/60">
+            © {currentYear} {brandConfig.name}. All rights reserved.
           </p>
-
-          <p className="text-xs text-[#B8C4D4]/40 flex items-center gap-1.5">
-            <span className="w-1 h-1 rounded-full bg-[#FF7A00]/60" aria-hidden="true" />
-            Desarrollado por {brandConfig.name}
+          <p className="text-xs text-[var(--text-secondary)]/40">
+            Powered by {brandConfig.name}
           </p>
         </div>
       </div>

@@ -1,15 +1,14 @@
 /**
- * Viewlytics — Tipos de Configuración
+ * Viewlytics — Config Types (Phase 1.5)
  *
- * Definiciones de tipo para la capa de configuración.
- * Cada archivo de configuración (página de inicio, rankings, panel, exportación) está fuertemente tipado
- * para permitir paneles de administración y futuras integraciones con CMS.
+ * Type definitions for the configuration layer.
+ * Homepage, rankings, dashboard, and export configs are all strongly typed.
  *
- * @see execution-pack/03-configuration-system.md — Arquitectura de configuración
+ * @see execution-pack/03-configuration-system.md — Config architecture
  */
 
 /**
- * Configuración de la sección Hero para la página de inicio.
+ * Hero section configuration for the homepage.
  */
 export interface HeroConfig {
   readonly title: string;
@@ -21,7 +20,7 @@ export interface HeroConfig {
 }
 
 /**
- * Configuración de widgets para las secciones destacadas de la página de inicio.
+ * Homepage widget section configuration.
  */
 export interface HomepageWidgetConfig {
   readonly id: string;
@@ -32,7 +31,7 @@ export interface HomepageWidgetConfig {
 }
 
 /**
- * Configuración completa de la página de inicio.
+ * Complete homepage configuration.
  */
 export interface HomepageConfig {
   readonly hero: HeroConfig;
@@ -42,7 +41,7 @@ export interface HomepageConfig {
 }
 
 /**
- * Definición de categoría de clasificación (ranking).
+ * Ranking category definition.
  */
 export interface RankingCategory {
   readonly id: string;
@@ -56,7 +55,7 @@ export interface RankingCategory {
 }
 
 /**
- * Configuración completa de clasificaciones (rankings).
+ * Complete rankings configuration.
  */
 export interface RankingsConfig {
   readonly categories: readonly RankingCategory[];
@@ -66,7 +65,7 @@ export interface RankingsConfig {
 }
 
 /**
- * Configuración de visibilidad del widget en el panel de control.
+ * Dashboard widget visibility configuration.
  */
 export interface DashboardWidgetConfig {
   readonly id: string;
@@ -76,26 +75,49 @@ export interface DashboardWidgetConfig {
 }
 
 /**
- * Configuración de la sección de gráficos analíticos.
+ * Analytics chart section configuration.
  */
 export interface AnalyticsSectionConfig {
   readonly id: string;
   readonly title: string;
   readonly enabled: boolean;
-  readonly chartType: 'line' | 'bar' | 'area' | 'pie';
+  readonly chartType: 'line' | 'bar' | 'area' | 'pie' | 'donut';
 }
 
 /**
- * Configuración completa del panel de control (dashboard).
+ * Dashboard card configuration — Phase 1.5 grid card system.
+ */
+export interface DashboardCardConfig {
+  /** Unique card identifier */
+  readonly id: string;
+  /** Card display title */
+  readonly title: string;
+  /** Optional subtitle */
+  readonly subtitle?: string;
+  /** Chart type rendered inside the card */
+  readonly chartType: 'line' | 'bar' | 'area' | 'pie' | 'donut' | 'list';
+  /** Whether this card is enabled */
+  readonly enabled: boolean;
+  /** Grid column span (1-3) */
+  readonly colSpan: 1 | 2 | 3;
+  /** Grid row span (1-2) */
+  readonly rowSpan: 1 | 2;
+  /** Display order in the grid */
+  readonly order: number;
+}
+
+/**
+ * Complete dashboard configuration.
  */
 export interface DashboardConfig {
   readonly widgets: readonly DashboardWidgetConfig[];
   readonly analyticsSections: readonly AnalyticsSectionConfig[];
+  readonly cards: readonly DashboardCardConfig[];
   readonly defaultTimeRange: '7d' | '30d' | '90d' | '1y';
 }
 
 /**
- * Ajuste preestablecido de dimensiones de exportación.
+ * Export dimension preset.
  */
 export interface ExportDimension {
   readonly id: string;
@@ -106,7 +128,7 @@ export interface ExportDimension {
 }
 
 /**
- * Plantilla de exportación para redes sociales.
+ * Social export template.
  */
 export interface SocialTemplate {
   readonly id: string;
@@ -117,7 +139,7 @@ export interface SocialTemplate {
 }
 
 /**
- * Configuración completa del sistema de exportación.
+ * Complete export system configuration.
  */
 export interface ExportConfig {
   readonly dimensions: readonly ExportDimension[];

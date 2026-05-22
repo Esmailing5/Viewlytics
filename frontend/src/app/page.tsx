@@ -1,39 +1,26 @@
 /**
- * Viewlytics — Homepage (Stage 01)
+ * Viewlytics — Homepage (Phase 1.5)
  *
- * Página principal de la plataforma. Ensambla todas las secciones en orden:
+ * Dashboard-first homepage. The landing page has been replaced with
+ * a live analytics dashboard preview that immediately communicates:
+ * analytics, creator intelligence, real-time metrics, platform monitoring.
  *
- * 1. Navbar
- * 2. HeroSection              — Cinematic hero con búsqueda y mini-dashboard
- * 3. LiveAnalyticsPreview     — Dashboard analítico interactivo de demostración
- * 4. RankingsPreview          — Top creators con tabs de categorías
- * 5. ExportCardsSection       — Tarjetas de exportación social
- * 6. FeaturesSection          — Grid de características de la plataforma
- * 7. TrustedCreatorsSection   — Vitrina de creadores dominicanos
- * 8. CtaBanner                — Banner de conversión final
- * 9. Footer
+ * Layout: DashboardLayout (Sidebar + Topbar + Footer) → DashboardGrid
  *
- * @see execution-pack/08-stage-prompts.md — Stage 01 requirements
- * @see src/config/homepage.ts — Homepage configuration
+ * @see components/layout/DashboardLayout.tsx — Layout wrapper
+ * @see components/dashboard/DashboardGrid.tsx — Dashboard content
  */
 
 import type { Metadata } from 'next';
 import { brandConfig } from '@/config/branding';
-import { Navbar } from '@/components/layout/Navbar';
-import { Footer } from '@/components/layout/Footer';
-import { HeroSection } from '@/components/homepage/HeroSection';
-import { LiveAnalyticsPreview } from '@/components/homepage/LiveAnalyticsPreview';
-import { RankingsPreview } from '@/components/homepage/RankingsPreview';
-import { ExportCardsSection } from '@/components/homepage/ExportCardsSection';
-import { FeaturesSection } from '@/components/homepage/FeaturesSection';
-import { TrustedCreatorsSection } from '@/components/homepage/TrustedCreatorsSection';
-import { CtaBanner } from '@/components/homepage/CtaBanner';
+import { DashboardLayout } from '@/components/layout/DashboardLayout';
+import { DashboardGrid } from '@/components/dashboard/DashboardGrid';
 
-/** SEO metadata específico para la homepage */
+/** SEO metadata for the homepage */
 export const metadata: Metadata = {
   title: `${brandConfig.name} — ${brandConfig.tagline}`,
   description:
-    'Track creator growth, explore Dominican creator rankings, and generate shareable analytics cards. Viewlytics is the premium creator analytics intelligence platform.',
+    'Premium creator analytics intelligence platform. Track growth, explore real-time metrics, and monitor streaming platforms. Viewlytics is the analytics dashboard for Dominican creators.',
   openGraph: {
     title: `${brandConfig.name} — ${brandConfig.tagline}`,
     description:
@@ -44,41 +31,13 @@ export const metadata: Metadata = {
 };
 
 /**
- * HomePage — Punto de entrada de la plataforma Viewlytics.
- * Componente servidor de Next.js (App Router).
+ * HomePage — Dashboard-first entry point for the Viewlytics platform.
+ * Next.js App Router server component.
  */
 export default function HomePage() {
   return (
-    <>
-      {/* Global navigation */}
-      <Navbar />
-
-      {/* Page content */}
-      <main id="main-content" className="flex flex-col">
-        {/* 1. Cinematic hero with creator search */}
-        <HeroSection />
-
-        {/* 2. Live analytics dashboard preview */}
-        <LiveAnalyticsPreview />
-
-        {/* 3. Rankings preview with category tabs */}
-        <RankingsPreview />
-
-        {/* 4. Social export cards showcase */}
-        <ExportCardsSection />
-
-        {/* 5. Platform features grid */}
-        <FeaturesSection />
-
-        {/* 6. Trusted Dominican creators marquee */}
-        <TrustedCreatorsSection />
-
-        {/* 7. Final conversion CTA banner */}
-        <CtaBanner />
-      </main>
-
-      {/* Footer */}
-      <Footer />
-    </>
+    <DashboardLayout>
+      <DashboardGrid />
+    </DashboardLayout>
   );
 }

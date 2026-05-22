@@ -1,55 +1,75 @@
 /**
- * Viewlytics — Tipos de Navegación
+ * Viewlytics — Navigation Types (Phase 1.5)
  *
- * Definiciones de tipo para el sistema de configuración de navegación.
- * Controla elementos de la barra de navegación, enlaces del pie de página y grupos de menús.
- * Toda la navegación se basa en la configuración para soportar futuras integraciones con CMS.
+ * Type definitions for the navigation system including sidebar, topbar, footer.
+ * All navigation is config-driven for future CMS integration.
  *
- * @see config/navigation.ts — Valores de navegación en tiempo de ejecución
- * @see execution-pack/03-configuration-system.md — Arquitectura de configuración
+ * @see config/navigation.ts — Runtime values
  */
 
 /**
- * Elemento de navegación individual.
- * Representa un enlace en la barra de navegación, barra lateral o pie de página.
+ * Individual navigation item.
+ * Represents a link in the sidebar, topbar, or footer.
  */
 export interface NavigationItem {
-  /** Identificador único para el elemento de navegación */
+  /** Unique identifier */
   readonly id: string;
-  /** Etiqueta de visualización */
+  /** Display label */
   readonly label: string;
-  /** Ruta de la página o URL externa */
+  /** Page path or external URL */
   readonly href: string;
-  /** Nombre opcional del icono de Lucide */
+  /** Optional Lucide icon name */
   readonly icon?: string;
-  /** Indica si este enlace se abre en una pestaña nueva */
+  /** Whether this link opens in a new tab */
   readonly external?: boolean;
-  /** Indica si este elemento está actualmente habilitado */
+  /** Whether this item is currently enabled */
   readonly enabled: boolean;
-  /** Texto del distintivo/badge (ej. "Nuevo", "Beta") */
+  /** Badge text (e.g. "New", "Beta") */
   readonly badge?: string;
 }
 
 /**
- * Elementos de navegación agrupados.
- * Se utiliza para las columnas del pie de página y secciones de la barra lateral.
+ * Grouped navigation items.
+ * Used for footer columns and sidebar sections.
  */
 export interface NavigationGroup {
-  /** Título de visualización del grupo */
+  /** Group display title */
   readonly title: string;
-  /** Elementos dentro de este grupo */
+  /** Items within this group */
   readonly items: readonly NavigationItem[];
 }
 
 /**
- * Configuración completa de navegación.
- * Define todas las superficies de navegación en toda la plataforma.
+ * Sidebar navigation item with section placement.
+ */
+export interface SidebarItem {
+  /** Unique identifier */
+  readonly id: string;
+  /** Display label */
+  readonly label: string;
+  /** Navigation path */
+  readonly href: string;
+  /** Lucide icon name */
+  readonly icon: string;
+  /** Whether this item is enabled */
+  readonly enabled: boolean;
+  /** Section placement: 'main' for primary nav, 'bottom' for footer area */
+  readonly section: 'main' | 'bottom';
+  /** Optional badge text */
+  readonly badge?: string;
+}
+
+/**
+ * Complete navigation configuration.
+ * Defines all navigation surfaces across the platform.
  */
 export interface NavigationConfig {
-  /** Elementos principales de la barra de navegación (barra superior) */
+  /** Sidebar navigation items */
+  readonly sidebar: readonly SidebarItem[];
+  /** Main navbar items (top bar) — kept for backwards compat */
   readonly navbar: readonly NavigationItem[];
-  /** Grupos de enlaces del pie de página organizados por columna */
+  /** Footer link groups organized by column */
   readonly footer: readonly NavigationGroup[];
-  /** Enlaces de redes sociales */
+  /** Social media links */
   readonly social: readonly NavigationItem[];
 }

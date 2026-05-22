@@ -1,11 +1,11 @@
 /**
- * Viewlytics — Exportación del Sistema de Tipos (Barrel Export)
+ * Viewlytics — Type System Barrel Export (Phase 1.5)
  *
- * Re-exportación central para todas las definiciones de tipos.
- * Importe tipos desde '@/types' para mantener importaciones limpias y consistentes en todo el proyecto.
+ * Central re-export for all type definitions.
+ * Import types from '@/types' for clean, consistent imports.
  *
- * Uso:
- *   import type { CreatorProfile, BrandConfig } from '@/types';
+ * Usage:
+ *   import type { CreatorProfile, BrandConfig, Theme } from '@/types';
  */
 
 export type {
@@ -22,6 +22,7 @@ export type {
 export type {
   NavigationItem,
   NavigationGroup,
+  SidebarItem,
   NavigationConfig,
 } from './navigation.types';
 
@@ -45,8 +46,14 @@ export type {
   RankingsConfig,
   DashboardWidgetConfig,
   AnalyticsSectionConfig,
+  DashboardCardConfig,
   DashboardConfig,
   ExportDimension,
   SocialTemplate,
   ExportConfig,
 } from './config.types';
+
+export type {
+  Theme,
+  ThemeContextValue,
+} from './theme.types';

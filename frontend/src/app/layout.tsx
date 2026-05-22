@@ -5,7 +5,7 @@ import { brandConfig } from '@/config/branding';
 import Providers from '@/lib/providers';
 import './globals.css';
 
-// Cargar la fuente Inter desde Google Fonts, configurando la variable para coincidir con nuestro token de Tailwind CSS
+// Load Inter from Google Fonts — variable maps to our Tailwind CSS font token
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
@@ -19,13 +19,13 @@ export const viewport: Viewport = {
 };
 
 /**
- * Configuración de Metadatos SEO Raíz
- * 
- * Impone valores de configuración de marca dinámicos en lugar de codificar títulos a mano.
- * Configurado específicamente para una indexación de búsqueda óptima (estándar SEO).
- * 
+ * Root SEO Metadata Configuration
+ *
+ * Uses dynamic brand config values instead of hardcoding titles.
+ * Optimized for search engine indexing (SEO standard).
+ *
  * @see execution-pack/03-configuration-system.md
- * @see execution-pack/17-deployment-system.md — Requisitos de SEO
+ * @see execution-pack/17-deployment-system.md — SEO requirements
  */
 export const metadata: Metadata = {
   title: {
@@ -34,16 +34,15 @@ export const metadata: Metadata = {
   },
   description: 'Premium creator analytics intelligence platform. Track growth, detect trends, and analyze metrics for Dominican podcasters, streamers, and digital media.',
   keywords: [
-    'Viewlytics', 'Viewlytics RD', 'Creator Analytics', 'Dominican Creators', 
-    'Podcast Analytics', 'Streamer Stats', 'YouTube DR', 'Twitch Dominica', 
-    'Creator Intelligence'
+    'Viewlytics', 'Viewlytics RD', 'Creator Analytics', 'Dominican Creators',
+    'Podcast Analytics', 'Streamer Stats', 'YouTube DR', 'Twitch Dominica',
+    'Creator Intelligence',
   ],
   authors: [{ name: 'Viewlytics Team' }],
   robots: {
     index: true,
     follow: true,
   },
-  // Etiquetas estándar OpenGraph
   openGraph: {
     type: 'website',
     locale: 'es_DO',
@@ -62,10 +61,10 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} h-full antialiased dark`}
-      style={{ colorScheme: 'dark' }}
+      className={`${inter.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col bg-deep-navy text-soft-white selection:bg-accent-orange/30 selection:text-soft-white">
+      <body className="min-h-full flex flex-col">
         <Providers>
           {children}
         </Providers>

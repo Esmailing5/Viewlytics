@@ -2,35 +2,39 @@
 
 import React, { useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ThemeProvider } from '@/providers/ThemeProvider';
 
 /**
- * Envolvedor de Proveedores Globales de la Aplicación
- * 
- * Alberga el proveedor de TanStack Query y otros proveedores globales del lado del cliente.
- * Mantener los proveedores en un componente cliente separado evita que la plantilla de diseño raíz (layout)
- * tenga que marcarse como un componente cliente, preservando los beneficios de SSR de Next.js.
- * 
- * @see app/layout.tsx — Usado en el diseño raíz
+ * Global App Providers Wrapper
+ *
+ * Wraps the application with:
+ * 1. ThemeProvider — dark/light mode with localStorage persistence
+ * 2. QueryClientProvider — TanStack Query for data fetching
+ *
+ * Keeping providers in a separate client component prevents the root layout
+ * from becoming a client component, preserving Next.js SSR benefits.
+ *
+ * @see app/layout.tsx — Used in root layout
  */
 export default function Providers({ children }: { children: React.ReactNode }) {
-  // Crear QueryClient dentro de useState asegura que los datos no se compartan entre
-  // diferentes usuarios/solicitudes en el lado del servidor, evitando la fuga de estado.
   const [queryClient] = useState(
     () =>
       new QueryClient({
         defaultOptions: {
           queries: {
-            staleTime: 60 * 1000, // 1 minuto de tiempo de expiración (stale time) por defecto
-            refetchOnWindowFocus: false, // Evita la recarga agresiva al enfocar la ventana
-            retry: 1, // Solo reintenta las solicitudes fallidas una vez
+            staleTime: 60 * 1000,
+            refetchOnWindowFocus: false,
+            retry: 1,
           },
         },
-      })
+      }),
   );
 
   return (
-    <QueryClientProvider client={queryClient}>
-      {children}
-    </QueryClientProvider>
+    <ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        {children}
+      </QueryClientProvider>
+    </ThemeProvider>
   );
 }
