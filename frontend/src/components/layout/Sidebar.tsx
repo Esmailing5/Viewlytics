@@ -173,7 +173,7 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
           hidden lg:flex flex-col
           fixed top-0 left-0 h-full z-40
           bg-[var(--bg-main)] border-r border-[var(--border-color)]
-          transition-all duration-300
+          transition-[width] duration-300
           ${collapsed ? 'w-[88px]' : 'w-[260px]'}
         `}
       >
