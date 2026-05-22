@@ -1,6 +1,6 @@
 import { FastifyInstance } from 'fastify';
 import { z } from 'zod';
-import { YouTubeAdapter } from '../../adapters/youtube/youtube.adapter';
+import { YouTubeChannelAdapter } from '../../adapters/youtube/youtube.channel.adapter';
 
 const channelParamsSchema = z.object({
   platform: z.enum(['youtube', 'twitch', 'kick']),
@@ -12,11 +12,10 @@ export async function channelRoutes(fastify: FastifyInstance) {
     try {
       const { platform, slug } = channelParamsSchema.parse(request.params);
       
-      const youtubeAdapter = new YouTubeAdapter();
-      
       let data;
       if (platform === 'youtube') {
-        data = await youtubeAdapter.getCreatorAnalytics(slug); // slug is the channel_id now
+        const youtubeChannelAdapter = new YouTubeChannelAdapter();
+        data = await youtubeChannelAdapter.getFullAnalytics(slug);
       } else {
         throw new Error(`Platform ${platform} not supported yet`);
       }

@@ -130,10 +130,10 @@ export function CreatorAnalyticsPage({ platform, channelId }: { platform: string
         
         {/* Row 1: Recent Videos (span 2) + Video Analytics Summary (span 1) */}
         <div className="lg:col-span-2 h-[400px]">
-          <RecentVideosCard videos={data.recent_videos || []} />
+          <RecentVideosCard videos={data.recentVideos || []} />
         </div>
         <div className="h-[400px]">
-          <VideoAnalyticsSummary videos={data.recent_videos || []} />
+          <VideoAnalyticsSummary videos={data.recentVideos || []} />
         </div>
 
         {/* Row 2: Viewers Chart (span 3) */}
