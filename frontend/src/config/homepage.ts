@@ -18,52 +18,55 @@ export const homepageConfig: HomepageConfig = {
    * Debe comunicar el valor de la plataforma en menos de 3 segundos (Principio de UX).
    */
   hero: {
-    title: 'Inteligencia Analítica de Creadores',
-    subtitle: 'Analiza el crecimiento, detecta tendencias y descubre estadísticas clave de los creadores dominicanos — podcasts, streamers y medios digitales.',
-    ctaText: 'Explorar Rankings',
-    ctaHref: '/rankings',
-    secondaryCtaText: 'Buscar Creador',
-    secondaryCtaHref: '/search',
+    title: 'Analítica Inteligente para Creadores y Streams',
+    subtitle: 'Descubre estadísticas, crecimiento y tendencias de YouTube, Twitch y Kick en tiempo real.',
+    ctaText: 'Buscar un canal',
+    ctaHref: '/search',
+    secondaryCtaText: 'Explorar Rankings',
+    secondaryCtaHref: '/rankings',
   },
 
-  /**
-   * Widgets de la página de inicio: secciones de contenido configurables debajo del hero.
-   * Cada widget se puede activar/desactivar y reordenar.
-   */
-  widgets: [
+  features: [
     {
-      id: 'trending-creators',
-      title: 'Trending Creators',
-      type: 'trending',
-      enabled: true,
-      maxItems: 6,
+      id: 'historical',
+      title: 'Historical Analytics',
+      description: 'Accede al historial de crecimiento y visualizaciones de los últimos años.',
+      icon: 'BarChart3',
     },
     {
-      id: 'top-growth',
-      title: 'Top Growth This Week',
-      type: 'growth',
-      enabled: true,
-      maxItems: 5,
+      id: 'realtime',
+      title: 'Real-time Tracking',
+      description: 'Monitoreo en vivo de espectadores y métricas de streams.',
+      icon: 'Activity',
     },
     {
-      id: 'featured-rankings',
-      title: 'Featured Rankings',
-      type: 'featured',
-      enabled: true,
-      maxItems: 10,
+      id: 'growth',
+      title: 'Growth Intelligence',
+      description: 'Proyecciones de crecimiento basadas en algoritmos avanzados.',
+      icon: 'TrendingUp',
     },
     {
-      id: 'recently-added',
-      title: 'Recently Added',
-      type: 'recent',
-      enabled: true,
-      maxItems: 4,
+      id: 'ranking',
+      title: 'Ranking Engine',
+      description: 'Descubre quién domina cada categoría en la República Dominicana.',
+      icon: 'Trophy',
+    },
+    {
+      id: 'crossplatform',
+      title: 'Cross-platform Metrics',
+      description: 'YouTube, Twitch y Kick unificados en un solo panel.',
+      icon: 'Globe',
+    },
+    {
+      id: 'engagement',
+      title: 'Engagement Tracking',
+      description: 'Mide la fidelidad de la audiencia y la interacción real.',
+      icon: 'Users',
     },
   ],
 
-  /** Indica si se debe mostrar la sección de tendencias en la página de inicio */
-  showTrendingSection: true,
-
-  /** Indica si se debe mostrar la vista previa de las clasificaciones destacadas en la página de inicio */
-  showFeaturedRankings: true,
+  cta: {
+    title: '¿Listo para descubrir los datos detrás del éxito?',
+    subtitle: 'Busca a tu creador favorito y sumérgete en las analíticas detalladas.',
+  },
 } as const;

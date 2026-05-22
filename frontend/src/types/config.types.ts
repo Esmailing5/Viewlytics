@@ -10,35 +10,28 @@
 /**
  * Hero section configuration for the homepage.
  */
-export interface HeroConfig {
-  readonly title: string;
-  readonly subtitle: string;
-  readonly ctaText: string;
-  readonly ctaHref: string;
-  readonly secondaryCtaText?: string;
-  readonly secondaryCtaHref?: string;
-}
-
-/**
- * Homepage widget section configuration.
- */
-export interface HomepageWidgetConfig {
-  readonly id: string;
-  readonly title: string;
-  readonly type: 'trending' | 'featured' | 'growth' | 'recent';
-  readonly enabled: boolean;
-  readonly maxItems: number;
-}
-
-/**
- * Complete homepage configuration.
- */
 export interface HomepageConfig {
-  readonly hero: HeroConfig;
-  readonly widgets: readonly HomepageWidgetConfig[];
-  readonly showTrendingSection: boolean;
-  readonly showFeaturedRankings: boolean;
+  hero: {
+    title: string;
+    subtitle: string;
+    ctaText: string;
+    ctaHref: string;
+    secondaryCtaText: string;
+    secondaryCtaHref: string;
+  };
+  features: Array<{
+    id: string;
+    title: string;
+    description: string;
+    icon: string;
+  }>;
+  cta: {
+    title: string;
+    subtitle: string;
+  };
 }
+
+
 
 /**
  * Ranking category definition.

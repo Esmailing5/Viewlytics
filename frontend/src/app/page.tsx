@@ -1,43 +1,35 @@
 /**
- * Viewlytics — Homepage (Phase 1.5)
+ * Viewlytics — Public Homepage (Phase 1.5)
  *
- * Dashboard-first homepage. The landing page has been replaced with
- * a live analytics dashboard preview that immediately communicates:
- * analytics, creator intelligence, real-time metrics, platform monitoring.
- *
- * Layout: DashboardLayout (Sidebar + Topbar + Footer) → DashboardGrid
- *
- * @see components/layout/DashboardLayout.tsx — Layout wrapper
- * @see components/dashboard/DashboardGrid.tsx — Dashboard content
+ * Modern SaaS marketing landing page.
+ * Acts as the entry point to the Creator Analytics platform.
  */
 
 import type { Metadata } from 'next';
 import { brandConfig } from '@/config/branding';
-import { DashboardLayout } from '@/components/layout/DashboardLayout';
-import { DashboardGrid } from '@/components/dashboard/DashboardGrid';
+import { PublicLayout } from '@/components/layout/PublicLayout';
 
-/** SEO metadata for the homepage */
+import { HeroSection } from '@/components/homepage/HeroSection';
+import { TrendingPreview } from '@/components/homepage/TrendingPreview';
+import { RankingsPreview } from '@/components/homepage/RankingsPreview';
+import { PlatformSupport } from '@/components/homepage/PlatformSupport';
+import { FeatureGrid } from '@/components/homepage/FeatureGrid';
+import { CtaSection } from '@/components/homepage/CtaSection';
+
 export const metadata: Metadata = {
   title: `${brandConfig.name} — ${brandConfig.tagline}`,
-  description:
-    'Premium creator analytics intelligence platform. Track growth, explore real-time metrics, and monitor streaming platforms. Viewlytics is the analytics dashboard for Dominican creators.',
-  openGraph: {
-    title: `${brandConfig.name} — ${brandConfig.tagline}`,
-    description:
-      'Premium analytics intelligence for Dominican podcasters, streamers, and digital media creators.',
-    url: 'https://viewlytics.rd',
-    type: 'website',
-  },
+  description: 'Descubre analíticas, crecimiento y tendencias de creadores en YouTube, Twitch y Kick.',
 };
 
-/**
- * HomePage — Dashboard-first entry point for the Viewlytics platform.
- * Next.js App Router server component.
- */
 export default function HomePage() {
   return (
-    <DashboardLayout>
-      <DashboardGrid />
-    </DashboardLayout>
+    <PublicLayout>
+      <HeroSection />
+      <TrendingPreview />
+      <RankingsPreview />
+      <PlatformSupport />
+      <FeatureGrid />
+      <CtaSection />
+    </PublicLayout>
   );
 }

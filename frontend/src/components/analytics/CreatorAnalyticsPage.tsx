@@ -62,15 +62,11 @@ function StatCard({ metric }: { metric: StatMetric }) {
 }
 
 /**
- * DashboardGrid — Main dashboard layout with stat cards and 6 chart cards.
+ * CreatorAnalyticsPage — The main data grid for a creator's analytics.
  *
- * Layout:
- * - Row 1: 4 stat metric cards
- * - Row 2: Viewers (2 cols) + Playtime (1 col)
- * - Row 3: Engagement (1 col) + Platforms (1 col) + Live Now (1 col, spans 2 rows)
- * - Row 4: Realtime (2 cols) + Live Now continues
+ * Uses CSS Grid to create a responsive, masonry-like layout.
  */
-export function DashboardGrid() {
+export function CreatorAnalyticsPage() {
   return (
     <div className="space-y-6">
       {/* Stat metrics row */}

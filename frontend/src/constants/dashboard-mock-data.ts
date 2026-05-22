@@ -209,3 +209,46 @@ export const STAT_METRICS: StatMetric[] = [
     icon: 'TrendingUp',
   },
 ];
+
+// ---------------------------------------------------------------------------
+// TRENDING & RANKINGS (Phase 1.5)
+// ---------------------------------------------------------------------------
+
+export interface TrendingCreator {
+  readonly id: string;
+  readonly name: string;
+  readonly slug: string;
+  readonly platform: 'youtube' | 'twitch' | 'kick';
+  readonly avatarInitials: string;
+  readonly growth: string;
+  readonly viewers: string;
+}
+
+export const TRENDING_CREATORS: TrendingCreator[] = [
+  { id: 't1', name: 'Alofoke Radio Show', slug: 'alofoke-radio-show', platform: 'youtube', avatarInitials: 'AR', growth: '+24%', viewers: '85.4K' },
+  { id: 't2', name: 'El Dotol Nastra', slug: 'el-dotol-nastra', platform: 'youtube', avatarInitials: 'DN', growth: '+18%', viewers: '42.1K' },
+  { id: 't3', name: 'Capricornio TV', slug: 'capricornio-tv', platform: 'youtube', avatarInitials: 'CT', growth: '+15%', viewers: '38.9K' },
+  { id: 't4', name: 'Mata Lluvia', slug: 'mata-lluvia', platform: 'twitch', avatarInitials: 'ML', growth: '+32%', viewers: '12.5K' },
+  { id: 't5', name: 'Jessica en Punto', slug: 'jessica-en-punto', platform: 'youtube', avatarInitials: 'JP', growth: '+11%', viewers: '28.3K' },
+  { id: 't6', name: 'Sin Filtro', slug: 'sin-filtro', platform: 'youtube', avatarInitials: 'SF', growth: '+9%', viewers: '22.1K' },
+];
+
+export interface RankingEntry {
+  readonly rank: number;
+  readonly creatorName: string;
+  readonly slug: string;
+  readonly platform: 'youtube' | 'twitch' | 'kick';
+  readonly avatarInitials: string;
+  readonly category: string;
+  readonly followers: string;
+  readonly views: string;
+  readonly growth: string;
+}
+
+export const FEATURED_RANKINGS: RankingEntry[] = [
+  { rank: 1, creatorName: 'Alofoke Radio Show', slug: 'alofoke-radio-show', platform: 'youtube', avatarInitials: 'AR', category: 'Podcast', followers: '5.2M', views: '2.1B', growth: '+12%' },
+  { rank: 2, creatorName: 'Carlos Durán', slug: 'carlos-duran', platform: 'youtube', avatarInitials: 'CD', category: 'Entertainment', followers: '4.8M', views: '1.5B', growth: '+8%' },
+  { rank: 3, creatorName: 'Capricornio TV', slug: 'capricornio-tv', platform: 'youtube', avatarInitials: 'CT', category: 'Interviews', followers: '3.1M', views: '800M', growth: '+15%' },
+  { rank: 4, creatorName: 'El Dotol Nastra', slug: 'el-dotol-nastra', platform: 'youtube', avatarInitials: 'DN', category: 'Podcast', followers: '2.4M', views: '650M', growth: '+10%' },
+  { rank: 5, creatorName: 'Mata Lluvia', slug: 'mata-lluvia', platform: 'twitch', avatarInitials: 'ML', category: 'Gaming', followers: '850K', views: '12M', growth: '+25%' },
+];

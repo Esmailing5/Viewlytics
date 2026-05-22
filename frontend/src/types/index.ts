@@ -39,8 +39,6 @@ export type {
 } from './analytics.types';
 
 export type {
-  HeroConfig,
-  HomepageWidgetConfig,
   HomepageConfig,
   RankingCategory,
   RankingsConfig,

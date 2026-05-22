@@ -1,6 +1,7 @@
 'use client';
 
-import { Search, Bell, Menu, Calendar } from 'lucide-react';
+import { useState } from 'react';
+import { Search, Bell, Menu, Calendar, X } from 'lucide-react';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
 
 interface TopbarProps {
@@ -16,11 +17,13 @@ interface TopbarProps {
  * Height: 72px.
  */
 export function Topbar({ onMobileMenuToggle }: TopbarProps) {
+  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
+
   return (
     <header
       id="topbar"
       className="
-        sticky top-0 z-30
+        relative sticky top-0 z-30
         flex items-center justify-between
         h-[72px] px-6
         bg-[var(--bg-main)]/80 backdrop-blur-xl
@@ -28,6 +31,34 @@ export function Topbar({ onMobileMenuToggle }: TopbarProps) {
       "
       role="banner"
     >
+      {/* Mobile Search Overlay */}
+      {isMobileSearchOpen && (
+        <div className="absolute inset-0 z-40 flex items-center px-4 bg-[var(--bg-main)] border-b border-[var(--border-color)] animate-in fade-in zoom-in-95 duration-200">
+          <div className="relative flex-1 flex items-center">
+            <Search className="absolute left-3 w-5 h-5 text-[var(--text-secondary)]" />
+            <input
+              type="text"
+              autoFocus
+              placeholder="Busqueda de canal favorito"
+              aria-label="Search"
+              className="
+                w-full h-10 pl-10 pr-4 rounded-xl
+                bg-[var(--bg-surface)] border border-[var(--border-color)]
+                text-base text-[var(--text-primary)] placeholder:text-[var(--text-secondary)]
+                focus:outline-none focus:ring-1 focus:ring-[var(--accent-cyan)] focus:border-[var(--accent-cyan)]
+              "
+            />
+          </div>
+          <button
+            onClick={() => setIsMobileSearchOpen(false)}
+            aria-label="Close search"
+            className="ml-3 p-2 rounded-xl text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface)] transition-colors"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+      )}
+
       {/* Left section */}
       <div className="flex items-center gap-4">
         {/* Mobile hamburger */}
@@ -77,12 +108,32 @@ export function Topbar({ onMobileMenuToggle }: TopbarProps) {
           <span>Last 30 days</span>
         </button>
 
-        {/* Search */}
+        {/* Search (Desktop) */}
+        <div className="relative hidden md:flex items-center">
+          <Search className="absolute left-3 w-4 h-4 text-[var(--text-secondary)]" />
+          <input
+            type="text"
+            id="topbar-search"
+            placeholder="Busqueda de canal favorito"
+            aria-label="Search"
+            className="
+              w-64 xl:w-80 h-9 pl-9 pr-4 rounded-xl
+              bg-transparent border border-[var(--border-color)]
+              text-sm text-[var(--text-primary)] placeholder:text-[var(--text-secondary)]
+              focus:outline-none focus:ring-1 focus:ring-[var(--accent-cyan)] focus:border-[var(--accent-cyan)]
+              hover:bg-[var(--bg-surface)]
+              transition-all duration-200
+            "
+          />
+        </div>
+
+        {/* Search (Mobile) */}
         <button
-          id="topbar-search"
-          aria-label="Search"
+          id="topbar-search-mobile"
+          aria-label="Open search mobile"
+          onClick={() => setIsMobileSearchOpen(true)}
           className="
-            flex items-center justify-center
+            md:hidden flex items-center justify-center
             w-9 h-9 rounded-xl
             text-[var(--text-secondary)] hover:text-[var(--text-primary)]
             hover:bg-[var(--bg-surface)]
