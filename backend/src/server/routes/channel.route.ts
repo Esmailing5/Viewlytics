@@ -29,7 +29,7 @@ export async function channelRoutes(fastify: FastifyInstance) {
       };
     } catch (error) {
       if (error instanceof z.ZodError) {
-        return reply.status(400).send({ error: 'Validation Error', details: (error as z.ZodError).errors });
+        return reply.status(400).send({ error: 'Validation Error', details: (error as any).errors });
       }
       throw error;
     }
