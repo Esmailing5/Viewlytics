@@ -24,7 +24,8 @@ async function buildApp() {
   // Error Handler
   fastify.setErrorHandler((error, request, reply) => {
     fastify.log.error(error);
-    reply.status(500).send({ error: 'Internal Server Error', message: error.message });
+    const err = error as Error;
+    reply.status(500).send({ error: 'Internal Server Error', message: err.message || 'Unknown Error' });
   });
 
   return fastify;
