@@ -1,0 +1,99 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Creator {
+  id           String   @id @default(uuid())
+  platform     String   // e.g., "youtube", "twitch"
+  channel_id   String   @unique
+  slug         String   @unique
+  username     String?
+  display_name String
+  avatar_url   String?
+  banner_url   String?
+  description  String?
+  category     String?
+  country      String?
+  verified     Boolean  @default(false)
+  
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  metrics      CreatorMetrics?
+  snapshots    CreatorSnapshot[]
+  videos       CreatorVideo[]
+  rankings     Ranking[]
+
+  @@map("creators")
+}
+
+model CreatorMetrics {
+  id                      String   @id @default(uuid())
+  creator_id              String   @unique
+  subscribers             BigInt   @default(0)
+  total_views             BigInt   @default(0)
+  total_videos            Int      @default(0)
+  engagement_rate         Float?   @default(0)
+  average_views           Float?   @default(0)
+  growth_percentage       Float?   @default(0)
+  estimated_monthly_views BigInt?  @default(0)
+  
+  updated_at              DateTime @updatedAt
+
+  creator                 Creator  @relation(fields: [creator_id], references: [id], onDelete: Cascade)
+
+  @@map("creator_metrics")
+}
+
+model CreatorSnapshot {
+  id           String   @id @default(uuid())
+  creator_id   String
+  subscribers  BigInt   @default(0)
+  total_views  BigInt   @default(0)
+  total_videos Int      @default(0)
+  captured_at  DateTime @default(now())
+
+  creator      Creator  @relation(fields: [creator_id], references: [id], onDelete: Cascade)
+
+  @@map("creator_snapshots")
+  @@index([creator_id, captured_at])
+}
+
+model CreatorVideo {
+  id            String   @id @default(uuid())
+  creator_id    String
+  video_id      String   @unique
+  title         String
+  thumbnail_url String?
+  published_at  DateTime
+  views         BigInt   @default(0)
+  likes         BigInt   @default(0)
+  comments      BigInt   @default(0)
+
+  creator       Creator  @relation(fields: [creator_id], references: [id], onDelete: Cascade)
+
+  @@map("creator_videos")
+  @@index([creator_id, published_at])
+}
+
+model Ranking {
+  id               String   @id @default(uuid())
+  creator_id       String
+  category         String
+  ranking_position Int
+  timeframe        String   // e.g., "daily", "weekly", "all-time"
+  score            Float    @default(0)
+  created_at       DateTime @default(now())
+
+  creator          Creator  @relation(fields: [creator_id], references: [id], onDelete: Cascade)
+
+  @@map("rankings")
+  @@index([category, timeframe, ranking_position])
+}

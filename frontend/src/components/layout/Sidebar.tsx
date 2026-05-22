@@ -12,6 +12,7 @@ import {
   ChevronLeft,
   ChevronRight,
   X,
+  Home,
 } from 'lucide-react';
 import { navigationConfig } from '@/config/navigation';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
@@ -20,6 +21,7 @@ import type { SidebarItem } from '@/types';
 
 /** Map sidebar icon names to Lucide components */
 const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
+  Home,
   LayoutDashboard,
   BarChart3,
   Users,
@@ -72,19 +74,36 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
   const mainItems = enabledItems.filter((item) => item.section === 'main');
   const bottomItems = enabledItems.filter((item) => item.section === 'bottom');
 
-  const isActive = (item: SidebarItem) => {
-    if (item.href === '/') return pathname === '/';
-    return pathname.startsWith(item.href);
+  const channelMatch = pathname.match(/^(\/channel\/[^/]+\/[^/]+)/);
+  const channelBasePath = channelMatch ? channelMatch[1] : null;
+
+  const getDynamicHref = (item: SidebarItem) => {
+    if (channelBasePath) {
+      if (item.id === 'dashboard') return channelBasePath;
+      if (['analytics', 'audience', 'reports'].includes(item.id)) {
+        return `${channelBasePath}/${item.id}`;
+      }
+    }
+    return item.href;
+  };
+
+  const isActive = (item: SidebarItem, dynamicHref: string) => {
+    if (dynamicHref === '/') return pathname === '/';
+    if (item.id === 'dashboard' && channelBasePath) {
+      return pathname === channelBasePath;
+    }
+    return pathname.startsWith(dynamicHref);
   };
 
   const renderNavItem = (item: SidebarItem) => {
     const Icon = ICON_MAP[item.icon];
-    const active = isActive(item);
+    const dynamicHref = getDynamicHref(item);
+    const active = isActive(item, dynamicHref);
 
     return (
       <li key={item.id}>
         <Link
-          href={item.href}
+          href={dynamicHref}
           id={`sidebar-${item.id}`}
           onClick={onMobileClose}
           className={`

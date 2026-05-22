@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Search, Activity, Trophy } from 'lucide-react';
 import { homepageConfig } from '@/config/homepage';
+import { SearchInput } from '@/components/shared/SearchInput';
 
 export function HeroSection() {
   return (
@@ -28,27 +29,22 @@ export function HeroSection() {
         </p>
 
         {/* Big Search Bar */}
-        <div className="max-w-3xl mx-auto relative group mb-12">
-          <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-[var(--accent-cyan)] to-[var(--accent-blue)] opacity-25 blur-xl group-hover:opacity-40 transition-opacity duration-500"></div>
-          <div className="relative flex items-center bg-[var(--bg-surface)] border border-[var(--border-color)] rounded-2xl shadow-xl overflow-hidden">
-            <Search className="w-6 h-6 text-[var(--text-secondary)] ml-6" />
-            <input 
-              type="text" 
-              placeholder="Busca un creador, podcast o canal..." 
-              className="flex-1 h-16 px-6 bg-transparent text-lg text-[var(--text-primary)] placeholder:text-[var(--text-secondary)] focus:outline-none"
-            />
-            <button className="h-16 px-8 bg-gradient-to-r from-[var(--accent-cyan)] to-[var(--accent-blue)] text-white font-semibold text-lg hover:opacity-90 transition-opacity flex items-center gap-2">
-              Analizar
-            </button>
+        <div className="max-w-3xl mx-auto mb-12">
+          <div className="relative group">
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-[var(--accent-cyan)] to-[var(--accent-blue)] opacity-25 blur-xl group-hover:opacity-40 transition-opacity duration-500"></div>
+            <SearchInput />
+          </div>
+          <div className="mt-4 flex items-center justify-center text-sm font-medium text-[var(--text-secondary)]">
+            <span className="opacity-80">¿Buscas usar filtros avanzados?</span>
+            <Link href={homepageConfig.hero.ctaHref} className="ml-2 flex items-center gap-1 text-[var(--text-primary)] hover:text-[var(--accent-cyan)] transition-colors">
+              <Search className="w-3.5 h-3.5" />
+              Explorar directorio
+            </Link>
           </div>
         </div>
 
         {/* Quick Actions */}
         <div className="flex flex-wrap items-center justify-center gap-4">
-          <Link href={homepageConfig.hero.ctaHref} className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-color)] text-[var(--text-primary)] font-medium hover:bg-[var(--bg-surface)] hover:border-[var(--accent-cyan)] transition-all">
-            <Search className="w-4 h-4 text-[var(--accent-cyan)]" />
-            {homepageConfig.hero.ctaText}
-          </Link>
           <Link href={homepageConfig.hero.secondaryCtaHref} className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-color)] text-[var(--text-primary)] font-medium hover:bg-[var(--bg-surface)] hover:border-[var(--accent-blue)] transition-all">
             <Trophy className="w-4 h-4 text-[var(--accent-blue)]" />
             {homepageConfig.hero.secondaryCtaText}

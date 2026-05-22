@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import { Search } from 'lucide-react';
 import { homepageConfig } from '@/config/homepage';
+import { SearchInput } from '@/components/shared/SearchInput';
 
 export function CtaSection() {
   return (
@@ -18,21 +18,9 @@ export function CtaSection() {
           {homepageConfig.cta.subtitle}
         </p>
 
-        <div className="max-w-xl mx-auto flex flex-col sm:flex-row gap-4">
-          <div className="relative flex-1">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--text-secondary)]" />
-            <input 
-              type="text" 
-              placeholder="Ej. Alofoke Radio Show..." 
-              className="w-full h-14 pl-12 pr-4 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-xl text-[var(--text-primary)] placeholder:text-[var(--text-secondary)] focus:outline-none focus:border-[var(--accent-cyan)] transition-colors shadow-inner"
-            />
-          </div>
-          <Link 
-            href="/search"
-            className="flex items-center justify-center h-14 px-8 rounded-xl bg-gradient-to-r from-[var(--accent-cyan)] to-[var(--accent-blue)] text-white font-semibold hover:opacity-90 transition-opacity shadow-lg shadow-[var(--accent-blue)]/20 whitespace-nowrap"
-          >
-            Buscar Ahora
-          </Link>
+        <div className="max-w-2xl mx-auto relative group">
+          <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-[var(--accent-cyan)] to-[var(--accent-blue)] opacity-25 blur-xl group-hover:opacity-40 transition-opacity duration-500"></div>
+          <SearchInput />
         </div>
       </div>
     </section>

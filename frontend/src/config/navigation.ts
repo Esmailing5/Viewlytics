@@ -16,9 +16,17 @@ export const navigationConfig: NavigationConfig = {
    */
   sidebar: [
     {
+      id: 'home',
+      label: 'Home',
+      href: '/',
+      icon: 'Home',
+      enabled: true,
+      section: 'main',
+    },
+    {
       id: 'dashboard',
       label: 'Dashboard',
-      href: '/',
+      href: '/dashboard', // Dynamically overridden in Sidebar when on a channel page
       icon: 'LayoutDashboard',
       enabled: true,
       section: 'main',
