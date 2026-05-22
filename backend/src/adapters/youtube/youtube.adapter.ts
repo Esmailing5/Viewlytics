@@ -1,4 +1,4 @@
-import { YouTubeSearchResponse, YouTubeChannelResponse, NormalizedCreator } from './youtube.types';
+import { YouTubeSearchResponse, YouTubeChannelResponse, NormalizedCreator, CreatorAnalyticsData, YouTubePlaylistItemsResponse, YouTubeVideosResponse, NormalizedVideo } from './youtube.types';
 import { YouTubeMapper } from './youtube.mapper';
 
 export class YouTubeAdapter {
@@ -75,6 +75,89 @@ export class YouTubeAdapter {
 
     } catch (error) {
       console.error('[YouTube Adapter] Error during search:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Fetch detailed analytics for a specific creator including recent videos.
+   */
+  async getCreatorAnalytics(channelId: string): Promise<CreatorAnalyticsData> {
+    if (!this.apiKey) {
+      throw new Error('YOUTUBE_API_KEY is not configured in the environment.');
+    }
+
+    try {
+      // 1. Fetch channel details
+      const channelsUrl = new URL(`${this.BASE_URL}/channels`);
+      channelsUrl.searchParams.append('id', channelId);
+      channelsUrl.searchParams.append('part', 'snippet,statistics,contentDetails');
+      channelsUrl.searchParams.append('key', this.apiKey);
+
+      const channelRes = await fetch(channelsUrl.toString());
+      if (!channelRes.ok) throw new Error('Failed to fetch channel details');
+      const channelData: any = await channelRes.json();
+      
+      if (!channelData.items || channelData.items.length === 0) {
+        throw new Error('Channel not found');
+      }
+
+      const channel = channelData.items[0];
+      const profile = YouTubeMapper.toNormalizedCreator(channel);
+      
+      const metrics = {
+        total_views: parseInt(channel.statistics?.viewCount || '0', 10),
+        total_videos: parseInt(channel.statistics?.videoCount || '0', 10),
+      };
+
+      // 2. Fetch recent videos (from the uploads playlist)
+      const uploadsPlaylistId = channel.contentDetails?.relatedPlaylists?.uploads;
+      let recent_videos: NormalizedVideo[] = [];
+
+      if (uploadsPlaylistId) {
+        const playlistUrl = new URL(`${this.BASE_URL}/playlistItems`);
+        playlistUrl.searchParams.append('playlistId', uploadsPlaylistId);
+        playlistUrl.searchParams.append('part', 'snippet');
+        playlistUrl.searchParams.append('maxResults', '6'); // Get 6 recent videos
+        playlistUrl.searchParams.append('key', this.apiKey);
+
+        const playlistRes = await fetch(playlistUrl.toString());
+        if (playlistRes.ok) {
+          const playlistData: YouTubePlaylistItemsResponse = await playlistRes.json();
+          const videoIds = playlistData.items?.map(item => item.snippet.resourceId.videoId).join(',') || '';
+
+          if (videoIds) {
+            // 3. Fetch video statistics
+            const videosUrl = new URL(`${this.BASE_URL}/videos`);
+            videosUrl.searchParams.append('id', videoIds);
+            videosUrl.searchParams.append('part', 'snippet,statistics');
+            videosUrl.searchParams.append('key', this.apiKey);
+
+            const videosRes = await fetch(videosUrl.toString());
+            if (videosRes.ok) {
+              const videosData: YouTubeVideosResponse = await videosRes.json();
+              recent_videos = (videosData.items || []).map(video => ({
+                id: video.id,
+                title: video.snippet.title,
+                published_at: video.snippet.publishedAt,
+                thumbnail_url: video.snippet.thumbnails?.high?.url || video.snippet.thumbnails?.medium?.url || '',
+                views: parseInt(video.statistics?.viewCount || '0', 10),
+                likes: parseInt(video.statistics?.likeCount || '0', 10),
+                comments: parseInt(video.statistics?.commentCount || '0', 10),
+              }));
+            }
+          }
+        }
+      }
+
+      return {
+        profile,
+        metrics,
+        recent_videos
+      };
+
+    } catch (error) {
+      console.error('[YouTube Adapter] Error fetching creator analytics:', error);
       throw error;
     }
   }

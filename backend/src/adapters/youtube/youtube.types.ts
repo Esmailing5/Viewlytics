@@ -67,3 +67,65 @@ export interface NormalizedCreator {
   verified: boolean;
   avatar_url?: string;
 }
+
+export interface YouTubePlaylistItem {
+  snippet: {
+    resourceId: {
+      videoId: string;
+    };
+  };
+}
+
+export interface YouTubePlaylistItemsResponse {
+  items?: YouTubePlaylistItem[];
+  error?: {
+    code: number;
+    message: string;
+  };
+}
+
+export interface YouTubeVideoItem {
+  id: string;
+  snippet: {
+    publishedAt: string;
+    title: string;
+    description: string;
+    thumbnails: {
+      default: { url: string };
+      medium: { url: string };
+      high: { url: string };
+    };
+  };
+  statistics: {
+    viewCount: string;
+    likeCount: string;
+    commentCount: string;
+  };
+}
+
+export interface YouTubeVideosResponse {
+  items?: YouTubeVideoItem[];
+  error?: {
+    code: number;
+    message: string;
+  };
+}
+
+export interface NormalizedVideo {
+  id: string;
+  title: string;
+  published_at: string;
+  thumbnail_url: string;
+  views: number;
+  likes: number;
+  comments: number;
+}
+
+export interface CreatorAnalyticsData {
+  profile: NormalizedCreator;
+  metrics: {
+    total_views: number;
+    total_videos: number;
+  };
+  recent_videos: NormalizedVideo[];
+}

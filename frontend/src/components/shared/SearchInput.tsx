@@ -75,7 +75,7 @@ export function SearchInput() {
   const handleSelect = (result: SearchResult) => {
     setShowDropdown(false);
     setQuery('');
-    router.push(`/channel/${result.platform}/${result.slug}`);
+    router.push(`/channel/${result.platform}/${result.channel_id}`);
   };
 
   const handleAnalyze = (e: React.FormEvent) => {
