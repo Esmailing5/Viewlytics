@@ -36,19 +36,9 @@ export function Topbar({ onMobileMenuToggle }: TopbarProps) {
       {isMobileSearchOpen && (
         <div className="absolute inset-0 z-40 flex items-center px-4 bg-[var(--bg-main)] border-b border-[var(--border-color)] animate-in fade-in zoom-in-95 duration-200">
           <div className="relative flex-1 flex items-center">
-            <Search className="absolute left-3 w-5 h-5 text-[var(--text-secondary)]" />
-            <input
-              type="text"
-              autoFocus
-              placeholder="Busqueda de canal favorito"
-              aria-label="Search"
-              className="
-                w-full h-10 pl-10 pr-4 rounded-xl
-                bg-[var(--bg-surface)] border border-[var(--border-color)]
-                text-base text-[var(--text-primary)] placeholder:text-[var(--text-secondary)]
-                focus:outline-none focus:ring-1 focus:ring-[var(--accent-cyan)] focus:border-[var(--accent-cyan)]
-              "
-            />
+            <div className="w-full" onClick={() => setIsMobileSearchOpen(false)}>
+              <SearchInput variant="minimal" />
+            </div>
           </div>
           <button
             onClick={() => setIsMobileSearchOpen(false)}
