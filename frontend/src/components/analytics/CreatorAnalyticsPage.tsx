@@ -164,7 +164,7 @@ export function CreatorAnalyticsPage({ platform, channelId }: { platform: string
         </div>
 
         {/* Row 2: Estimated Income Chart (span 3) */}
-        <div className="lg:col-span-3 h-[500px]">
+        <div className="lg:col-span-3 min-h-[500px] flex flex-col">
           <Suspense fallback={<ChartSkeleton />}>
             <EstimatedIncomeChart growth={data.growth} recentVideos={data.recentVideos} />
           </Suspense>

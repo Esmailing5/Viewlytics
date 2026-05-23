@@ -80,7 +80,7 @@ export function EstimatedIncomeChart({ growth, recentVideos = [] }: ChartProps) 
     <div className="dashboard-card p-6 h-full flex flex-col">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
         <div>
-          <h3 className="text-xl font-bold text-[var(--text-primary)]">Ingresos Estimados (SocialBlade Style)</h3>
+          <h3 className="text-xl font-bold text-[var(--text-primary)]">Ingresos Estimados</h3>
           <p className="text-sm text-[var(--text-secondary)] mt-1">
             Basado en CPM de $0.25 - $4.00 y tráfico de 30 días
           </p>
@@ -93,13 +93,13 @@ export function EstimatedIncomeChart({ growth, recentVideos = [] }: ChartProps) 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
         <div className="p-5 rounded-2xl bg-[var(--bg-main)] border border-[var(--border-color)]">
           <p className="text-sm font-medium text-[var(--text-secondary)] mb-1">Ingreso Estimado Mensual</p>
-          <p className="text-2xl lg:text-3xl font-bold text-[var(--text-primary)]">
+          <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-[var(--text-primary)] break-words">
             {formatMoney(monthlyLow)} <span className="text-[var(--text-secondary)] font-normal text-lg mx-1">-</span> {formatMoney(monthlyHigh)}
           </p>
         </div>
         <div className="p-5 rounded-2xl bg-[var(--bg-main)] border border-[var(--border-color)]">
           <p className="text-sm font-medium text-[var(--text-secondary)] mb-1">Ingreso Estimado Anual</p>
-          <p className="text-2xl lg:text-3xl font-bold text-[var(--text-primary)]">
+          <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-[var(--text-primary)] break-words">
             {formatMoney(yearlyLow)} <span className="text-[var(--text-secondary)] font-normal text-lg mx-1">-</span> {formatMoney(yearlyHigh)}
           </p>
         </div>
