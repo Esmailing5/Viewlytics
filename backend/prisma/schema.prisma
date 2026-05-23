@@ -9,91 +9,99 @@ datasource db {
   provider = "postgresql"
 }
 
-model Creator {
-  id           String   @id @default(uuid())
-  platform     String   // e.g., "youtube", "twitch"
-  channel_id   String   @unique
-  slug         String   @unique
-  username     String?
-  display_name String
-  avatar_url   String?
-  banner_url   String?
-  description  String?
-  category     String?
-  country      String?
-  verified     Boolean  @default(false)
-  
-  created_at   DateTime @default(now())
-  updated_at   DateTime @updatedAt
+/// Enum for tracking status to support scalable background jobs and filtering.
+enum TrackingStatus {
+  searched
+  tracked
+  archived
+}
 
-  metrics      CreatorMetrics?
-  snapshots    CreatorSnapshot[]
-  videos       CreatorVideo[]
-  rankings     Ranking[]
+/// Region enum for geographical segmentation.
+enum Region {
+  dominican_republic
+  latin_america
+  usa
+  unknown
+}
+
+/// Main model representing a Content Creator across multiple platforms (YouTube, Twitch, Kick, TikTok).
+model Creator {
+  id             String          @id @default(uuid())
+  platform       String          // e.g., "youtube", "twitch", "kick", "tiktok"
+  channelId      String          @unique @map("channel_id")
+  slug           String          @unique
+  username       String?         // Maintained for backwards compatibility
+  displayName    String          @map("display_name")
+  description    String?
+  avatarUrl      String?         @map("avatar_url")
+  bannerUrl      String?         @map("banner_url")
+  verified       Boolean         @default(false)
+  country        String?
+  region         Region          @default(unknown)
+  category       String?
+  trackingStatus TrackingStatus  @default(searched) @map("tracking_status")
+  isFeatured     Boolean         @default(false) @map("is_featured")
+  
+  createdAt      DateTime        @default(now()) @map("created_at")
+  updatedAt      DateTime        @updatedAt @map("updated_at")
+
+  snapshots      CreatorSnapshot[]
+  videos         Video[]
+  dailyRankings  DailyRanking[]
 
   @@map("creators")
+  @@index([slug])
+  @@index([platform])
+  @@index([trackingStatus])
+  @@index([region])
 }
 
-model CreatorMetrics {
-  id                      String   @id @default(uuid())
-  creator_id              String   @unique
-  subscribers             BigInt   @default(0)
-  total_views             BigInt   @default(0)
-  total_videos            Int      @default(0)
-  engagement_rate         Float?   @default(0)
-  average_views           Float?   @default(0)
-  growth_percentage       Float?   @default(0)
-  estimated_monthly_views BigInt?  @default(0)
-  
-  updated_at              DateTime @updatedAt
-
-  creator                 Creator  @relation(fields: [creator_id], references: [id], onDelete: Cascade)
-
-  @@map("creator_metrics")
-}
-
+/// Stores historical data captures for a creator, enabling daily tracking and analytics.
 model CreatorSnapshot {
-  id           String   @id @default(uuid())
-  creator_id   String
-  subscribers  BigInt   @default(0)
-  total_views  BigInt   @default(0)
-  total_videos Int      @default(0)
-  captured_at  DateTime @default(now())
+  id             String   @id @default(uuid())
+  creatorId      String   @map("creator_id")
+  
+  subscribers    BigInt   @default(0)
+  totalViews     BigInt   @default(0) @map("total_views")
+  totalVideos    Int      @default(0) @map("total_videos")
+  avgViews       Float?   @default(0) @map("avg_views")
+  engagementRate Float?   @default(0) @map("engagement_rate")
+  
+  snapshotDate   DateTime @default(now()) @map("snapshot_date")
 
-  creator      Creator  @relation(fields: [creator_id], references: [id], onDelete: Cascade)
+  creator        Creator  @relation(fields: [creatorId], references: [id], onDelete: Cascade)
 
   @@map("creator_snapshots")
-  @@index([creator_id, captured_at])
+  @@index([creatorId, snapshotDate])
+  @@index([snapshotDate])
 }
 
-model CreatorVideo {
+/// Stores information about individual videos or streams from a creator.
+model Video {
   id            String   @id @default(uuid())
-  creator_id    String
-  video_id      String   @unique
+  videoId       String   @unique @map("video_id")
   title         String
-  thumbnail_url String?
-  published_at  DateTime
+  thumbnail     String?  @map("thumbnail_url")
   views         BigInt   @default(0)
-  likes         BigInt   @default(0)
-  comments      BigInt   @default(0)
-
-  creator       Creator  @relation(fields: [creator_id], references: [id], onDelete: Cascade)
+  publishedAt   DateTime @map("published_at")
+  
+  creatorId     String   @map("creator_id")
+  creator       Creator  @relation(fields: [creatorId], references: [id], onDelete: Cascade)
 
   @@map("creator_videos")
-  @@index([creator_id, published_at])
+  @@index([creatorId, publishedAt])
 }
 
-model Ranking {
-  id               String   @id @default(uuid())
-  creator_id       String
-  category         String
-  ranking_position Int
-  timeframe        String   // e.g., "daily", "weekly", "all-time"
-  score            Float    @default(0)
-  created_at       DateTime @default(now())
+/// Stores historical ranking positions for a creator on a specific date.
+model DailyRanking {
+  id              String   @id @default(uuid())
+  creatorId       String   @map("creator_id")
+  rankingType     String   @map("ranking_type")
+  rankingPosition Int      @map("ranking_position")
+  rankingDate     DateTime @default(now()) @map("ranking_date")
 
-  creator          Creator  @relation(fields: [creator_id], references: [id], onDelete: Cascade)
+  creator         Creator  @relation(fields: [creatorId], references: [id], onDelete: Cascade)
 
-  @@map("rankings")
-  @@index([category, timeframe, ranking_position])
+  @@map("daily_rankings")
+  @@index([rankingType, rankingDate])
 }

@@ -2,6 +2,7 @@ import Fastify, { FastifyInstance } from 'fastify';
 import cors from '@fastify/cors';
 import { searchRoutes } from './routes/search.route';
 import { channelRoutes } from './routes/channel.route';
+import { adminRoutes } from './routes/admin.route';
 
 const fastify: FastifyInstance = Fastify({
   logger: true,
@@ -20,6 +21,7 @@ async function buildApp() {
 
   fastify.register(searchRoutes, { prefix: '/api/search' });
   fastify.register(channelRoutes, { prefix: '/api/channel' });
+  fastify.register(adminRoutes, { prefix: '/api/admin' });
 
   // Error Handler
   fastify.setErrorHandler((error, request, reply) => {
