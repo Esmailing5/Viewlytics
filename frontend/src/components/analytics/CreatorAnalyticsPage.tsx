@@ -119,29 +119,49 @@ export function CreatorAnalyticsPage({ platform, channelId }: { platform: string
     <div className="space-y-6">
       
       {/* Visual Header */}
-      <div className="relative w-full h-56 sm:h-72 rounded-2xl overflow-hidden bg-[var(--bg-surface)] border border-[var(--border-color)]">
-        {data.profile?.banner_url ? (
-          <img src={data.profile.banner_url} alt="Banner" className="absolute inset-0 w-full h-full object-cover opacity-70" />
-        ) : (
-          <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-[var(--bg-main)] to-[var(--bg-surface)]" />
-        )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
-        
-        <div className="absolute bottom-0 left-0 w-full p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-end gap-4 sm:gap-6">
-          {data.profile?.avatar_url && (
-            <img src={data.profile.avatar_url} alt={data.profile.display_name} className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 border-[var(--bg-surface)] object-cover shadow-xl shrink-0" />
+      <div className="relative mb-8 sm:mb-0">
+        {/* Banner Image */}
+        <div className="relative w-full h-32 sm:h-72 rounded-t-2xl sm:rounded-2xl overflow-hidden bg-[var(--bg-surface)] border border-[var(--border-color)]">
+          {data.profile?.banner_url ? (
+            <img src={data.profile.banner_url} alt="Banner" className="absolute inset-0 w-full h-full object-cover sm:opacity-70" />
+          ) : (
+            <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-[var(--bg-main)] to-[var(--bg-surface)]" />
           )}
-          <div className="mb-0 sm:mb-2 flex-1 min-w-0">
-            <h1 className="text-xl sm:text-3xl font-bold text-white drop-shadow-md flex items-center gap-2 flex-wrap">
-              <span className="truncate">{data.profile?.display_name || 'Analytics'}</span>
-              {data.profile?.verified && (
-                <span className="text-[var(--accent-blue)] bg-white rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center text-xs sm:text-sm shrink-0" title="Verified">✓</span>
-              )}
-            </h1>
-            <p className="text-gray-200 text-xs sm:text-sm mt-1">
-              {data.platform.toUpperCase()} • {new Intl.NumberFormat('es-ES', { notation: "compact" }).format(data.profile?.subscribers || 0)} Subs
-            </p>
+          <div className="hidden sm:block absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+          
+          {/* Desktop Overlay Content */}
+          <div className="hidden sm:flex absolute bottom-0 left-0 w-full p-6 items-end gap-6">
+            {data.profile?.avatar_url && (
+              <img src={data.profile.avatar_url} alt={data.profile.display_name} className="w-24 h-24 rounded-full border-4 border-[var(--bg-surface)] object-cover shadow-xl shrink-0" />
+            )}
+            <div className="mb-2 flex-1 min-w-0">
+              <h1 className="text-3xl font-bold text-white drop-shadow-md flex items-center gap-2 flex-wrap">
+                <span className="truncate">{data.profile?.display_name || 'Analytics'}</span>
+                {data.profile?.verified && (
+                  <span className="text-[var(--accent-blue)] bg-white rounded-full w-5 h-5 flex items-center justify-center text-sm shrink-0" title="Verified">✓</span>
+                )}
+              </h1>
+              <p className="text-gray-200 text-sm mt-1">
+                {data.platform.toUpperCase()} • {new Intl.NumberFormat('es-ES', { notation: "compact" }).format(data.profile?.subscribers || 0)} Subs
+              </p>
+            </div>
           </div>
+        </div>
+
+        {/* Mobile Content (Below Banner) */}
+        <div className="sm:hidden px-4 relative z-10 flex flex-col items-center text-center -mt-10">
+          {data.profile?.avatar_url && (
+            <img src={data.profile.avatar_url} alt={data.profile.display_name} className="w-20 h-20 rounded-full border-4 border-[var(--bg-main)] object-cover shadow-lg mb-2" />
+          )}
+          <h1 className="text-xl font-bold text-[var(--text-primary)] flex items-center justify-center gap-1 flex-wrap">
+            {data.profile?.display_name || 'Analytics'}
+            {data.profile?.verified && (
+              <span className="text-[var(--accent-blue)] bg-[var(--bg-surface)] rounded-full w-4 h-4 flex items-center justify-center text-xs shrink-0" title="Verified">✓</span>
+            )}
+          </h1>
+          <p className="text-[var(--text-secondary)] text-sm mt-0.5">
+            {data.platform.toUpperCase()} • {new Intl.NumberFormat('es-ES', { notation: "compact" }).format(data.profile?.subscribers || 0)} Subs
+          </p>
         </div>
       </div>
 
