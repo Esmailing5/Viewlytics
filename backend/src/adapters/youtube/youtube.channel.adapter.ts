@@ -28,7 +28,11 @@ export class YouTubeChannelAdapter {
     searchUrl.searchParams.append('key', this.apiKey);
 
     const res = await fetch(searchUrl.toString());
-    if (!res.ok) throw new Error('Failed to search channel by slug');
+    if (!res.ok) {
+      const errText = await res.text();
+      console.error(`YouTube API Search Error: ${res.status} - ${errText}`);
+      throw new Error(`Failed to search channel by slug. Status: ${res.status}`);
+    }
     const data = await res.json();
     return data.items && data.items.length > 0 ? data.items[0].snippet.channelId : null;
   }
@@ -55,7 +59,11 @@ export class YouTubeChannelAdapter {
       channelsUrl.searchParams.append('key', this.apiKey);
 
       const channelRes = await fetch(channelsUrl.toString());
-      if (!channelRes.ok) throw new Error('Failed to fetch channel details');
+      if (!channelRes.ok) {
+        const errText = await channelRes.text();
+        console.error(`YouTube API Channel Details Error: ${channelRes.status} - ${errText}`);
+        throw new Error(`Failed to fetch channel details. Status: ${channelRes.status}`);
+      }
       const channelData: YouTubeChannelDetailsResponse = await channelRes.json();
 
       if (!channelData.items || channelData.items.length === 0) {
