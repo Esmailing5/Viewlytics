@@ -16,7 +16,7 @@ interface SearchResult {
   avatar_url?: string;
 }
 
-export function SearchInput({ variant = 'default' }: { variant?: 'default' | 'minimal' }) {
+export function SearchInput({ variant = 'default', onSelect }: { variant?: 'default' | 'minimal', onSelect?: () => void }) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<SearchResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -75,6 +75,7 @@ export function SearchInput({ variant = 'default' }: { variant?: 'default' | 'mi
   const handleSelect = (result: SearchResult) => {
     setShowDropdown(false);
     setQuery('');
+    if (onSelect) onSelect();
     router.push(`/channel/${result.platform}/${result.channel_id}`);
   };
 
@@ -85,6 +86,7 @@ export function SearchInput({ variant = 'default' }: { variant?: 'default' | 'mi
       if (results.length > 0) {
         handleSelect(results[0]);
       } else {
+        if (onSelect) onSelect();
         router.push(`/search?q=${encodeURIComponent(query)}`);
       }
     }

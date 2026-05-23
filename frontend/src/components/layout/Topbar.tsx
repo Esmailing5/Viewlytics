@@ -36,8 +36,8 @@ export function Topbar({ onMobileMenuToggle }: TopbarProps) {
       {isMobileSearchOpen && (
         <div className="absolute inset-0 z-40 flex items-center px-4 bg-[var(--bg-main)] border-b border-[var(--border-color)] animate-in fade-in zoom-in-95 duration-200">
           <div className="relative flex-1 flex items-center">
-            <div className="w-full" onClick={() => setIsMobileSearchOpen(false)}>
-              <SearchInput variant="minimal" />
+            <div className="w-full">
+              <SearchInput variant="minimal" onSelect={() => setIsMobileSearchOpen(false)} />
             </div>
           </div>
           <button
