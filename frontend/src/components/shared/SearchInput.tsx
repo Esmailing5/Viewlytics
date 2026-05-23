@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Search, Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
 
 interface SearchResult {
   id: string;
@@ -163,7 +162,7 @@ export function SearchInput({ variant = 'default', onSelect }: { variant?: 'defa
 
       {showDropdown && results.length === 0 && !isSearching && query.length >= 2 && (
         <div className="absolute top-full left-0 right-0 mt-2 bg-[var(--bg-surface)] border border-[var(--border-color)] rounded-xl shadow-2xl z-30 p-4 text-center text-[var(--text-secondary)] animate-in fade-in slide-in-from-top-2">
-          No se encontraron resultados para "{query}"
+          No se encontraron resultados para &quot;{query}&quot;
         </div>
       )}
     </div>

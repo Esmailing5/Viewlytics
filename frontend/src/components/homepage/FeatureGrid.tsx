@@ -17,7 +17,7 @@ export function FeatureGrid() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {homepageConfig.features.map((feature) => {
             // Dynamically grab the icon component
-            const Icon = (LucideIcons as any)[feature.icon] || LucideIcons.BarChart3;
+            const Icon = (LucideIcons as Record<string, React.ElementType>)[feature.icon] || LucideIcons.BarChart3;
 
             return (
               <div

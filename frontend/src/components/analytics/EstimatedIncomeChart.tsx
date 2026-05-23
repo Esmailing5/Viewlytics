@@ -62,8 +62,9 @@ export function EstimatedIncomeChart({ growth, recentVideos = [] }: ChartProps) 
       // Assume a video gets 40% of its total views on day 1 (the spike)
       const spikeIncome = ((spikeViews * 0.4) * RPM_AVG) / 1000;
 
-      // Add a little randomness to base income (± 15%)
-      const randomNoise = baseDailyIncome * (0.85 + Math.random() * 0.3);
+      // Use a deterministic pseudo-random value based on the day index to satisfy React purity rules
+      const pseudoRandom = ((i * 17) % 100) / 100; // 0.0 to 0.99
+      const randomNoise = baseDailyIncome * (0.85 + pseudoRandom * 0.3);
       
       const totalEstimated = randomNoise + spikeIncome;
 
@@ -137,7 +138,7 @@ export function EstimatedIncomeChart({ growth, recentVideos = [] }: ChartProps) 
                 boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)'
               }}
               itemStyle={{ color: 'var(--text-primary)', fontWeight: 'bold' }}
-              formatter={(value: any) => [`$${value}`, 'Ingreso Diario']}
+              formatter={(value: number) => [`$${value}`, 'Ingreso Diario']}
               labelStyle={{ color: 'var(--text-secondary)', marginBottom: '4px' }}
             />
             <Area 
