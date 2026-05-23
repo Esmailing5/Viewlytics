@@ -137,7 +137,7 @@ export function EstimatedIncomeChart({ growth, recentVideos = [] }: ChartProps) 
                 boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)'
               }}
               itemStyle={{ color: 'var(--text-primary)', fontWeight: 'bold' }}
-              formatter={(value: number) => [`$${value}`, 'Ingreso Diario']}
+              formatter={(value: any) => [`$${value}`, 'Ingreso Diario']}
               labelStyle={{ color: 'var(--text-secondary)', marginBottom: '4px' }}
             />
             <Area 

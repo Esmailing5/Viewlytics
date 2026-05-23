@@ -1,7 +1,7 @@
 'use client';
 
 import { Suspense, lazy, useEffect, useState } from 'react';
-import { Eye, Clock, Users, Youtube } from 'lucide-react';
+import { Eye, Clock, Users, PlaySquare } from 'lucide-react';
 
 // Lazy-loaded chart components for performance
 const EstimatedIncomeChart = lazy(() => import('./EstimatedIncomeChart').then((m) => ({ default: m.EstimatedIncomeChart })));
@@ -13,7 +13,7 @@ const STAT_ICON_MAP: Record<string, React.ComponentType<{ className?: string }>>
   Eye,
   Clock,
   Users,
-  Youtube,
+  Youtube: PlaySquare,
 };
 
 /** Loading skeleton for chart cards */
