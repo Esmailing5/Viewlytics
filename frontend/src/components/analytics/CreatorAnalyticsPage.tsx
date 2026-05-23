@@ -1,11 +1,10 @@
 'use client';
 
 import { Suspense, lazy, useEffect, useState } from 'react';
-import { Eye, Clock, Users, TrendingUp } from 'lucide-react';
+import { Eye, Clock, Users, Youtube } from 'lucide-react';
 
 // Lazy-loaded chart components for performance
-const ViewersChart = lazy(() => import('./ViewersChart').then((m) => ({ default: m.ViewersChart })));
-const RealtimeChart = lazy(() => import('./RealtimeChart').then((m) => ({ default: m.RealtimeChart })));
+const EstimatedIncomeChart = lazy(() => import('./EstimatedIncomeChart').then((m) => ({ default: m.EstimatedIncomeChart })));
 import { RecentVideosCard } from './RecentVideosCard';
 import { VideoAnalyticsSummary } from './VideoAnalyticsSummary';
 
@@ -14,7 +13,7 @@ const STAT_ICON_MAP: Record<string, React.ComponentType<{ className?: string }>>
   Eye,
   Clock,
   Users,
-  TrendingUp,
+  Youtube,
 };
 
 /** Loading skeleton for chart cards */
@@ -112,12 +111,40 @@ export function CreatorAnalyticsPage({ platform, channelId }: { platform: string
       id: 'platform',
       label: 'Plataforma',
       value: data.platform.toUpperCase(),
-      icon: 'TrendingUp',
+      icon: data.platform === 'youtube' ? 'Youtube' : 'TrendingUp',
     }
   ];
 
   return (
     <div className="space-y-6">
+      
+      {/* Visual Header */}
+      <div className="relative w-full h-48 sm:h-64 rounded-2xl overflow-hidden bg-[var(--bg-surface)] border border-[var(--border-color)]">
+        {data.profile?.banner_url ? (
+          <img src={data.profile.banner_url} alt="Banner" className="absolute inset-0 w-full h-full object-cover opacity-70" />
+        ) : (
+          <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-[var(--bg-main)] to-[var(--bg-surface)]" />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+        
+        <div className="absolute bottom-0 left-0 p-6 flex items-end gap-6">
+          {data.profile?.avatar_url && (
+            <img src={data.profile.avatar_url} alt={data.profile.display_name} className="w-24 h-24 rounded-full border-4 border-[var(--bg-surface)] object-cover shadow-xl" />
+          )}
+          <div className="mb-2">
+            <h1 className="text-3xl font-bold text-white drop-shadow-md flex items-center gap-2">
+              {data.profile?.display_name || 'Analytics'}
+              {data.profile?.verified && (
+                <span className="text-[var(--accent-blue)] bg-white rounded-full w-5 h-5 flex items-center justify-center text-sm" title="Verified">✓</span>
+              )}
+            </h1>
+            <p className="text-gray-200 text-sm mt-1">
+              {data.platform.toUpperCase()} • {new Intl.NumberFormat('es-ES', { notation: "compact" }).format(data.profile?.subscribers || 0)} Subs
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Dynamic Stat metrics row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         {dynamicMetrics.map((metric) => (
@@ -133,20 +160,13 @@ export function CreatorAnalyticsPage({ platform, channelId }: { platform: string
           <RecentVideosCard videos={data.recentVideos || []} />
         </div>
         <div className="h-[400px]">
-          <VideoAnalyticsSummary videos={data.recentVideos || []} />
+          <VideoAnalyticsSummary growth={data.growth} />
         </div>
 
-        {/* Row 2: Viewers Chart (span 3) */}
-        <div className="lg:col-span-3">
+        {/* Row 2: Estimated Income Chart (span 3) */}
+        <div className="lg:col-span-3 h-[500px]">
           <Suspense fallback={<ChartSkeleton />}>
-            <ViewersChart />
-          </Suspense>
-        </div>
-
-        {/* Row 3: Realtime (span 3) */}
-        <div className="lg:col-span-3">
-          <Suspense fallback={<ChartSkeleton />}>
-            <RealtimeChart />
+            <EstimatedIncomeChart growth={data.growth} recentVideos={data.recentVideos} />
           </Suspense>
         </div>
       </div>

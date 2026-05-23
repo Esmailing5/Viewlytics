@@ -16,7 +16,7 @@ interface SearchResult {
   avatar_url?: string;
 }
 
-export function SearchInput() {
+export function SearchInput({ variant = 'default' }: { variant?: 'default' | 'minimal' }) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<SearchResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -82,7 +82,6 @@ export function SearchInput() {
     e.preventDefault();
     if (query.trim()) {
       setShowDropdown(false);
-      // For now, if they hit analyze without selecting, we can route to global search page (if exists) or select the first result.
       if (results.length > 0) {
         handleSelect(results[0]);
       } else {
@@ -93,9 +92,16 @@ export function SearchInput() {
 
   return (
     <div className="relative w-full" ref={dropdownRef}>
-      <form onSubmit={handleAnalyze} className="relative flex flex-col sm:flex-row p-1.5 sm:p-0 items-center bg-[var(--bg-surface)] border border-[var(--border-color)] rounded-2xl shadow-xl overflow-hidden gap-2 sm:gap-0 z-20">
+      <form 
+        onSubmit={handleAnalyze} 
+        className={`relative flex items-center bg-[var(--bg-surface)] border border-[var(--border-color)] overflow-hidden z-20 ${
+          variant === 'minimal' 
+            ? 'h-9 rounded-xl hover:bg-[var(--bg-surface)] transition-colors' 
+            : 'flex-col sm:flex-row p-1.5 sm:p-0 rounded-2xl shadow-xl gap-2 sm:gap-0'
+        }`}
+      >
         <div className="flex w-full sm:flex-1 items-center">
-          <Search className="w-5 h-5 md:w-6 md:h-6 text-[var(--text-secondary)] ml-3 md:ml-6 shrink-0" />
+          <Search className={`${variant === 'minimal' ? 'w-4 h-4 ml-3' : 'w-5 h-5 md:w-6 md:h-6 ml-3 md:ml-6'} text-[var(--text-secondary)] shrink-0`} />
           <input 
             type="text" 
             value={query}
@@ -104,16 +110,24 @@ export function SearchInput() {
               if (e.target.value.length < 2) setShowDropdown(false);
             }}
             placeholder="Busca un creador, podcast o canal..." 
-            className="flex-1 h-12 sm:h-14 md:h-16 px-3 md:px-6 bg-transparent text-base md:text-lg text-[var(--text-primary)] placeholder:text-[var(--text-secondary)] focus:outline-none min-w-0"
+            className={`flex-1 bg-transparent text-[var(--text-primary)] placeholder:text-[var(--text-secondary)] focus:outline-none min-w-0 ${
+              variant === 'minimal' ? 'h-9 px-3 text-sm' : 'h-12 sm:h-14 md:h-16 px-3 md:px-6 text-base md:text-lg'
+            }`}
           />
+          {variant === 'minimal' && isSearching && (
+            <Loader2 className="w-4 h-4 mr-3 animate-spin text-[var(--text-secondary)]" />
+          )}
         </div>
-        <button 
-          type="submit"
-          disabled={isSearching}
-          className="w-full sm:w-auto h-12 sm:h-14 md:h-16 px-6 md:px-8 bg-gradient-to-r from-[var(--accent-cyan)] to-[var(--accent-blue)] text-white font-semibold text-base md:text-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2 rounded-xl sm:rounded-none shrink-0 disabled:opacity-70"
-        >
-          {isSearching ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Analizar'}
-        </button>
+        
+        {variant !== 'minimal' && (
+          <button 
+            type="submit"
+            disabled={isSearching}
+            className="w-full sm:w-auto h-12 sm:h-14 md:h-16 px-6 md:px-8 bg-gradient-to-r from-[var(--accent-cyan)] to-[var(--accent-blue)] text-white font-semibold text-base md:text-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2 rounded-xl sm:rounded-none shrink-0 disabled:opacity-70"
+          >
+            {isSearching ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Analizar'}
+          </button>
+        )}
       </form>
 
       {/* Dropdown Results */}

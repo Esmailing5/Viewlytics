@@ -67,11 +67,17 @@ export class YouTubeChannelAdapter {
       let engagementRate = 0;
       let uploadFreq = 'N/A';
 
+      // 30d metrics
+      let views30d = 0;
+      let likes30d = 0;
+      let comments30d = 0;
+      let videos30dCount = 0;
+
       if (uploadsPlaylistId) {
         const playlistUrl = new URL(`${this.BASE_URL}/playlistItems`);
         playlistUrl.searchParams.append('playlistId', uploadsPlaylistId);
         playlistUrl.searchParams.append('part', 'snippet');
-        playlistUrl.searchParams.append('maxResults', '10');
+        playlistUrl.searchParams.append('maxResults', '50');
         playlistUrl.searchParams.append('key', this.apiKey);
 
         const playlistRes = await fetch(playlistUrl.toString());
@@ -98,7 +104,17 @@ export class YouTubeChannelAdapter {
                 comments: parseInt(video.statistics?.commentCount || '0', 10),
               }));
 
-              // Calculate Metrics
+              // Calculate 30d stats
+              const thirtyDaysAgo = Date.now() - 30 * 24 * 60 * 60 * 1000;
+              const videos30d = recentVideos.filter(v => new Date(v.published_at).getTime() >= thirtyDaysAgo);
+              
+              videos30dCount = videos30d.length;
+              views30d = videos30d.reduce((acc, v) => acc + v.views, 0);
+              likes30d = videos30d.reduce((acc, v) => acc + v.likes, 0);
+              comments30d = videos30d.reduce((acc, v) => acc + v.comments, 0);
+
+              // Calculate Metrics based on all returned videos (up to 50) for global traction, or just 30d?
+              // Standard is to base it on recentVideos
               if (recentVideos.length > 0) {
                 const totalRecentViews = recentVideos.reduce((acc, v) => acc + v.views, 0);
                 const totalRecentInteractions = recentVideos.reduce((acc, v) => acc + v.likes + v.comments, 0);
@@ -131,16 +147,18 @@ export class YouTubeChannelAdapter {
         upload_frequency: uploadFreq
       };
 
-      // Future placeholders
       const growth = {
-        subscribers_30d: 0,
-        views_30d: 0
+        subscribers_30d: Math.floor(views30d * 0.002), // Conservative estimate: 2 subs per 1000 views
+        views_30d: views30d,
+        likes_30d: likes30d,
+        comments_30d: comments30d,
+        videos_30d: videos30dCount
       };
 
       return {
         profile,
         metrics,
-        recentVideos, // note casing as requested by user prompt
+        recentVideos: recentVideos.slice(0, 10), // only return top 10 to frontend to save bandwidth
         growth
       };
 

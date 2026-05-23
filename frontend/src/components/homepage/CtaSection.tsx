@@ -4,7 +4,7 @@ import { SearchInput } from '@/components/shared/SearchInput';
 
 export function CtaSection() {
   return (
-    <section className="py-24 relative overflow-hidden">
+    <section className="py-24 relative">
       <div className="absolute inset-0 bg-gradient-to-br from-[var(--bg-main)] via-[var(--bg-surface)] to-[var(--bg-main)]" />
       
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-r from-[var(--accent-cyan)] to-[var(--accent-blue)] rounded-full blur-[120px] opacity-10" />

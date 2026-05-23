@@ -61,6 +61,9 @@ export interface ChannelMetrics {
 export interface GrowthPlaceholders {
   subscribers_30d: number;
   views_30d: number;
+  likes_30d: number;
+  comments_30d: number;
+  videos_30d: number;
 }
 
 export interface FullCreatorAnalytics {

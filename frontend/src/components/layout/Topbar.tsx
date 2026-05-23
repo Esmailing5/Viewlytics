@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Search, Bell, Menu, Calendar, X } from 'lucide-react';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
+import { SearchInput } from '@/components/shared/SearchInput';
 
 interface TopbarProps {
   /** Callback to toggle mobile sidebar */
@@ -109,22 +110,8 @@ export function Topbar({ onMobileMenuToggle }: TopbarProps) {
         </button>
 
         {/* Search (Desktop) */}
-        <div className="relative hidden md:flex items-center">
-          <Search className="absolute left-3 w-4 h-4 text-[var(--text-secondary)]" />
-          <input
-            type="text"
-            id="topbar-search"
-            placeholder="Busqueda de canal favorito"
-            aria-label="Search"
-            className="
-              w-64 xl:w-80 h-9 pl-9 pr-4 rounded-xl
-              bg-transparent border border-[var(--border-color)]
-              text-sm text-[var(--text-primary)] placeholder:text-[var(--text-secondary)]
-              focus:outline-none focus:ring-1 focus:ring-[var(--accent-cyan)] focus:border-[var(--accent-cyan)]
-              hover:bg-[var(--bg-surface)]
-              transition-all duration-200
-            "
-          />
+        <div className="relative hidden md:flex items-center w-64 xl:w-80">
+          <SearchInput variant="minimal" />
         </div>
 
         {/* Search (Mobile) */}
