@@ -109,7 +109,7 @@ export function EstimatedIncomeChart({ growth, recentVideos = [] }: ChartProps) 
       <div className="flex-1 w-full min-h-[250px]">
         <h4 className="text-sm font-semibold text-[var(--text-secondary)] mb-4">Proyección de Generación Diaria (Últimos 14 días)</h4>
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+          <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 10 }}>
             <defs>
               <linearGradient id="colorIncome" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
@@ -121,8 +121,9 @@ export function EstimatedIncomeChart({ growth, recentVideos = [] }: ChartProps) 
               dataKey="date" 
               axisLine={false}
               tickLine={false}
-              tick={{ fill: 'var(--text-secondary)', fontSize: 12 }}
-              dy={10}
+              tick={{ fill: 'var(--text-secondary)', fontSize: 11 }}
+              tickMargin={12}
+              minTickGap={20}
             />
             <YAxis 
               axisLine={false}
