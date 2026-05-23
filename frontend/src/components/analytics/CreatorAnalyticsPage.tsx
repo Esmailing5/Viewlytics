@@ -127,18 +127,18 @@ export function CreatorAnalyticsPage({ platform, channelId }: { platform: string
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
         
-        <div className="absolute bottom-0 left-0 p-6 flex items-end gap-6">
+        <div className="absolute bottom-0 left-0 w-full p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-end gap-4 sm:gap-6">
           {data.profile?.avatar_url && (
-            <img src={data.profile.avatar_url} alt={data.profile.display_name} className="w-24 h-24 rounded-full border-4 border-[var(--bg-surface)] object-cover shadow-xl" />
+            <img src={data.profile.avatar_url} alt={data.profile.display_name} className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 border-[var(--bg-surface)] object-cover shadow-xl shrink-0" />
           )}
-          <div className="mb-2">
-            <h1 className="text-3xl font-bold text-white drop-shadow-md flex items-center gap-2">
-              {data.profile?.display_name || 'Analytics'}
+          <div className="mb-0 sm:mb-2 flex-1 min-w-0">
+            <h1 className="text-xl sm:text-3xl font-bold text-white drop-shadow-md flex items-center gap-2 flex-wrap">
+              <span className="truncate">{data.profile?.display_name || 'Analytics'}</span>
               {data.profile?.verified && (
-                <span className="text-[var(--accent-blue)] bg-white rounded-full w-5 h-5 flex items-center justify-center text-sm" title="Verified">✓</span>
+                <span className="text-[var(--accent-blue)] bg-white rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center text-xs sm:text-sm shrink-0" title="Verified">✓</span>
               )}
             </h1>
-            <p className="text-gray-200 text-sm mt-1">
+            <p className="text-gray-200 text-xs sm:text-sm mt-1">
               {data.platform.toUpperCase()} • {new Intl.NumberFormat('es-ES', { notation: "compact" }).format(data.profile?.subscribers || 0)} Subs
             </p>
           </div>
