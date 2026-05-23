@@ -119,7 +119,7 @@ export function CreatorAnalyticsPage({ platform, channelId }: { platform: string
     <div className="space-y-6">
       
       {/* Visual Header */}
-      <div className="relative w-full h-48 sm:h-64 rounded-2xl overflow-hidden bg-[var(--bg-surface)] border border-[var(--border-color)]">
+      <div className="relative w-full h-56 sm:h-72 rounded-2xl overflow-hidden bg-[var(--bg-surface)] border border-[var(--border-color)]">
         {data.profile?.banner_url ? (
           <img src={data.profile.banner_url} alt="Banner" className="absolute inset-0 w-full h-full object-cover opacity-70" />
         ) : (
