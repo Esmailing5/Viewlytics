@@ -27,6 +27,7 @@ function ChartSkeleton() {
 }
 
 /** Stat metric card */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function StatCard({ metric }: { metric: any }) {
   const Icon = STAT_ICON_MAP[metric.icon];
 
@@ -46,6 +47,7 @@ function StatCard({ metric }: { metric: any }) {
 }
 
 export function CreatorAnalyticsPage({ platform, channelId }: { platform: string; channelId: string }) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -60,8 +62,8 @@ export function CreatorAnalyticsPage({ platform, channelId }: { platform: string
         }
         const json = await response.json();
         setData(json);
-      } catch (err: any) {
-        setError(err.message);
+      } catch (err) {
+        setError((err as Error).message);
       } finally {
         setLoading(false);
       }
@@ -86,6 +88,8 @@ export function CreatorAnalyticsPage({ platform, channelId }: { platform: string
       </div>
     );
   }
+
+  if (!data) return null;
 
   // Transform backend data into the 4 stat cards format
   const dynamicMetrics = [
