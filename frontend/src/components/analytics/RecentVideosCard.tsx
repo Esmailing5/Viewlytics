@@ -25,7 +25,7 @@ export function RecentVideosCard({ videos }: { videos: VideoProps[] }) {
     <div className="dashboard-card p-6 flex flex-col h-full">
       <h3 className="text-lg font-bold text-[var(--text-primary)] mb-4">Últimos Videos</h3>
       <div className="flex-1 overflow-y-auto pr-2 space-y-4">
-        {videos.map((video) => (
+        {videos.slice(0, 20).map((video) => (
           <div key={video.id} className="flex gap-4 p-3 rounded-xl hover:bg-[var(--bg-main)] transition-colors border border-transparent hover:border-[var(--border-color)] group cursor-pointer">
             <div className="relative w-32 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-[var(--bg-main)]">
               <img src={video.thumbnail_url} alt={video.title} className="object-cover w-full h-full group-hover:scale-105 transition-transform" />

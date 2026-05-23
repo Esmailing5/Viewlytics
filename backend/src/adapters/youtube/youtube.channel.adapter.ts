@@ -2,6 +2,15 @@ import { YouTubeChannelDetailsResponse, FullCreatorAnalytics, ChannelMetrics } f
 import { YouTubeChannelMapper } from './youtube.channel.mapper';
 import { YouTubePlaylistItemsResponse, YouTubeVideosResponse, NormalizedVideo } from './youtube.types';
 
+function parseIsoDuration(duration: string): number {
+  const match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+  if (!match) return 0;
+  const hours = parseInt(match[1] || '0', 10);
+  const minutes = parseInt(match[2] || '0', 10);
+  const seconds = parseInt(match[3] || '0', 10);
+  return hours * 3600 + minutes * 60 + seconds;
+}
+
 export class YouTubeChannelAdapter {
   private apiKey: string;
   private readonly BASE_URL = 'https://www.googleapis.com/youtube/v3';
@@ -74,69 +83,98 @@ export class YouTubeChannelAdapter {
       let videos30dCount = 0;
 
       if (uploadsPlaylistId) {
-        const playlistUrl = new URL(`${this.BASE_URL}/playlistItems`);
-        playlistUrl.searchParams.append('playlistId', uploadsPlaylistId);
-        playlistUrl.searchParams.append('part', 'snippet');
-        playlistUrl.searchParams.append('maxResults', '50');
-        playlistUrl.searchParams.append('key', this.apiKey);
+        const thirtyDaysAgo = Date.now() - 30 * 24 * 60 * 60 * 1000;
+        let nextPageToken = '';
+        let keepFetching = true;
+        let pageCount = 0;
+        const MAX_PAGES = 10; // safety limit to prevent infinite loops (max 500 videos/month)
 
-        const playlistRes = await fetch(playlistUrl.toString());
-        if (playlistRes.ok) {
-          const playlistData: YouTubePlaylistItemsResponse = await playlistRes.json();
-          const videoIds = playlistData.items?.map(item => item.snippet.resourceId.videoId).join(',') || '';
+        while (keepFetching && pageCount < MAX_PAGES) {
+          pageCount++;
+          const playlistUrl = new URL(`${this.BASE_URL}/playlistItems`);
+          playlistUrl.searchParams.append('playlistId', uploadsPlaylistId);
+          playlistUrl.searchParams.append('part', 'snippet');
+          playlistUrl.searchParams.append('maxResults', '50');
+          if (nextPageToken) playlistUrl.searchParams.append('pageToken', nextPageToken);
+          playlistUrl.searchParams.append('key', this.apiKey);
 
-          if (videoIds) {
-            const videosUrl = new URL(`${this.BASE_URL}/videos`);
-            videosUrl.searchParams.append('id', videoIds);
-            videosUrl.searchParams.append('part', 'snippet,statistics');
-            videosUrl.searchParams.append('key', this.apiKey);
+          const playlistRes = await fetch(playlistUrl.toString());
+          if (!playlistRes.ok) break;
+          
+          const playlistData = await playlistRes.json();
+          nextPageToken = playlistData.nextPageToken || '';
+          
+          const videoIds = playlistData.items?.map((item: any) => item.snippet.resourceId.videoId).join(',') || '';
+          if (!videoIds) break;
 
-            const videosRes = await fetch(videosUrl.toString());
-            if (videosRes.ok) {
-              const videosData: YouTubeVideosResponse = await videosRes.json();
-              recentVideos = (videosData.items || []).map(video => ({
-                id: video.id,
-                title: video.snippet.title,
-                published_at: video.snippet.publishedAt,
-                thumbnail_url: video.snippet.thumbnails?.high?.url || video.snippet.thumbnails?.medium?.url || '',
-                views: parseInt(video.statistics?.viewCount || '0', 10),
-                likes: parseInt(video.statistics?.likeCount || '0', 10),
-                comments: parseInt(video.statistics?.commentCount || '0', 10),
-              }));
+          const videosUrl = new URL(`${this.BASE_URL}/videos`);
+          videosUrl.searchParams.append('id', videoIds);
+          videosUrl.searchParams.append('part', 'snippet,statistics,contentDetails');
+          videosUrl.searchParams.append('key', this.apiKey);
 
-              // Calculate 30d stats
-              const thirtyDaysAgo = Date.now() - 30 * 24 * 60 * 60 * 1000;
-              const videos30d = recentVideos.filter(v => new Date(v.published_at).getTime() >= thirtyDaysAgo);
-              
-              videos30dCount = videos30d.length;
-              views30d = videos30d.reduce((acc, v) => acc + v.views, 0);
-              likes30d = videos30d.reduce((acc, v) => acc + v.likes, 0);
-              comments30d = videos30d.reduce((acc, v) => acc + v.comments, 0);
+          const videosRes = await fetch(videosUrl.toString());
+          if (!videosRes.ok) break;
 
-              // Calculate Metrics based on all returned videos (up to 50) for global traction, or just 30d?
-              // Standard is to base it on recentVideos
-              if (recentVideos.length > 0) {
-                const totalRecentViews = recentVideos.reduce((acc, v) => acc + v.views, 0);
-                const totalRecentInteractions = recentVideos.reduce((acc, v) => acc + v.likes + v.comments, 0);
-                
-                avgViews = totalRecentViews / recentVideos.length;
-                engagementRate = totalRecentViews > 0 ? (totalRecentInteractions / totalRecentViews) * 100 : 0;
+          const videosData: any = await videosRes.json();
+          
+          const pageVideos = (videosData.items || [])
+            .filter((video: any) => {
+              const duration = parseIsoDuration(video.contentDetails?.duration || '');
+              const isLive = video.snippet?.liveBroadcastContent === 'live';
+              return duration > 65 || isLive;
+            })
+            .map((video: any) => ({
+              id: video.id,
+              title: video.snippet.title,
+              published_at: video.snippet.publishedAt,
+              thumbnail_url: video.snippet.thumbnails?.high?.url || video.snippet.thumbnails?.medium?.url || '',
+              views: parseInt(video.statistics?.viewCount || '0', 10),
+              likes: parseInt(video.statistics?.likeCount || '0', 10),
+              comments: parseInt(video.statistics?.commentCount || '0', 10),
+            }));
 
-                if (recentVideos.length > 1) {
-                  const newest = new Date(recentVideos[0].published_at).getTime();
-                  const oldest = new Date(recentVideos[recentVideos.length - 1].published_at).getTime();
-                  const diffDays = (newest - oldest) / (1000 * 3600 * 24);
-                  const daysPerVideo = diffDays / (recentVideos.length - 1);
-                  if (daysPerVideo <= 1) uploadFreq = 'Daily';
-                  else if (daysPerVideo <= 3) uploadFreq = 'Multiple per week';
-                  else if (daysPerVideo <= 7) uploadFreq = 'Weekly';
-                  else if (daysPerVideo <= 14) uploadFreq = 'Bi-weekly';
-                  else uploadFreq = 'Monthly+';
-                }
-              }
+          recentVideos.push(...pageVideos);
+
+          // Check if we hit videos older than 30 days
+          if (playlistData.items && playlistData.items.length > 0) {
+            const lastItemDate = new Date(playlistData.items[playlistData.items.length - 1].snippet.publishedAt).getTime();
+            if (lastItemDate < thirtyDaysAgo) {
+              keepFetching = false;
             }
           }
+
+          if (!nextPageToken) keepFetching = false;
         }
+
+        // Filter exact 30d videos
+        const videos30d = recentVideos.filter(v => new Date(v.published_at).getTime() >= thirtyDaysAgo);
+        
+        videos30dCount = videos30d.length;
+        views30d = videos30d.reduce((acc, v) => acc + v.views, 0);
+        likes30d = videos30d.reduce((acc, v) => acc + v.likes, 0);
+        comments30d = videos30d.reduce((acc, v) => acc + v.comments, 0);
+
+        // Calculate Metrics based exclusively on 30d videos
+        if (videos30d.length > 0) {
+          avgViews = views30d / videos30d.length;
+          const total30dInteractions = likes30d + comments30d;
+          engagementRate = views30d > 0 ? (total30dInteractions / views30d) * 100 : 0;
+
+          if (videos30d.length > 1) {
+            const newest = new Date(videos30d[0].published_at).getTime();
+            const oldest = new Date(videos30d[videos30d.length - 1].published_at).getTime();
+            const diffDays = (newest - oldest) / (1000 * 3600 * 24);
+            const daysPerVideo = diffDays / (videos30d.length - 1);
+            if (daysPerVideo <= 1) uploadFreq = 'Daily';
+            else if (daysPerVideo <= 3) uploadFreq = 'Multiple per week';
+            else if (daysPerVideo <= 7) uploadFreq = 'Weekly';
+            else if (daysPerVideo <= 14) uploadFreq = 'Bi-weekly';
+            else uploadFreq = 'Monthly+';
+          }
+        }
+        
+        // Output exactly what was published in the last 30 days
+        recentVideos = videos30d;
       }
 
       const metrics: ChannelMetrics = {
