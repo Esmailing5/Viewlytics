@@ -15,7 +15,7 @@ export function renderTopRankingPreview() {
         `).join('')}
       </div>
       
-      <div class="safe-zone-wrapper" style="transform: scale(0.92); transform-origin: center center; flex: 1; display: flex; flex-direction: column; width: 100%; height: 100%; z-index: 2;">
+      <div class="safe-zone-wrapper" style="transform: scale(0.99); transform-origin: center center; flex: 1; display: flex; flex-direction: column; width: 100%; height: 100%; z-index: 2;">
         <div class="tr-header">
           <div class="tr-title-group">
             <div class="tr-subtitle" id="prev-tr-subtitle"></div>
@@ -85,7 +85,12 @@ export function initTopRankingPreview() {
         }
         
         row.querySelector('.tr-name').textContent = item.name;
-        row.querySelector('.tr-cat').textContent = item.cat;
+        
+        const catEl = row.querySelector('.tr-cat');
+        if (catEl) {
+          catEl.textContent = item.cat || '';
+          catEl.style.display = item.cat ? 'block' : 'none';
+        }
         
         const statVals = row.querySelectorAll('.tr-stat-val');
         if (statVals.length >= 2) {
@@ -96,11 +101,12 @@ export function initTopRankingPreview() {
         const rcDiv = row.querySelector('.tr-rank-change');
         if (rcDiv) {
             const rcIcon = item.rankChange === 'up' ? 'chevron-up' : (item.rankChange === 'down' ? 'chevron-down' : 'minus');
+            const numHtml = (item.rankChange !== 'same' && item.rankChangeNum) ? `<span style="margin-left: 2px;">${item.rankChangeNum}</span>` : '';
             rcDiv.className = `tr-rank-change ${item.rankChange || 'same'}`;
-            rcDiv.innerHTML = `<i data-lucide="${rcIcon}"></i>`;
+            rcDiv.innerHTML = `<i data-lucide="${rcIcon}"></i>${numHtml}`;
         }
 
-        row.className = `tr-item cat-${item.cat.toLowerCase()}`;
+        row.className = `tr-item`;
         row.setAttribute('data-rank', index + 1);
       });
       createIcons({
@@ -113,19 +119,20 @@ export function initTopRankingPreview() {
     // Full render if items were added/removed/reordered
     container.innerHTML = itemsToRender.map((item, index) => {
       const rank = index + 1;
-      const catClass = `cat-${item.cat.toLowerCase()}`;
       const rcClass = item.rankChange || 'same';
       const rcIcon = rcClass === 'up' ? 'chevron-up' : (rcClass === 'down' ? 'chevron-down' : 'minus');
+      const numHtml = (rcClass !== 'same' && item.rankChangeNum) ? `<span style="margin-left: 2px;">${item.rankChangeNum}</span>` : '';
+      const catHtml = item.cat ? `<div class="tr-cat">${item.cat}</div>` : '';
       return `
-        <div class="tr-item ${catClass}" data-rank="${rank}">
+        <div class="tr-item" data-rank="${rank}">
           <div class="tr-rank-number">#${rank}</div>
           <div class="tr-rank-change ${rcClass}">
-             <i data-lucide="${rcIcon}"></i>
+             <i data-lucide="${rcIcon}"></i>${numHtml}
           </div>
-          <img src="${item.avatar}" class="tr-avatar">
+          <img src="${item.avatar}" class="tr-avatar" crossOrigin="anonymous">
           <div class="tr-details">
             <div class="tr-name">${item.name}</div>
-            <div class="tr-cat">${item.cat}</div>
+            ${catHtml}
           </div>
           <div class="tr-stats">
             <div class="tr-stat-block">

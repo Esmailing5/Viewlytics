@@ -1,5 +1,64 @@
-import html2canvas from 'html2canvas';
+import * as htmlToImage from 'html-to-image';
 import { showToast } from './toast.js';
+
+// Bulletproof utility to preload and inline all images to base64 Data URLs.
+// This prevents CORS taint issues and blank images during SVG serialization.
+async function inlineAllImages(container) {
+  const images = container.querySelectorAll('img');
+  const originalSources = [];
+
+  const promises = Array.from(images).map(async (img) => {
+    const originalSrc = img.src;
+    originalSources.push({ img, src: originalSrc });
+
+    // Skip if it's already a base64 Data URL or empty
+    if (!originalSrc || originalSrc.startsWith('data:')) return;
+
+    try {
+      // Add crossOrigin attribute to ensure browser requests CORS headers
+      img.setAttribute('crossOrigin', 'anonymous');
+      
+      const response = await fetch(originalSrc, { 
+        mode: 'cors',
+        credentials: 'omit',
+        cache: 'no-cache'
+      });
+      
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      
+      const blob = await response.blob();
+      const dataUrl = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+      img.src = dataUrl;
+    } catch (e) {
+      console.warn(`Failed to inline image ${originalSrc}:`, e);
+      // Fallback: Attempt to use a canvas to draw and extract base64 if permitted
+      try {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.naturalWidth || img.width || 150;
+        canvas.height = img.naturalHeight || img.height || 150;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+        img.src = canvas.toDataURL('image/png');
+      } catch (canvasErr) {
+        console.warn(`Fallback canvas conversion failed for ${originalSrc}:`, canvasErr);
+      }
+    }
+  });
+
+  await Promise.all(promises);
+  return originalSources;
+}
+
+function restoreAllImages(originalSources) {
+  originalSources.forEach(({ img, src }) => {
+    img.src = src;
+  });
+}
 
 export async function exportImage(containerId, format, type = 'jpeg') {
   const container = document.getElementById(containerId);
@@ -7,51 +66,43 @@ export async function exportImage(containerId, format, type = 'jpeg') {
 
   showToast('Rendering high quality image...', 'info');
 
+  // Wait for document fonts to load completely
+  await document.fonts.ready;
+  
+  // Give CSS and layout a short window to settle
+  await new Promise(r => setTimeout(r, 150));
+
   // Temporarily reset transform and flex-shrink to get full quality capture
   const originalTransform = container.style.transform;
   const originalFlexShrink = container.style.flexShrink;
   container.style.transform = 'scale(1)';
   container.style.flexShrink = '0';
 
+  let originalSources = [];
   try {
-    const canvas = await html2canvas(container, {
-      scale: 3, // Ultra HD Retina Export (3x DPI)
-      width: container.scrollWidth,
-      height: container.scrollHeight,
-      windowWidth: container.scrollWidth,
-      windowHeight: container.scrollHeight,
-      useCORS: true,
-      allowTaint: false,
-      backgroundColor: '#0b0e14', // Match Viewlytics bg-main
-      logging: false,
-      onclone: (clonedDoc) => {
-        // 0. Fix watermark rotation clipping (html2canvas applies overflow:hidden before rotation)
-        const clonedContainer = clonedDoc.getElementById(containerId);
-        if (clonedContainer) clonedContainer.style.overflow = 'visible';
-        
-        const previews = clonedDoc.querySelectorAll('.tr-preview, .sc-preview');
-        previews.forEach(p => p.style.overflow = 'visible');
+    // Inline all image elements inside the container to avoid CORS blanks
+    originalSources = await inlineAllImages(container);
+    
+    // Give rendering thread a moment to update layout with inlined base64 images
+    await new Promise(r => setTimeout(r, 100));
 
-        // 1. Hide noise overlays (mix-blend-mode causes gray washed-out screens in html2canvas)
-        const noises = clonedDoc.querySelectorAll('.tr-noise, .sc-noise');
-        noises.forEach(n => n.style.display = 'none');
+    const options = {
+      quality: 0.98,
+      pixelRatio: 3, // Ultra HD Retina Export (3x scale)
+      backgroundColor: '#0b0e14',
+      style: {
+        transform: 'scale(1)',
+        transformOrigin: 'top left'
+      },
+      cacheBust: true
+    };
 
-        // 2. Fix text clipping gradients (they render as black boxes, invisible text, or cut off text)
-        const gradientTexts = clonedDoc.querySelectorAll('.tr-title, .sc-name, .sc-metric-val');
-        gradientTexts.forEach(node => {
-          node.style.background = 'transparent';
-          node.style.webkitBackgroundClip = 'initial';
-          node.style.webkitTextFillColor = 'initial';
-          node.style.color = '#ffffff';
-        });
-
-        // 3. Fix glow blur (causes whole canvas to fail sometimes)
-        const glow = clonedDoc.getElementById('prev-glow');
-        if (glow) glow.style.filter = 'none'; 
-      }
-    });
-
-    const dataUrl = canvas.toDataURL(`image/${type}`, 0.95); // High quality JPEG
+    let dataUrl;
+    if (type === 'png') {
+      dataUrl = await htmlToImage.toPng(container, options);
+    } else {
+      dataUrl = await htmlToImage.toJpeg(container, options);
+    }
     
     // Create download link
     const link = document.createElement('a');
@@ -64,6 +115,8 @@ export async function exportImage(containerId, format, type = 'jpeg') {
     console.error('Error exporting image:', error);
     showToast('Failed to export image. Check console.', 'error');
   } finally {
+    // Restore original image sources
+    restoreAllImages(originalSources);
     // Restore scale and flex-shrink
     container.style.transform = originalTransform;
     container.style.flexShrink = originalFlexShrink;
@@ -76,38 +129,42 @@ export async function copyImageToClipboard(containerId) {
   
   showToast('Preparing image for clipboard...', 'info');
 
+  await document.fonts.ready;
+  await new Promise(r => setTimeout(r, 150));
+
   const originalTransform = container.style.transform;
   const originalFlexShrink = container.style.flexShrink;
   container.style.transform = 'scale(1)';
   container.style.flexShrink = '0';
 
+  let originalSources = [];
   try {
-    const canvas = await html2canvas(container, {
-      scale: 2, // Standard HD for clipboard
-      width: container.scrollWidth,
-      height: container.scrollHeight,
-      windowWidth: container.scrollWidth,
-      windowHeight: container.scrollHeight,
-      useCORS: true,
-      allowTaint: false,
+    originalSources = await inlineAllImages(container);
+    await new Promise(r => setTimeout(r, 100));
+
+    const blob = await htmlToImage.toBlob(container, {
+      pixelRatio: 2.2, // standard HD for clipboard
       backgroundColor: '#0b0e14',
-      logging: false
+      style: {
+        transform: 'scale(1)',
+        transformOrigin: 'top left'
+      },
+      cacheBust: true
     });
 
-    canvas.toBlob(async (blob) => {
-      try {
-        const item = new ClipboardItem({ 'image/png': blob });
-        await navigator.clipboard.write([item]);
-        showToast('Image copied to clipboard!', 'success');
-      } catch (err) {
-        console.error('Clipboard error:', err);
-        showToast('Failed to copy to clipboard.', 'error');
-      }
-    }, 'image/png', 1.0);
+    try {
+      const item = new ClipboardItem({ 'image/png': blob });
+      await navigator.clipboard.write([item]);
+      showToast('Image copied to clipboard!', 'success');
+    } catch (err) {
+      console.error('Clipboard error:', err);
+      showToast('Failed to copy to clipboard.', 'error');
+    }
   } catch (error) {
     console.error('Error capturing image:', error);
     showToast('Failed to render image.', 'error');
   } finally {
+    restoreAllImages(originalSources);
     container.style.transform = originalTransform;
     container.style.flexShrink = originalFlexShrink;
   }

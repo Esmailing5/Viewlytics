@@ -35,7 +35,7 @@ export function renderSingleCardPreview() {
           <div class="sc-creator-block">
             <div style="position:relative;">
               <div class="sc-avatar-glow" id="prev-glow"></div>
-              <img src="https://i.pravatar.cc/300" class="sc-avatar" id="prev-avatar">
+              <img src="https://i.pravatar.cc/300" class="sc-avatar" id="prev-avatar" crossOrigin="anonymous">
             </div>
             <div class="sc-creator-info">
               <div class="sc-name">

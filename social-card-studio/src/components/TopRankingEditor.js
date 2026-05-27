@@ -59,14 +59,8 @@ export function renderListEditorItems(items) {
           <input type="text" class="form-input row-input-name" value="${item.name}">
         </div>
         <div>
-          <label class="form-label">Category</label>
-          <select class="form-input row-input-cat">
-            <option value="Entertainment" ${item.cat === 'Entertainment' ? 'selected' : ''}>Entertainment</option>
-            <option value="Podcast" ${item.cat === 'Podcast' ? 'selected' : ''}>Podcast</option>
-            <option value="Gaming" ${item.cat === 'Gaming' ? 'selected' : ''}>Gaming</option>
-            <option value="News" ${item.cat === 'News' ? 'selected' : ''}>News</option>
-            <option value="Music" ${item.cat === 'Music' ? 'selected' : ''}>Music</option>
-          </select>
+          <label class="form-label">Tag / Label</label>
+          <input type="text" class="form-input row-input-cat" value="${item.cat}" placeholder="@username o Tag">
         </div>
         <div>
           <label class="form-label">Main Metric (Views)</label>
@@ -76,13 +70,16 @@ export function renderListEditorItems(items) {
           <label class="form-label">Sub Metric (Subs)</label>
           <input type="text" class="form-input row-input-subs" value="${item.subs}">
         </div>
-        <div style="grid-column: span 2;">
+        <div>
           <label class="form-label">Position Change</label>
-          <select class="form-input row-input-rankchange">
-            <option value="same" ${item.rankChange === 'same' ? 'selected' : ''}>Maintained (—)</option>
-            <option value="up" ${item.rankChange === 'up' ? 'selected' : ''}>Moved Up (▲)</option>
-            <option value="down" ${item.rankChange === 'down' ? 'selected' : ''}>Moved Down (▼)</option>
-          </select>
+          <div style="display: flex; gap: 8px;">
+            <select class="form-input row-input-rankchange" style="flex: 2;">
+              <option value="same" ${item.rankChange === 'same' ? 'selected' : ''}>Maintained (—)</option>
+              <option value="up" ${item.rankChange === 'up' ? 'selected' : ''}>Moved Up (▲)</option>
+              <option value="down" ${item.rankChange === 'down' ? 'selected' : ''}>Moved Down (▼)</option>
+            </select>
+            <input type="number" class="form-input row-input-ranknum" style="flex: 1;" value="${item.rankChangeNum || ''}" min="1" placeholder="#">
+          </div>
         </div>
       </div>
     </div>
@@ -183,6 +180,7 @@ export function initTopRankingEditor() {
       if (e.target.classList.contains('row-input-views')) newItem.views = e.target.value;
       if (e.target.classList.contains('row-input-subs')) newItem.subs = e.target.value;
       if (e.target.classList.contains('row-input-rankchange')) newItem.rankChange = e.target.value;
+      if (e.target.classList.contains('row-input-ranknum')) newItem.rankChangeNum = e.target.value;
 
       items[index] = newItem;
       updateStore('items', items);
@@ -198,10 +196,11 @@ export function initTopRankingEditor() {
     items.push({
       id: Date.now(),
       name: 'New Creator',
-      cat: 'Entertainment',
+      cat: '@username',
       views: '0M',
       subs: '0K',
       rankChange: 'same',
+      rankChangeNum: '',
       avatar: 'https://i.pravatar.cc/150?img=' + Math.floor(Math.random() * 70)
     });
     updateStore('items', items);

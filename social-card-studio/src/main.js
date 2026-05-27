@@ -18,6 +18,7 @@ import { renderTopRankingPreview, initTopRankingPreview } from './components/Top
 import { renderTop11To20Preview, initTop11To20Preview } from './components/Top11To20Preview.js';
 import { renderBrandingEditor, initBrandingEditor, applyBrandingToRoot } from './components/BrandingEditor.js';
 import { renderTemplatesEditor, initTemplatesEditor, renderHistoryEditor, initHistoryEditor } from './components/PersistenceEditors.js';
+import { renderAvatarGenerator, initAvatarGenerator } from './components/AvatarGenerator.js';
 
 const uiState = {
   currentView: 'single-card',
@@ -143,6 +144,27 @@ function switchView(view) {
     editorContainer.innerHTML = renderHistoryEditor();
     initHistoryEditor();
     keepPreview = true;
+  }
+  else if (view === 'avatar-generator') {
+    viewTitle.textContent = 'Viewlytics Avatar Generator';
+    editorContainer.innerHTML = `
+      <h2 class="section-title">Avatar Generator</h2>
+      <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.5; margin-bottom: 12px;">
+        This tool generates a high-resolution 1:1 square vector avatar containing the exact vector path definition of the main <strong>Viewlytics SVG logo</strong>.
+      </p>
+      <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.5; margin-bottom: 16px;">
+        Perfectly styled and sized for Instagram, Facebook, and other social media profile avatars.
+      </p>
+      <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); padding: 16px; border-radius: var(--radius-md);">
+        <h4 style="font-size: 0.85rem; font-weight: 700; color: var(--accent-cyan); text-transform: uppercase; margin-bottom: 8px;">Instructions</h4>
+        <ul style="color: var(--text-secondary); font-size: 0.85rem; padding-left: 20px; display: flex; flex-direction: column; gap: 8px;">
+          <li>Change the aspect ratio format in the top bar to <strong>Square (1:1)</strong> for the perfect profile avatar size.</li>
+          <li>Click the <strong>Export PNG (HQ)</strong> or <strong>Copy to Clipboard</strong> button in the sidebar or mobile footer to download.</li>
+        </ul>
+      </div>
+    `;
+    previewContainer.innerHTML = renderAvatarGenerator();
+    initAvatarGenerator();
   }
 
   // If view is a settings view, we keep the last preview active to see changes
