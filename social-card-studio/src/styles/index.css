@@ -34,7 +34,7 @@
   --font-display: 'Outfit', system-ui, sans-serif;
 
   /* Layout Constants */
-  --sidebar-width: 280px;
+  --sidebar-width: 240px;
   --header-height: 70px;
   
   /* Radius */
@@ -70,6 +70,11 @@ body {
   height: 100vh;
   width: 100vw;
   overflow: hidden;
+  transition: grid-template-columns 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.app-container.sidebar-collapsed {
+  grid-template-columns: 0px 1fr;
 }
 
 .sidebar {
@@ -79,7 +84,20 @@ body {
   display: flex;
   flex-direction: column;
   z-index: 50;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+  opacity: 1;
+}
+
+@media (min-width: 1025px) {
+  .app-container.sidebar-collapsed {
+    grid-template-columns: 0px 1fr;
+  }
+
+  .app-container.sidebar-collapsed .sidebar {
+    transform: translateX(-100%);
+    opacity: 0;
+    pointer-events: none;
+  }
 }
 
 .top-bar {
@@ -208,6 +226,7 @@ body {
     left: 0;
     top: 0;
     bottom: 0;
+    width: var(--sidebar-width);
     transform: translateX(-100%);
     box-shadow: 0 0 40px rgba(0,0,0,0.5);
   }
@@ -222,23 +241,23 @@ body {
 
   /* Floating sticky footer bar for export buttons on mobile/tablet */
   .sidebar-footer {
-    position: fixed;
+    position: absolute;
     bottom: 0;
     left: 0;
-    right: 0;
+    width: 100%;
     background: rgba(13, 17, 23, 0.95);
     backdrop-filter: blur(16px);
     border-top: 1px solid var(--border-color);
     display: flex;
     gap: 12px;
-    padding: 16px;
+    padding: 12px;
     z-index: 100;
   }
   .sidebar-footer .btn {
     margin: 0 !important;
     flex: 1;
-    font-size: 0.85rem;
-    padding: 10px 16px;
+    font-size: 0.8rem;
+    padding: 8px 12px;
   }
 }
 
@@ -321,6 +340,39 @@ body {
   color: var(--text-primary);
   cursor: pointer;
   margin-right: 16px;
+}
+
+/* Desktop Sidebar Toggle Button */
+.desktop-sidebar-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  cursor: pointer;
+  margin-right: 16px;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.desktop-sidebar-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--accent-cyan);
+  border-color: rgba(0, 198, 255, 0.3);
+  transform: scale(1.05);
+}
+
+.desktop-sidebar-btn:active {
+  transform: scale(0.95);
+}
+
+@media (max-width: 1024px) {
+  .desktop-sidebar-btn {
+    display: none;
+  }
 }
 
 .top-bar-left {
@@ -417,8 +469,13 @@ body {
 }
 
 .sidebar-footer {
-  padding: 24px 16px;
+  padding: 16px;
   border-top: 1px solid var(--border-color);
+}
+
+.sidebar-footer .btn {
+  padding: 8px 12px;
+  font-size: 0.8rem;
 }
 
 /* Forms */

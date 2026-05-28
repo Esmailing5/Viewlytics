@@ -58,6 +58,26 @@ function init() {
     document.getElementById('sidebar').classList.toggle('mobile-open');
   });
 
+  // Close Mobile Menu on Click Outside
+  document.addEventListener('click', (e) => {
+    const sidebar = document.getElementById('sidebar');
+    const mobileMenuBtn = document.getElementById('btn-mobile-menu');
+    if (sidebar.classList.contains('mobile-open')) {
+      if (!sidebar.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+        sidebar.classList.remove('mobile-open');
+      }
+    }
+  });
+
+  // Desktop Sidebar Toggle
+  document.getElementById('btn-toggle-sidebar').addEventListener('click', () => {
+    const container = document.querySelector('.app-container');
+    container.classList.toggle('sidebar-collapsed');
+    scalePreview();
+    setTimeout(scalePreview, 150);
+    setTimeout(scalePreview, 300);
+  });
+
   // Format Selector
   document.querySelectorAll('.format-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
