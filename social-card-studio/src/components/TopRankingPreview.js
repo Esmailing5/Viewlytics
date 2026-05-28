@@ -23,6 +23,7 @@ export function renderTopRankingPreview() {
           </div>
           <div class="tr-meta">
             <div class="tr-period" id="prev-tr-period"></div>
+            <div class="tr-date" id="prev-tr-date"></div>
           </div>
         </div>
 
@@ -57,10 +58,15 @@ export function initTopRankingPreview() {
     const titleEl = document.getElementById('prev-tr-title');
     const subtitleEl = document.getElementById('prev-tr-subtitle');
     const periodEl = document.getElementById('prev-tr-period');
+    const dateEl = document.getElementById('prev-tr-date');
     
     if (titleEl) titleEl.textContent = tr.title;
     if (subtitleEl) subtitleEl.textContent = tr.subtitle;
     if (periodEl) periodEl.textContent = tr.period;
+    if (dateEl) {
+      dateEl.textContent = tr.date || '';
+      dateEl.style.display = tr.date ? 'inline-block' : 'none';
+    }
 
     const container = document.getElementById('prev-tr-list');
     if (!container) return;

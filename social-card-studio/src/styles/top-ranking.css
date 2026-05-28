@@ -54,9 +54,16 @@
   -webkit-text-fill-color: transparent;
 }
 
-.tr-meta { text-align: right; margin-bottom: 8px; }
+.tr-meta {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 8px;
+}
 
-.tr-period {
+.tr-period,
+.tr-date {
   display: inline-block;
   padding: 8px 20px;
   background: rgba(22, 27, 34, 0.8);
@@ -67,6 +74,12 @@
   color: var(--text-primary);
   text-transform: uppercase;
   letter-spacing: 1px;
+  white-space: nowrap;
+}
+
+.tr-date {
+  color: var(--accent-cyan);
+  border-color: rgba(0, 198, 255, 0.3);
 }
 
 .tr-content {

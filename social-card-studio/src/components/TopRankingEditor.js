@@ -19,8 +19,16 @@ export function renderTopRankingEditor() {
         <input type="text" class="form-input" id="tr-in-subtitle" value="${tr.subtitle}">
       </div>
       <div class="form-group">
-        <label class="form-label">Period</label>
-        <input type="text" class="form-input" id="tr-in-period" value="${tr.period}">
+        <div style="display: flex; gap: 16px;">
+          <div style="flex: 1;">
+            <label class="form-label">Period</label>
+            <input type="text" class="form-input" id="tr-in-period" value="${tr.period}">
+          </div>
+          <div style="flex: 1;">
+            <label class="form-label">Date</label>
+            <input type="text" class="form-input" id="tr-in-date" value="${tr.date || ''}">
+          </div>
+        </div>
       </div>
     </div>
 
@@ -105,6 +113,9 @@ export function initTopRankingEditor() {
 
   const periodIn = document.getElementById('tr-in-period');
   if (periodIn) periodIn.addEventListener('input', e => updateStore('period', e.target.value));
+
+  const dateIn = document.getElementById('tr-in-date');
+  if (dateIn) dateIn.addEventListener('input', e => updateStore('date', e.target.value));
 
   const el = document.getElementById('ranking-list-editor');
   let sortableInstance = null;

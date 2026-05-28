@@ -79,6 +79,7 @@ const initialState = {
     title: 'MOST VIEWED',
     subtitle: 'DOMINICAN CREATORS',
     period: 'LAST 30 DAYS',
+    date: 'MAY 2026',
     items: [
       { id: 1, name: 'Alofoke Radio Show', cat: 'Entertainment', views: '313M', subs: '5.2M', trend: '+42%', trendType: 'up', avatar: 'https://i.pravatar.cc/150?img=11' },
       { id: 2, name: 'El Dotol Nastra', cat: 'Entertainment', views: '185M', subs: '3.1M', trend: '+15%', trendType: 'up', avatar: 'https://i.pravatar.cc/150?img=12' },

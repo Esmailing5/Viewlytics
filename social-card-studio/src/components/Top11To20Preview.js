@@ -23,6 +23,7 @@ export function renderTop11To20Preview() {
           </div>
           <div class="tr-meta">
             <div class="tr-period" id="prev-tr-period-11"></div>
+            <div class="tr-date" id="prev-tr-date-11"></div>
           </div>
         </div>
 
@@ -57,10 +58,15 @@ export function initTop11To20Preview() {
     const titleEl = document.getElementById('prev-tr-title-11');
     const subtitleEl = document.getElementById('prev-tr-subtitle-11');
     const periodEl = document.getElementById('prev-tr-period-11');
+    const dateEl = document.getElementById('prev-tr-date-11');
     
     if (titleEl) titleEl.textContent = tr.title;
     if (subtitleEl) subtitleEl.textContent = tr.subtitle;
     if (periodEl) periodEl.textContent = tr.period;
+    if (dateEl) {
+      dateEl.textContent = tr.date || '';
+      dateEl.style.display = tr.date ? 'inline-block' : 'none';
+    }
 
     const container = document.getElementById('prev-tr-list-11');
     if (!container) return;
