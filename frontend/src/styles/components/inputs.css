@@ -1,0 +1,221 @@
+/**
+ * Viewlytics — Input Component Styles
+ *
+ * Form controls, search bars, and input groups.
+ * Consistent focus states with the red accent ring.
+ */
+
+/* ═══ BASE INPUT ═══ */
+.vl-input {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  color: var(--vl-text-primary);
+  background: var(--vl-bg-surface);
+  border: 1px solid var(--vl-border);
+  border-radius: var(--radius-lg);
+  outline: none;
+  transition-property: border-color, box-shadow, background-color;
+  transition-duration: var(--duration-fast);
+  transition-timing-function: var(--ease-default);
+}
+
+.vl-input::placeholder {
+  color: var(--vl-text-tertiary);
+}
+
+.vl-input:hover {
+  border-color: var(--vl-border-hover);
+}
+
+.vl-input:focus {
+  border-color: var(--vl-red);
+  box-shadow: 0 0 0 3px var(--vl-red-soft);
+}
+
+.vl-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+
+/* ═══ INPUT SIZES ═══ */
+.vl-input-sm {
+  height: 32px;
+  padding: 0 var(--space-3);
+  font-size: var(--text-sm);
+  border-radius: var(--radius-md);
+}
+
+.vl-input-md {
+  height: 40px;
+  padding: 0 var(--space-4);
+  font-size: var(--text-base);
+  border-radius: var(--radius-lg);
+}
+
+.vl-input-lg {
+  height: 48px;
+  padding: 0 var(--space-5);
+  font-size: var(--text-md);
+  border-radius: var(--radius-xl);
+}
+
+
+/* ═══ SEARCH BAR ═══ */
+.vl-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: var(--vl-bg-surface);
+  border: 1px solid var(--vl-border);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  transition-property: border-color, box-shadow;
+  transition-duration: var(--duration-normal);
+  transition-timing-function: var(--ease-default);
+}
+
+.vl-search:hover {
+  border-color: var(--vl-border-hover);
+}
+
+.vl-search:focus-within {
+  border-color: var(--vl-cyan);
+  box-shadow: 0 0 0 3px var(--vl-cyan-soft);
+}
+
+.vl-search-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--vl-text-tertiary);
+}
+
+.vl-search-input {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  color: var(--vl-text-primary);
+  border: none;
+  outline: none;
+}
+
+.vl-search-input::placeholder {
+  color: var(--vl-text-tertiary);
+}
+
+/* Search bar minimal variant (topbar) */
+.vl-search-minimal {
+  height: 36px;
+  border-radius: var(--radius-lg);
+}
+
+.vl-search-minimal .vl-search-icon {
+  width: var(--icon-sm);
+  height: var(--icon-sm);
+  margin-left: var(--space-3);
+}
+
+.vl-search-minimal .vl-search-input {
+  padding: 0 var(--space-3);
+  font-size: var(--text-sm);
+}
+
+/* Search bar large variant (hero) */
+.vl-search-hero {
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-xl);
+}
+
+.vl-search-hero .vl-search-icon {
+  width: var(--icon-lg);
+  height: var(--icon-lg);
+  margin-left: var(--space-6);
+}
+
+.vl-search-hero .vl-search-input {
+  padding: var(--space-5) var(--space-6);
+  font-size: var(--text-lg);
+}
+
+
+/* ═══ INPUT GROUP (input + button) ═══ */
+.vl-input-group {
+  display: flex;
+  align-items: stretch;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+}
+
+.vl-input-group .vl-input {
+  border-radius: var(--radius-xl) 0 0 var(--radius-xl);
+  border-right: none;
+}
+
+.vl-input-group .vl-btn {
+  border-radius: 0 var(--radius-xl) var(--radius-xl) 0;
+  flex-shrink: 0;
+}
+
+
+/* ═══ KEYBOARD SHORTCUT (kbd) ═══ */
+.vl-kbd {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px var(--space-1\.5);
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  color: var(--vl-text-tertiary);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--vl-border);
+  border-radius: var(--radius-sm);
+  line-height: var(--leading-none);
+}
+
+:root:not(.dark) .vl-kbd {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+
+/* ═══ DROPDOWN RESULTS ═══ */
+.vl-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: var(--space-2);
+  background: var(--vl-bg-elevated);
+  border: 1px solid var(--vl-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  z-index: var(--z-dropdown);
+  max-height: 400px;
+  overflow-y: auto;
+  animation: vl-scale-in var(--duration-fast) var(--ease-out);
+}
+
+.vl-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  width: 100%;
+  text-align: left;
+  border-bottom: 1px solid var(--vl-border);
+  transition-property: background-color;
+  transition-duration: var(--duration-fast);
+  transition-timing-function: var(--ease-default);
+  cursor: pointer;
+}
+
+.vl-dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.vl-dropdown-item:hover {
+  background: var(--vl-bg-secondary);
+}

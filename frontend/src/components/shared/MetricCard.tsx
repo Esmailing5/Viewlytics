@@ -31,27 +31,27 @@ interface MetricCardProps {
   /** Ícono de Lucide React */
   icon?: ReactNode;
   /** Variante de color de acento */
-  accent?: 'orange' | 'blue' | 'green' | 'purple';
+  accent?: 'red' | 'cyan' | 'green' | 'purple';
   /** Índice para animación escalonada */
   animationDelay?: number;
 }
 
 const ACCENT_MAP = {
-  orange: {
-    icon: 'bg-[#FF7A00]/15 text-[#FF7A00]',
-    glow: 'hover:shadow-[0_0_20px_rgba(255,122,0,0.1)]',
+  red: {
+    icon: 'bg-[var(--vl-red-soft)] text-[var(--vl-red)]',
+    glow: 'vl-hover-glow-red',
   },
-  blue: {
-    icon: 'bg-blue-500/15 text-blue-400',
-    glow: 'hover:shadow-[0_0_20px_rgba(59,130,246,0.1)]',
+  cyan: {
+    icon: 'bg-[var(--vl-cyan-soft)] text-[var(--vl-cyan)]',
+    glow: 'vl-hover-glow-cyan',
   },
   green: {
-    icon: 'bg-emerald-500/15 text-emerald-400',
-    glow: 'hover:shadow-[0_0_20px_rgba(16,185,129,0.1)]',
+    icon: 'bg-[var(--vl-success-soft)] text-[var(--vl-success)]',
+    glow: 'hover:shadow-[0_0_20px_rgba(34,197,94,0.15)]',
   },
   purple: {
-    icon: 'bg-purple-500/15 text-purple-400',
-    glow: 'hover:shadow-[0_0_20px_rgba(168,85,247,0.1)]',
+    icon: 'bg-[var(--vl-purple-soft)] text-[var(--vl-purple)]',
+    glow: 'vl-hover-glow-purple',
   },
 } as const;
 
@@ -64,7 +64,7 @@ export function MetricCard({
   change,
   positive = true,
   icon,
-  accent = 'orange',
+  accent = 'red',
   animationDelay = 0,
 }: MetricCardProps) {
   const accentStyle = ACCENT_MAP[accent];
@@ -72,12 +72,10 @@ export function MetricCard({
   return (
     <motion.div
       className={`
-        relative p-4 rounded-2xl
-        bg-[#0F2747]/60 backdrop-blur-md
-        border border-white/[0.06]
-        transition-all duration-300
+        vl-card-metric
         ${accentStyle.glow}
       `}
+      data-accent={accent}
       initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
@@ -92,7 +90,7 @@ export function MetricCard({
         {change && (
           <span
             className={`text-xs font-semibold ${
-              positive ? 'text-emerald-400' : 'text-red-400'
+              positive ? 'text-[var(--vl-success)]' : 'text-[var(--vl-danger)]'
             }`}
           >
             {change}
@@ -100,8 +98,8 @@ export function MetricCard({
         )}
       </div>
 
-      <p className="text-2xl font-bold text-[#F5F7FA] tracking-tight">{value}</p>
-      <p className="mt-1 text-xs text-[#B8C4D4] font-medium">{label}</p>
+      <p className="text-2xl font-bold text-[var(--vl-text-primary)] tracking-tight">{value}</p>
+      <p className="mt-1 text-xs text-[var(--vl-text-secondary)] font-medium">{label}</p>
     </motion.div>
   );
 }

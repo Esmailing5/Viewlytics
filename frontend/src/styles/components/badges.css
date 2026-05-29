@@ -1,0 +1,170 @@
+/**
+ * Viewlytics — Badge & Pill Component Styles
+ *
+ * System for status indicators, tags, and inline labels.
+ * Consistent sizing, colors, and border-radius.
+ */
+
+/* ═══ BASE BADGE ═══ */
+.vl-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-family: var(--font-sans);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-none);
+  white-space: nowrap;
+  border-radius: var(--radius-full);
+  border: 1px solid transparent;
+}
+
+
+/* ═══ BADGE SIZES ═══ */
+.vl-badge-xs {
+  font-size: var(--text-2xs);
+  padding: 2px var(--space-1\.5);
+  gap: 2px;
+}
+
+.vl-badge-sm {
+  font-size: var(--text-xs);
+  padding: var(--space-0\.5) var(--space-2);
+  gap: var(--space-1);
+}
+
+.vl-badge-md {
+  font-size: var(--text-sm);
+  padding: var(--space-1) var(--space-2\.5);
+  gap: var(--space-1\.5);
+}
+
+
+/* ═══ BADGE VARIANTS ═══ */
+.vl-badge-default {
+  background: var(--vl-bg-elevated);
+  color: var(--vl-text-secondary);
+  border-color: var(--vl-border);
+}
+
+.vl-badge-red {
+  background: var(--vl-red-soft);
+  color: var(--vl-red);
+  border-color: rgba(255, 59, 48, 0.2);
+}
+
+.vl-badge-success {
+  background: var(--vl-success-soft);
+  color: var(--vl-success);
+  border-color: rgba(34, 197, 94, 0.2);
+}
+
+.vl-badge-danger {
+  background: var(--vl-danger-soft);
+  color: var(--vl-danger);
+  border-color: rgba(255, 59, 48, 0.2);
+}
+
+.vl-badge-warning {
+  background: var(--vl-warning-soft);
+  color: var(--vl-warning);
+  border-color: rgba(245, 158, 11, 0.2);
+}
+
+.vl-badge-info {
+  background: var(--vl-info-soft);
+  color: var(--vl-info);
+  border-color: rgba(0, 194, 255, 0.2);
+}
+
+.vl-badge-purple {
+  background: var(--vl-purple-soft);
+  color: var(--vl-purple);
+  border-color: rgba(124, 92, 255, 0.2);
+}
+
+/* Hot / Trending badge */
+.vl-badge-hot {
+  background: var(--vl-red-soft);
+  color: var(--vl-red);
+  border-color: rgba(255, 59, 48, 0.2);
+}
+
+
+/* ═══ BADGE OUTLINE VARIANT ═══ */
+.vl-badge-outline {
+  background: transparent;
+  border-color: var(--vl-border-hover);
+  color: var(--vl-text-secondary);
+}
+
+
+/* ═══ PILL (tag / chip style) ═══ */
+.vl-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1\.5) var(--space-3);
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  color: var(--vl-text-secondary);
+  background: var(--vl-bg-surface);
+  border: 1px solid var(--vl-border);
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+  transition-property: color, background-color, border-color;
+  transition-duration: var(--duration-fast);
+  transition-timing-function: var(--ease-default);
+}
+
+.vl-pill:hover {
+  color: var(--vl-text-primary);
+  border-color: var(--vl-border-hover);
+}
+
+.vl-pill-active {
+  color: var(--vl-text-primary);
+  background: var(--vl-bg-elevated);
+  border-color: var(--vl-border-active);
+}
+
+
+/* ═══ STATUS DOT ═══ */
+.vl-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+
+.vl-status-dot-live {
+  background: var(--vl-success);
+  animation: vl-pulse-glow 2s var(--ease-in-out) infinite;
+}
+
+.vl-status-dot-offline {
+  background: var(--vl-text-tertiary);
+}
+
+.vl-status-dot-warning {
+  background: var(--vl-warning);
+}
+
+
+/* ═══ LABEL (uppercase micro text) ═══ */
+.vl-label {
+  font-family: var(--font-sans);
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--vl-text-tertiary);
+}
+
+.vl-label-red {
+  color: var(--vl-red);
+}
+
+.vl-label-cyan {
+  color: var(--vl-cyan);
+}

@@ -77,76 +77,81 @@ export function EstimatedIncomeChart({ growth, recentVideos = [] }: ChartProps) 
     return data;
   }, [views30d, recentVideos]);
 
+  /* Chart color — uses success green from design system */
+  const chartColor = '#22C55E';
+  const gridColor = 'rgba(255,255,255,0.04)';
+  const tickColor = '#98A2B3';
+
   return (
-    <div className="dashboard-card p-6 h-full flex flex-col">
+    <div className="vl-card-dashboard p-6 h-full flex flex-col">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
         <div>
-          <h3 className="text-xl font-bold text-[var(--text-primary)]">Ingresos Estimados</h3>
-          <p className="text-sm text-[var(--text-secondary)] mt-1">
+          <h3 className="text-xl font-bold text-[var(--vl-text-primary)]">Ingresos Estimados</h3>
+          <p className="text-sm text-[var(--vl-text-secondary)] mt-1">
             Basado en CPM de $0.25 - $4.00 y tráfico de 30 días
           </p>
         </div>
-        <div className="flex items-center gap-2 px-4 py-2 bg-emerald-500/10 text-emerald-500 rounded-xl font-semibold">
+        <div className="flex items-center gap-2 px-4 py-2 bg-[var(--vl-success-soft)] text-[var(--vl-success)] rounded-xl font-semibold">
           <DollarSign className="w-5 h-5" /> Monetización Activa
         </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-        <div className="p-5 rounded-2xl bg-[var(--bg-main)] border border-[var(--border-color)]">
-          <p className="text-sm font-medium text-[var(--text-secondary)] mb-1">Ingreso Estimado Mensual</p>
-          <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-[var(--text-primary)] break-words">
-            {formatMoney(monthlyLow)} <span className="text-[var(--text-secondary)] font-normal text-lg mx-1">-</span> {formatMoney(monthlyHigh)}
+        <div className="p-5 rounded-2xl bg-[var(--vl-bg-primary)] border border-[var(--vl-border)]">
+          <p className="text-sm font-medium text-[var(--vl-text-secondary)] mb-1">Ingreso Estimado Mensual</p>
+          <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-[var(--vl-text-primary)] break-words">
+            {formatMoney(monthlyLow)} <span className="text-[var(--vl-text-secondary)] font-normal text-lg mx-1">-</span> {formatMoney(monthlyHigh)}
           </p>
         </div>
-        <div className="p-5 rounded-2xl bg-[var(--bg-main)] border border-[var(--border-color)]">
-          <p className="text-sm font-medium text-[var(--text-secondary)] mb-1">Ingreso Estimado Anual</p>
-          <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-[var(--text-primary)] break-words">
-            {formatMoney(yearlyLow)} <span className="text-[var(--text-secondary)] font-normal text-lg mx-1">-</span> {formatMoney(yearlyHigh)}
+        <div className="p-5 rounded-2xl bg-[var(--vl-bg-primary)] border border-[var(--vl-border)]">
+          <p className="text-sm font-medium text-[var(--vl-text-secondary)] mb-1">Ingreso Estimado Anual</p>
+          <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-[var(--vl-text-primary)] break-words">
+            {formatMoney(yearlyLow)} <span className="text-[var(--vl-text-secondary)] font-normal text-lg mx-1">-</span> {formatMoney(yearlyHigh)}
           </p>
         </div>
       </div>
 
       <div className="flex-1 w-full min-h-[250px]">
-        <h4 className="text-sm font-semibold text-[var(--text-secondary)] mb-4">Proyección de Generación Diaria (Últimos 14 días)</h4>
+        <h4 className="text-sm font-semibold text-[var(--vl-text-secondary)] mb-4">Proyección de Generación Diaria (Últimos 14 días)</h4>
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 10 }}>
             <defs>
               <linearGradient id="colorIncome" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
-                <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                <stop offset="5%" stopColor={chartColor} stopOpacity={0.3}/>
+                <stop offset="95%" stopColor={chartColor} stopOpacity={0}/>
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border-color)" opacity={0.5} />
+            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={gridColor} opacity={0.5} />
             <XAxis 
               dataKey="date" 
               axisLine={false}
               tickLine={false}
-              tick={{ fill: 'var(--text-secondary)', fontSize: 11 }}
+              tick={{ fill: tickColor, fontSize: 11 }}
               tickMargin={12}
               minTickGap={20}
             />
             <YAxis 
               axisLine={false}
               tickLine={false}
-              tick={{ fill: 'var(--text-secondary)', fontSize: 12 }}
+              tick={{ fill: tickColor, fontSize: 12 }}
               tickFormatter={(value) => `$${value}`}
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: 'var(--bg-surface)',
-                borderColor: 'var(--border-color)',
+                backgroundColor: 'var(--vl-bg-elevated)',
+                borderColor: 'var(--vl-border)',
                 borderRadius: '12px',
                 boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)'
               }}
-              itemStyle={{ color: 'var(--text-primary)', fontWeight: 'bold' }}
+              itemStyle={{ color: 'var(--vl-text-primary)', fontWeight: 'bold' }}
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
               formatter={(value: any) => [`$${value}`, 'Ingreso Diario']}
-              labelStyle={{ color: 'var(--text-secondary)', marginBottom: '4px' }}
+              labelStyle={{ color: 'var(--vl-text-secondary)', marginBottom: '4px' }}
             />
             <Area 
               type="monotone" 
               dataKey="income" 
-              stroke="#10b981" 
+              stroke={chartColor} 
               strokeWidth={3}
               fillOpacity={1} 
               fill="url(#colorIncome)" 

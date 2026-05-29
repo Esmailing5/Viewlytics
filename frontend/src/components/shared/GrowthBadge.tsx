@@ -7,7 +7,7 @@
  * @example
  * <GrowthBadge rate={12.4} />       // → "+12.4%" (verde)
  * <GrowthBadge rate={-3.2} />       // → "-3.2%" (rojo)
- * <GrowthBadge rate={21.3} hot />   // → "+21.3% 🔥" (naranja)
+ * <GrowthBadge rate={21.3} hot />   // → "+21.3% 🔥" (rojo hot)
  */
 
 'use client';
@@ -32,18 +32,18 @@ export function GrowthBadge({ rate, hot, size = 'md' }: GrowthBadgeProps) {
   const isHot = hot ?? rate >= 15;
 
   const sizeClasses = size === 'sm'
-    ? 'text-xs px-2 py-0.5 gap-1'
-    : 'text-sm px-2.5 py-1 gap-1.5';
+    ? 'vl-badge-xs'
+    : 'vl-badge-sm';
 
   const colorClasses = isHot
-    ? 'bg-[#FF7A00]/15 text-[#FF7A00] border border-[#FF7A00]/20'
+    ? 'vl-badge-hot'
     : isPositive
-    ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/20'
-    : 'bg-red-500/15 text-red-400 border border-red-500/20';
+    ? 'vl-badge-success'
+    : 'vl-badge-danger';
 
   return (
     <span
-      className={`inline-flex items-center rounded-full font-semibold ${sizeClasses} ${colorClasses}`}
+      className={`vl-badge ${sizeClasses} ${colorClasses}`}
     >
       {isHot ? (
         <Flame className="w-3 h-3" />

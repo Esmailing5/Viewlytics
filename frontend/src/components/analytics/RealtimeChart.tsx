@@ -13,6 +13,12 @@ import { REALTIME_DATA } from '@/constants/dashboard-mock-data';
 import { DashboardCard } from './DashboardCard';
 import { formatCount } from '@/utils/format';
 
+/* Chart colors — resolved from design system tokens (Recharts requires hex) */
+const purpleColor = '#7C5CFF';  /* --vl-purple */
+const cyanColor = '#00C2FF';    /* --vl-cyan */
+const gridColor = 'rgba(255,255,255,0.04)';
+const tickColor = '#98A2B3';    /* --vl-text-secondary */
+
 /** Custom tooltip */
 function CustomTooltip({
   active,
@@ -26,9 +32,9 @@ function CustomTooltip({
   if (!active || !payload?.length) return null;
 
   return (
-    <div className="dashboard-card px-3 py-2 !rounded-xl text-xs shadow-lg">
-      <p className="text-[var(--text-secondary)] mb-1">{label} ago</p>
-      <p className="text-[var(--text-primary)] font-semibold">
+    <div className="vl-card-dashboard px-3 py-2 !rounded-xl text-xs shadow-lg">
+      <p className="text-[var(--vl-text-secondary)] mb-1">{label} ago</p>
+      <p className="text-[var(--vl-text-primary)] font-semibold">
         {formatCount(payload[0].value)} viewers
       </p>
     </div>
@@ -47,28 +53,28 @@ export function RealtimeChart() {
           <LineChart data={REALTIME_DATA} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
             <defs>
               <linearGradient id="realtimeGrad" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stopColor="var(--accent-purple)" />
-                <stop offset="50%" stopColor="var(--accent-blue)" />
-                <stop offset="100%" stopColor="var(--accent-cyan)" />
+                <stop offset="0%" stopColor={purpleColor} />
+                <stop offset="50%" stopColor={cyanColor} />
+                <stop offset="100%" stopColor={cyanColor} />
               </linearGradient>
             </defs>
 
             <CartesianGrid
               strokeDasharray="3 3"
-              stroke="var(--border-color)"
+              stroke={gridColor}
               vertical={false}
             />
 
             <XAxis
               dataKey="time"
-              tick={{ fill: 'var(--text-secondary)', fontSize: 11 }}
+              tick={{ fill: tickColor, fontSize: 11 }}
               tickLine={false}
               axisLine={false}
               interval={9}
             />
 
             <YAxis
-              tick={{ fill: 'var(--text-secondary)', fontSize: 11 }}
+              tick={{ fill: tickColor, fontSize: 11 }}
               tickLine={false}
               axisLine={false}
               tickFormatter={(v: number) => formatCount(v)}
@@ -84,8 +90,8 @@ export function RealtimeChart() {
               dot={false}
               activeDot={{
                 r: 4,
-                fill: 'var(--accent-cyan)',
-                stroke: 'var(--bg-surface)',
+                fill: cyanColor,
+                stroke: '#11141B', /* --vl-bg-surface */
                 strokeWidth: 2,
               }}
               animationDuration={1000}

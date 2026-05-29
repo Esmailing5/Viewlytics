@@ -15,12 +15,17 @@ interface LogoProps {
  *
  * Renders inline SVG with colors that adapt to the active theme.
  * Supports full, compact, and icon-only variants.
+ *
+ * Uses design system token values for theme-aware rendering.
+ * Note: SVG fill/stroke attributes cannot use CSS variables directly in all
+ * browsers, so we resolve them via the useTheme hook.
  */
 export function Logo({ className = '', width, height, variant = 'full' }: LogoProps) {
   const { isDark } = useTheme();
 
-  const textColor = isDark ? '#FFFFFF' : '#1a1c21';
-  const accentColor = isDark ? '#00c6ff' : '#3366ff';
+  /* Resolve design system colors for SVG rendering */
+  const textColor = isDark ? '#F5F7FA' : '#1a1c21';   /* --vl-text-primary */
+  const accentColor = isDark ? '#FF3B30' : '#FF3B30';  /* --vl-red (brand red, same in both themes) */
 
   if (variant === 'icon') {
     return (

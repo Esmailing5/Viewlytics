@@ -1,5 +1,5 @@
 /**
- * Viewlytics — Footer (Phase 1.5)
+ * Viewlytics — Footer (Design System v2)
  *
  * Minimal footer with logo, copyright, links, and social icons.
  * Config-driven, theme-aware.
@@ -33,7 +33,7 @@ export function Footer() {
 
   return (
     <footer
-      className="border-t border-[var(--border-color)] bg-[var(--bg-main)]"
+      className="border-t border-[var(--vl-border)] bg-[var(--vl-bg-primary)]"
       role="contentinfo"
     >
       <div className="max-w-7xl mx-auto px-6 py-8">
@@ -44,7 +44,7 @@ export function Footer() {
             <Link href="/" id="footer-logo" aria-label={`${brandConfig.name} — Home`}>
               <Logo className="h-8 w-auto mb-3" variant="full" />
             </Link>
-            <p className="text-sm text-[var(--text-secondary)] max-w-xs leading-relaxed">
+            <p className="text-sm text-[var(--vl-text-secondary)] max-w-xs leading-relaxed">
               Premium creator analytics intelligence platform.
             </p>
 
@@ -60,14 +60,7 @@ export function Footer() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={social.label}
-                    className="
-                      w-8 h-8 rounded-lg
-                      flex items-center justify-center
-                      text-[var(--text-secondary)]
-                      hover:text-[var(--text-primary)]
-                      hover:bg-[var(--bg-surface)]
-                      transition-all duration-200
-                    "
+                    className="vl-btn vl-btn-ghost vl-btn-icon vl-btn-sm"
                   >
                     {Icon && <Icon className="w-4 h-4" />}
                   </a>
@@ -80,7 +73,7 @@ export function Footer() {
           <div className="flex flex-wrap gap-12">
             {enabledFooterGroups.map((group) => (
               <div key={group.title}>
-                <h3 className="text-[var(--text-primary)] text-xs font-semibold uppercase tracking-wider mb-3">
+                <h3 className="vl-label mb-3">
                   {group.title}
                 </h3>
                 <ul className="space-y-2" role="list">
@@ -92,9 +85,9 @@ export function Footer() {
                           href={item.href}
                           id={item.id}
                           className="
-                            text-sm text-[var(--text-secondary)]
-                            hover:text-[var(--text-primary)]
-                            transition-colors duration-200
+                            text-sm text-[var(--vl-text-secondary)]
+                            hover:text-[var(--vl-text-primary)]
+                            vl-transition-fast
                           "
                         >
                           {item.label}
@@ -108,11 +101,11 @@ export function Footer() {
         </div>
 
         {/* Bottom row: Copyright */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-6 border-t border-[var(--border-color)]">
-          <p className="text-xs text-[var(--text-secondary)]/60">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-6 border-t border-[var(--vl-border)]">
+          <p className="text-xs text-[var(--vl-text-tertiary)]">
             © {currentYear} {brandConfig.name}. All rights reserved.
           </p>
-          <p className="text-xs text-[var(--text-secondary)]/40">
+          <p className="text-xs text-[var(--vl-text-disabled)]">
             Powered by {brandConfig.name}
           </p>
         </div>

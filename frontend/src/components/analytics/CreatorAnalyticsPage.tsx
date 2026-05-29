@@ -26,9 +26,9 @@ const STAT_ICON_MAP: Record<
 /** Loading skeleton for chart cards */
 function ChartSkeleton() {
   return (
-    <div className="dashboard-card p-5 animate-pulse">
-      <div className="h-4 w-24 bg-[var(--border-color)] rounded mb-4" />
-      <div className="h-[200px] bg-[var(--border-color)] rounded-xl opacity-30" />
+    <div className="vl-card-dashboard p-5 vl-animate-shimmer">
+      <div className="h-4 w-24 bg-[var(--vl-border)] rounded mb-4" />
+      <div className="h-[200px] bg-[var(--vl-border)] rounded-xl opacity-30" />
     </div>
   );
 }
@@ -39,16 +39,16 @@ function StatCard({ metric }: { metric: any }) {
   const Icon = STAT_ICON_MAP[metric.icon];
 
   return (
-    <div className="dashboard-card p-4 flex items-center gap-4">
-      <div className="w-10 h-10 rounded-xl gradient-accent flex items-center justify-center flex-shrink-0">
+    <div className="vl-card-stat">
+      <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: 'var(--vl-gradient-brand)' }}>
         {Icon && <Icon className="w-5 h-5 text-white" />}
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-xs text-[var(--text-secondary)] truncate">
+        <p className="text-xs text-[var(--vl-text-secondary)] truncate">
           {metric.label}
         </p>
         <div className="flex items-baseline gap-2">
-          <p className="text-lg font-bold text-[var(--text-primary)]">
+          <p className="text-lg font-bold text-[var(--vl-text-primary)]">
             {metric.value}
           </p>
         </div>
@@ -95,18 +95,18 @@ export function CreatorAnalyticsPage({
   if (loading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <div className="w-8 h-8 rounded-full border-4 border-[var(--accent-blue)] border-t-transparent animate-spin" />
+        <div className="w-8 h-8 rounded-full border-4 border-[var(--vl-red)] border-t-transparent vl-animate-spin" />
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="p-6 dashboard-card border-red-500/20 bg-red-500/5">
-        <h3 className="text-red-500 font-bold mb-2">
+      <div className="p-6 vl-card-dashboard border-[var(--vl-danger)]/20 bg-[var(--vl-danger-soft)]">
+        <h3 className="text-[var(--vl-danger)] font-bold mb-2">
           Error cargando analytics
         </h3>
-        <p className="text-[var(--text-secondary)]">{error}</p>
+        <p className="text-[var(--vl-text-secondary)]">{error}</p>
       </div>
     );
   }
@@ -152,7 +152,7 @@ export function CreatorAnalyticsPage({
       {/* Visual Header */}
       <div className="relative mb-8 sm:mb-10">
         {/* Banner Image */}
-        <div className="relative w-full h-32 sm:h-72 rounded-t-2xl sm:rounded-2xl overflow-hidden bg-[var(--bg-surface)] border border-[var(--border-color)]">
+        <div className="relative w-full h-32 sm:h-72 rounded-t-2xl sm:rounded-2xl overflow-hidden bg-[var(--vl-bg-surface)] border border-[var(--vl-border)]">
           {data.profile?.banner_url ? (
             <img
               src={data.profile.banner_url}
@@ -160,7 +160,7 @@ export function CreatorAnalyticsPage({
               className="absolute inset-0 w-full h-full object-cover sm:opacity-70"
             />
           ) : (
-            <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-[var(--bg-main)] to-[var(--bg-surface)]" />
+            <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-[var(--vl-bg-primary)] to-[var(--vl-bg-surface)]" />
           )}
           <div className="hidden sm:block absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
 
@@ -170,7 +170,7 @@ export function CreatorAnalyticsPage({
               <img
                 src={data.profile.avatar_url}
                 alt={data.profile.display_name}
-                className="w-24 h-24 rounded-full border-4 border-[var(--bg-surface)] object-cover shadow-xl shrink-0"
+                className="w-24 h-24 rounded-full border-4 border-[var(--vl-bg-surface)] object-cover shadow-xl shrink-0"
               />
             )}
             <div className="mb-2 flex-1 min-w-0">
@@ -180,7 +180,7 @@ export function CreatorAnalyticsPage({
                 </span>
                 {data.profile?.verified && (
                   <span
-                    className="text-[var(--accent-blue)] bg-white rounded-full w-5 h-5 flex items-center justify-center text-sm shrink-0"
+                    className="text-[var(--vl-cyan)] bg-white rounded-full w-5 h-5 flex items-center justify-center text-sm shrink-0"
                     title="Verified"
                   >
                     ✓
@@ -204,21 +204,21 @@ export function CreatorAnalyticsPage({
             <img
               src={data.profile.avatar_url}
               alt={data.profile.display_name}
-              className="w-20 h-20 rounded-full border-4 border-[var(--bg-main)] object-cover shadow-lg mb-2"
+              className="w-20 h-20 rounded-full border-4 border-[var(--vl-bg-primary)] object-cover shadow-lg mb-2"
             />
           )}
-          <h1 className="text-xl font-bold text-[var(--text-primary)] flex items-center justify-center gap-1 flex-wrap">
+          <h1 className="text-xl font-bold text-[var(--vl-text-primary)] flex items-center justify-center gap-1 flex-wrap">
             {data.profile?.display_name || 'Analytics'}
             {data.profile?.verified && (
               <span
-                className="text-[var(--accent-blue)] bg-[var(--bg-surface)] rounded-full w-4 h-4 flex items-center justify-center text-xs shrink-0"
+                className="text-[var(--vl-cyan)] bg-[var(--vl-bg-surface)] rounded-full w-4 h-4 flex items-center justify-center text-xs shrink-0"
                 title="Verified"
               >
                 ✓
               </span>
             )}
           </h1>
-          <p className="text-[var(--text-secondary)] text-sm mt-0.5">
+          <p className="text-[var(--vl-text-secondary)] text-sm mt-0.5">
             {data.platform.toUpperCase()} •{' '}
             {new Intl.NumberFormat('es-ES', { notation: 'compact' }).format(
               data.profile?.subscribers || 0

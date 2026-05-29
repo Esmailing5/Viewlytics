@@ -26,14 +26,18 @@ function CustomTooltip({
   if (!active || !payload?.length) return null;
 
   return (
-    <div className="dashboard-card px-3 py-2 !rounded-xl text-xs shadow-lg">
-      <p className="text-[var(--text-secondary)] mb-1">{label}</p>
-      <p className="text-[var(--text-primary)] font-semibold">
+    <div className="vl-card-dashboard px-3 py-2 !rounded-xl text-xs shadow-lg">
+      <p className="text-[var(--vl-text-secondary)] mb-1">{label}</p>
+      <p className="text-[var(--vl-text-primary)] font-semibold">
         {formatCount(payload[0].value)}
       </p>
     </div>
   );
 }
+
+/* Chart colors from design system tokens */
+const gridColor = 'rgba(255,255,255,0.04)';
+const tickColor = '#98A2B3';
 
 /**
  * EngagementChart — Bar chart with gradient bars showing engagement by category.
@@ -47,42 +51,42 @@ export function EngagementChart() {
           <BarChart data={ENGAGEMENT_DATA} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
             <defs>
               <linearGradient id="engGrad1" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="var(--accent-cyan)" />
-                <stop offset="100%" stopColor="var(--accent-blue)" />
+                <stop offset="0%" stopColor="#00C2FF" />
+                <stop offset="100%" stopColor="#7C5CFF" />
               </linearGradient>
               <linearGradient id="engGrad2" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="var(--accent-blue)" />
-                <stop offset="100%" stopColor="var(--accent-purple)" />
+                <stop offset="0%" stopColor="#7C5CFF" />
+                <stop offset="100%" stopColor="#5B3FCC" />
               </linearGradient>
               <linearGradient id="engGrad3" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="var(--accent-purple)" />
+                <stop offset="0%" stopColor="#7C5CFF" />
                 <stop offset="100%" stopColor="#9146FF" />
               </linearGradient>
               <linearGradient id="engGrad4" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="var(--success-green)" />
+                <stop offset="0%" stopColor="#22C55E" />
                 <stop offset="100%" stopColor="#16a34a" />
               </linearGradient>
               <linearGradient id="engGrad5" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#f59e0b" />
+                <stop offset="0%" stopColor="#F59E0B" />
                 <stop offset="100%" stopColor="#d97706" />
               </linearGradient>
             </defs>
 
             <CartesianGrid
               strokeDasharray="3 3"
-              stroke="var(--border-color)"
+              stroke={gridColor}
               vertical={false}
             />
 
             <XAxis
               dataKey="category"
-              tick={{ fill: 'var(--text-secondary)', fontSize: 11 }}
+              tick={{ fill: tickColor, fontSize: 11 }}
               tickLine={false}
               axisLine={false}
             />
 
             <YAxis
-              tick={{ fill: 'var(--text-secondary)', fontSize: 11 }}
+              tick={{ fill: tickColor, fontSize: 11 }}
               tickLine={false}
               axisLine={false}
               tickFormatter={(v: number) => formatCount(v)}

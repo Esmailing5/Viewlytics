@@ -2,9 +2,8 @@
  * Viewlytics — ViewsChart
  *
  * Gráfico de barras animado para mostrar las vistas mensuales de un creador.
- * Construido con Recharts, color naranja de acento de marca.
- *
- * @see execution-pack/01-tech-architecture.md — Recharts
+ * Construido con Recharts, color rojo de acento de marca.
+ * Uses design system color tokens for chart colors.
  */
 
 'use client';
@@ -42,9 +41,9 @@ function CustomTooltip({
   if (!active || !payload?.length) return null;
 
   return (
-    <div className="bg-[#0F2747] border border-white/10 rounded-xl px-3 py-2 shadow-xl">
-      <p className="text-[#B8C4D4] text-xs mb-1">{label}</p>
-      <p className="text-[#F5F7FA] text-sm font-bold">{formatCount(payload[0].value)} vistas</p>
+    <div className="bg-[var(--vl-bg-elevated)] border border-[var(--vl-border-hover)] rounded-xl px-3 py-2 shadow-xl">
+      <p className="text-[var(--vl-text-secondary)] text-xs mb-1">{label}</p>
+      <p className="text-[var(--vl-text-primary)] text-sm font-bold">{formatCount(payload[0].value)} vistas</p>
     </div>
   );
 }
@@ -60,25 +59,31 @@ export function ViewsChart({ data, height = 130 }: ViewsChartProps) {
 
   const maxValue = Math.max(...chartData.map((d) => d.value));
 
+  /* Chart colors — resolved from design system tokens (Recharts requires hex) */
+  const barColorActive = '#FF3B30';             /* --vl-red */
+  const barColorMuted = 'rgba(255, 59, 48, 0.25)'; /* --vl-red at 25% */
+  const gridColor = 'rgba(255,255,255,0.04)';
+  const tickColor = '#98A2B3';                  /* --vl-text-secondary */
+
   return (
     <ResponsiveContainer width="100%" height={height}>
       <BarChart data={chartData} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
         <CartesianGrid
           strokeDasharray="3 3"
-          stroke="rgba(245,247,250,0.05)"
+          stroke={gridColor}
           vertical={false}
         />
 
         <XAxis
           dataKey="month"
-          tick={{ fill: '#B8C4D4', fontSize: 11 }}
+          tick={{ fill: tickColor, fontSize: 11 }}
           tickLine={false}
           axisLine={false}
           interval={2}
         />
 
         <YAxis
-          tick={{ fill: '#B8C4D4', fontSize: 11 }}
+          tick={{ fill: tickColor, fontSize: 11 }}
           tickLine={false}
           axisLine={false}
           tickFormatter={formatCount}
@@ -90,7 +95,7 @@ export function ViewsChart({ data, height = 130 }: ViewsChartProps) {
           {chartData.map((entry, index) => (
             <Cell
               key={`cell-${index}`}
-              fill={entry.value === maxValue ? '#FF7A00' : 'rgba(255,122,0,0.35)'}
+              fill={entry.value === maxValue ? barColorActive : barColorMuted}
             />
           ))}
         </Bar>

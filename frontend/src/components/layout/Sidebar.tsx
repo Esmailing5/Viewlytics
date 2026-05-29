@@ -107,30 +107,16 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
           id={`sidebar-${item.id}`}
           onClick={onMobileClose}
           className={`
-            relative flex items-center gap-3
-            px-3 py-2.5 rounded-xl
-            text-sm font-medium
-            transition-all duration-200
-            group
-            ${active
-              ? 'text-[var(--text-primary)] bg-[var(--accent-blue)]/10'
-              : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface)]'
-            }
+            vl-nav-item
+            ${active ? 'vl-nav-item-active' : ''}
             ${collapsed ? 'justify-center' : ''}
           `}
           title={collapsed ? item.label : undefined}
         >
-          {/* Active indicator bar */}
-          {active && (
-            <span
-              className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-r-full bg-[var(--accent-blue)]"
-              aria-hidden="true"
-            />
-          )}
-          {Icon && <Icon className={`w-5 h-5 flex-shrink-0 ${active ? 'text-[var(--accent-blue)]' : ''}`} />}
+          {Icon && <Icon className={`vl-nav-icon ${active ? 'text-[var(--vl-red)]' : ''}`} />}
           {!collapsed && <span>{item.label}</span>}
           {!collapsed && item.badge && (
-            <span className="ml-auto inline-flex items-center px-1.5 py-0.5 rounded-md bg-[var(--accent-blue)]/20 text-[var(--accent-blue)] text-[10px] font-bold">
+            <span className="vl-nav-badge">
               {item.badge}
             </span>
           )}
@@ -142,7 +128,7 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
   const sidebarContent = (
     <div className="flex flex-col h-full">
       {/* Logo */}
-      <div className={`flex items-center h-[72px] px-4 border-b border-[var(--border-color)] ${collapsed ? 'justify-center' : ''}`}>
+      <div className={`flex items-center h-[72px] px-4 border-b border-[var(--vl-border)] ${collapsed ? 'justify-center' : ''}`}>
         <Link href="/" className="flex items-center gap-2 flex-shrink-0" aria-label="Viewlytics Home">
           <Logo variant={collapsed ? 'icon' : 'full'} className={collapsed ? 'h-8 w-auto' : 'h-9 w-auto'} />
         </Link>
@@ -156,7 +142,7 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
       </nav>
 
       {/* Bottom section */}
-      <div className="px-3 py-4 border-t border-[var(--border-color)] space-y-1">
+      <div className="px-3 py-4 border-t border-[var(--vl-border)] space-y-1">
         <ul className="space-y-1" role="list">
           {bottomItems.map(renderNavItem)}
         </ul>
@@ -172,10 +158,8 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
         aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         className="
           hidden lg:flex items-center justify-center
-          h-10 mx-3 mb-3 rounded-xl
-          text-[var(--text-secondary)] hover:text-[var(--text-primary)]
-          hover:bg-[var(--bg-surface)]
-          transition-all duration-200
+          h-10 mx-3 mb-3
+          vl-btn vl-btn-ghost vl-btn-icon
         "
       >
         {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
@@ -190,10 +174,8 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
         id="sidebar-desktop"
         className={`
           hidden lg:flex flex-col
-          fixed top-0 left-0 h-full z-40
-          bg-[var(--bg-main)] border-r border-[var(--border-color)]
-          transition-[width] duration-300
-          ${collapsed ? 'w-[88px]' : 'w-[260px]'}
+          vl-sidebar
+          ${collapsed ? 'vl-sidebar-collapsed' : 'vl-sidebar-expanded'}
         `}
       >
         {sidebarContent}
@@ -207,7 +189,7 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
         >
           {/* Backdrop */}
           <div
-            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+            className="absolute inset-0 bg-[var(--vl-bg-overlay)] backdrop-blur-sm"
             onClick={onMobileClose}
           />
           {/* Drawer */}
@@ -215,7 +197,7 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
             id="sidebar-mobile"
             className="
               relative w-[280px] h-full
-              bg-[var(--bg-main)] border-r border-[var(--border-color)]
+              bg-[var(--vl-bg-primary)] border-r border-[var(--vl-border)]
               shadow-2xl
               animate-in slide-in-from-left duration-300
             "
@@ -226,11 +208,7 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
               aria-label="Close sidebar"
               className="
                 absolute top-4 right-4
-                w-8 h-8 rounded-lg
-                flex items-center justify-center
-                text-[var(--text-secondary)] hover:text-[var(--text-primary)]
-                hover:bg-[var(--bg-surface)]
-                transition-all duration-200
+                vl-btn vl-btn-ghost vl-btn-icon vl-btn-sm
               "
             >
               <X className="w-4 h-4" />

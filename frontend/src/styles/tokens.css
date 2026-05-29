@@ -1,0 +1,271 @@
+/**
+ * Viewlytics — Design System Tokens v2
+ *
+ * Single source of truth for ALL visual tokens in the product.
+ * Components MUST reference these tokens via var(--vl-*) instead of hardcoded values.
+ *
+ * Inspired by: Linear, Raycast, Vercel, Spotify Editorial
+ *
+ * Token naming: --vl-{category}-{property}-{variant}
+ */
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+ * COLOR SYSTEM
+ * Dark-first palette. Light mode overrides in theme.css.
+ * ═══════════════════════════════════════════════════════════════════════════════ */
+:root {
+  /* ── Backgrounds ── */
+  --vl-bg-primary:    #06070A;
+  --vl-bg-secondary:  #0B0D12;
+  --vl-bg-surface:    #11141B;
+  --vl-bg-elevated:   #181C25;
+  --vl-bg-overlay:    rgba(0, 0, 0, 0.6);
+
+  /* ── Borders ── */
+  --vl-border:        rgba(255, 255, 255, 0.06);
+  --vl-border-hover:  rgba(255, 255, 255, 0.12);
+  --vl-border-active: rgba(255, 255, 255, 0.18);
+  --vl-border-focus:  rgba(255, 59, 48, 0.4);
+
+  /* ── Text ── */
+  --vl-text-primary:   #F5F7FA;
+  --vl-text-secondary: #98A2B3;
+  --vl-text-tertiary:  #667085;
+  --vl-text-disabled:  #475467;
+  --vl-text-inverse:   #06070A;
+
+  /* ── Brand Red (Primary Accent) ── */
+  --vl-red:            #FF3B30;
+  --vl-red-hover:      #FF5147;
+  --vl-red-active:     #E6352B;
+  --vl-red-soft:       rgba(255, 59, 48, 0.12);
+  --vl-red-glow:       rgba(255, 59, 48, 0.35);
+
+  /* ── Accent Cyan (Secondary) ── */
+  --vl-cyan:           #00C2FF;
+  --vl-cyan-hover:     #33CEFF;
+  --vl-cyan-soft:      rgba(0, 194, 255, 0.12);
+  --vl-cyan-glow:      rgba(0, 194, 255, 0.25);
+
+  /* ── Accent Purple (Tertiary) ── */
+  --vl-purple:         #7C5CFF;
+  --vl-purple-hover:   #917AFF;
+  --vl-purple-soft:    rgba(124, 92, 255, 0.12);
+  --vl-purple-glow:    rgba(124, 92, 255, 0.25);
+
+  /* ── Semantic Colors ── */
+  --vl-success:        #22C55E;
+  --vl-success-soft:   rgba(34, 197, 94, 0.12);
+  --vl-warning:        #F59E0B;
+  --vl-warning-soft:   rgba(245, 158, 11, 0.12);
+  --vl-danger:         #FF3B30;
+  --vl-danger-soft:    rgba(255, 59, 48, 0.12);
+  --vl-info:           #00C2FF;
+  --vl-info-soft:      rgba(0, 194, 255, 0.12);
+
+  /* ── Chart Palette ── */
+  --vl-chart-1:        #FF3B30;
+  --vl-chart-2:        #00C2FF;
+  --vl-chart-3:        #7C5CFF;
+  --vl-chart-4:        #22C55E;
+  --vl-chart-5:        #F59E0B;
+  --vl-chart-6:        #EC4899;
+
+  /* ── Gradients ── */
+  --vl-gradient-brand:   linear-gradient(135deg, #FF3B30 0%, #FF6B5E 100%);
+  --vl-gradient-cyan:    linear-gradient(135deg, #00C2FF 0%, #7C5CFF 100%);
+  --vl-gradient-surface: linear-gradient(180deg, #11141B 0%, #0B0D12 100%);
+  --vl-gradient-hero:    linear-gradient(135deg, rgba(255,59,48,0.08) 0%, transparent 40%, rgba(0,194,255,0.06) 100%);
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+ * SPACING SCALE
+ * Base unit: 4px. Use --space-{n} for all margin, padding, gap values.
+ * ═══════════════════════════════════════════════════════════════════════════════ */
+:root {
+  --space-0:   0px;
+  --space-px:  1px;
+  --space-0\.5: 2px;
+  --space-1:   4px;
+  --space-1\.5: 6px;
+  --space-2:   8px;
+  --space-2\.5: 10px;
+  --space-3:   12px;
+  --space-3\.5: 14px;
+  --space-4:   16px;
+  --space-5:   20px;
+  --space-6:   24px;
+  --space-7:   28px;
+  --space-8:   32px;
+  --space-9:   36px;
+  --space-10:  40px;
+  --space-12:  48px;
+  --space-14:  56px;
+  --space-16:  64px;
+  --space-20:  80px;
+  --space-24:  96px;
+  --space-28:  112px;
+  --space-32:  128px;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+ * BORDER RADIUS
+ * Consistent rounding system. Cards use --radius-xl, pills --radius-full, etc.
+ * ═══════════════════════════════════════════════════════════════════════════════ */
+:root {
+  --radius-none: 0px;
+  --radius-xs:   4px;
+  --radius-sm:   6px;
+  --radius-md:   8px;
+  --radius-lg:   12px;
+  --radius-xl:   16px;
+  --radius-2xl:  20px;
+  --radius-3xl:  24px;
+  --radius-full: 9999px;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+ * SHADOW SYSTEM
+ * Dark-mode optimized shadows (higher opacity than typical light-mode shadows).
+ * ═══════════════════════════════════════════════════════════════════════════════ */
+:root {
+  --shadow-xs:   0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-sm:   0 2px 4px rgba(0, 0, 0, 0.25),
+                 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md:   0 4px 8px rgba(0, 0, 0, 0.3),
+                 0 2px 4px rgba(0, 0, 0, 0.2);
+  --shadow-lg:   0 8px 24px rgba(0, 0, 0, 0.35),
+                 0 4px 8px rgba(0, 0, 0, 0.2);
+  --shadow-xl:   0 16px 48px rgba(0, 0, 0, 0.4),
+                 0 8px 16px rgba(0, 0, 0, 0.25);
+  --shadow-2xl:  0 24px 64px rgba(0, 0, 0, 0.5),
+                 0 12px 24px rgba(0, 0, 0, 0.3);
+
+  /* Glow shadows — for accent elements on hover */
+  --shadow-glow-red:    0 0 20px var(--vl-red-glow),
+                        0 0 60px rgba(255, 59, 48, 0.08);
+  --shadow-glow-cyan:   0 0 20px var(--vl-cyan-glow),
+                        0 0 60px rgba(0, 194, 255, 0.06);
+  --shadow-glow-purple: 0 0 20px var(--vl-purple-glow),
+                        0 0 60px rgba(124, 92, 255, 0.06);
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+ * TYPOGRAPHY SCALE
+ * Modular scale with tight tracking for headings, relaxed for body.
+ * ═══════════════════════════════════════════════════════════════════════════════ */
+:root {
+  /* Font families — mapped via next/font CSS variables */
+  --font-sans:    var(--font-inter, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
+  --font-heading: var(--font-satoshi, var(--font-inter, 'Inter', sans-serif));
+  --font-mono:    var(--font-geist-mono, 'Geist Mono', 'JetBrains Mono', 'Fira Code', monospace);
+
+  /* Font sizes */
+  --text-2xs:  0.625rem;   /* 10px — micro labels */
+  --text-xs:   0.75rem;    /* 12px — captions, badges */
+  --text-sm:   0.8125rem;  /* 13px — labels, nav items */
+  --text-base: 0.875rem;   /* 14px — body text */
+  --text-md:   1rem;       /* 16px — large body */
+  --text-lg:   1.125rem;   /* 18px — lead text */
+  --text-xl:   1.25rem;    /* 20px — section titles */
+  --text-2xl:  1.5rem;     /* 24px — card headings */
+  --text-3xl:  1.875rem;   /* 30px — page headings */
+  --text-4xl:  2.25rem;    /* 36px — hero secondary */
+  --text-5xl:  3rem;       /* 48px — hero primary */
+  --text-6xl:  3.75rem;    /* 60px — hero display */
+  --text-7xl:  4.5rem;     /* 72px — giant display */
+
+  /* Line heights */
+  --leading-none:    1;
+  --leading-tight:   1.15;
+  --leading-snug:    1.25;
+  --leading-normal:  1.5;
+  --leading-relaxed: 1.625;
+  --leading-loose:   2;
+
+  /* Letter spacing */
+  --tracking-tighter: -0.04em;
+  --tracking-tight:   -0.025em;
+  --tracking-normal:  0em;
+  --tracking-wide:    0.025em;
+  --tracking-wider:   0.05em;
+  --tracking-widest:  0.1em;
+
+  /* Font weights */
+  --weight-regular:  400;
+  --weight-medium:   500;
+  --weight-semibold: 600;
+  --weight-bold:     700;
+  --weight-extrabold: 800;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+ * Z-INDEX STRATEGY
+ * Layering system. Never use arbitrary z-index values.
+ * ═══════════════════════════════════════════════════════════════════════════════ */
+:root {
+  --z-base:     0;
+  --z-raised:   10;
+  --z-dropdown: 100;
+  --z-sticky:   200;
+  --z-header:   250;
+  --z-overlay:  300;
+  --z-modal:    400;
+  --z-toast:    500;
+  --z-tooltip:  600;
+  --z-max:      9999;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+ * MOTION / TRANSITION TOKENS
+ * Consistent easing and duration values.
+ * ═══════════════════════════════════════════════════════════════════════════════ */
+:root {
+  /* Easing curves */
+  --ease-default:  cubic-bezier(0.4, 0, 0.2, 1);    /* Standard Material */
+  --ease-in:       cubic-bezier(0.4, 0, 1, 1);       /* Accelerate */
+  --ease-out:      cubic-bezier(0, 0, 0.2, 1);       /* Decelerate */
+  --ease-in-out:   cubic-bezier(0.4, 0, 0.2, 1);     /* Standard */
+  --ease-spring:   cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy */
+  --ease-smooth:   cubic-bezier(0.25, 0.1, 0.25, 1); /* Smooth linear */
+
+  /* Durations */
+  --duration-instant:  100ms;
+  --duration-fast:     150ms;
+  --duration-normal:   250ms;
+  --duration-slow:     400ms;
+  --duration-slower:   600ms;
+  --duration-slowest:  800ms;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+ * RESPONSIVE BREAKPOINTS (reference values — Tailwind handles actual breakpoints)
+ * ═══════════════════════════════════════════════════════════════════════════════ */
+:root {
+  --breakpoint-sm:  640px;
+  --breakpoint-md:  768px;
+  --breakpoint-lg:  1024px;
+  --breakpoint-xl:  1280px;
+  --breakpoint-2xl: 1536px;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+ * ICON SYSTEM
+ * Consistent icon sizing. Use Lucide React with these stroke-width values.
+ * ═══════════════════════════════════════════════════════════════════════════════ */
+:root {
+  --icon-xs:           14px;
+  --icon-sm:           16px;
+  --icon-md:           20px;
+  --icon-lg:           24px;
+  --icon-xl:           32px;
+  --icon-stroke-width: 1.75;
+}

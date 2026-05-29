@@ -1,0 +1,208 @@
+/**
+ * Viewlytics — Navigation Component Styles
+ *
+ * Sidebar nav items, tabs, breadcrumbs, and nav link patterns.
+ * Consistent active indicators and hover states.
+ */
+
+/* ═══ NAV ITEM (Sidebar / Menu) ═══ */
+.vl-nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2\.5) var(--space-3);
+  border-radius: var(--radius-lg);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--vl-text-secondary);
+  text-decoration: none;
+  transition-property: color, background-color;
+  transition-duration: var(--duration-fast);
+  transition-timing-function: var(--ease-default);
+  cursor: pointer;
+}
+
+.vl-nav-item:hover {
+  color: var(--vl-text-primary);
+  background: var(--vl-bg-surface);
+}
+
+/* Active state */
+.vl-nav-item-active {
+  color: var(--vl-text-primary);
+  background: var(--vl-red-soft);
+}
+
+/* Active indicator bar */
+.vl-nav-item-active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 20px;
+  border-radius: 0 var(--radius-full) var(--radius-full) 0;
+  background: var(--vl-red);
+}
+
+/* Active icon color */
+.vl-nav-item-active .vl-nav-icon {
+  color: var(--vl-red);
+}
+
+/* Icon */
+.vl-nav-icon {
+  width: var(--icon-md);
+  height: var(--icon-md);
+  flex-shrink: 0;
+  color: inherit;
+}
+
+/* Badge in nav */
+.vl-nav-badge {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  padding: 2px var(--space-1\.5);
+  border-radius: var(--radius-sm);
+  background: var(--vl-red-soft);
+  color: var(--vl-red);
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-none);
+}
+
+
+/* ═══ NAV LINK (Navbar / Topbar inline) ═══ */
+.vl-nav-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-1\.5);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-lg);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--vl-text-secondary);
+  text-decoration: none;
+  transition-property: color, background-color;
+  transition-duration: var(--duration-fast);
+  transition-timing-function: var(--ease-default);
+}
+
+.vl-nav-link:hover {
+  color: var(--vl-text-primary);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+:root:not(.dark) .vl-nav-link:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+
+/* ═══ TABS ═══ */
+.vl-tabs {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  border-bottom: 1px solid var(--vl-border);
+  padding-bottom: var(--space-px);
+}
+
+.vl-tab {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2\.5) var(--space-4);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--vl-text-secondary);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  cursor: pointer;
+  transition-property: color, background-color;
+  transition-duration: var(--duration-fast);
+  transition-timing-function: var(--ease-default);
+}
+
+.vl-tab:hover {
+  color: var(--vl-text-primary);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.vl-tab-active {
+  color: var(--vl-text-primary);
+}
+
+.vl-tab-active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: var(--space-4);
+  right: var(--space-4);
+  height: 2px;
+  background: var(--vl-red);
+  border-radius: var(--radius-full) var(--radius-full) 0 0;
+}
+
+/* Pill tabs variant */
+.vl-tabs-pill {
+  border-bottom: none;
+  padding: var(--space-1);
+  background: var(--vl-bg-secondary);
+  border-radius: var(--radius-lg);
+  gap: var(--space-0\.5);
+}
+
+.vl-tab-pill {
+  padding: var(--space-1\.5) var(--space-3);
+  border-radius: var(--radius-md);
+  font-size: var(--text-xs);
+  border: none;
+}
+
+.vl-tab-pill.vl-tab-active {
+  background: var(--vl-bg-surface);
+  box-shadow: var(--shadow-xs);
+}
+
+.vl-tab-pill.vl-tab-active::after {
+  display: none;
+}
+
+
+/* ═══ BREADCRUMB ═══ */
+.vl-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1\.5);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  color: var(--vl-text-tertiary);
+}
+
+.vl-breadcrumb-link {
+  color: var(--vl-text-secondary);
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-default);
+}
+
+.vl-breadcrumb-link:hover {
+  color: var(--vl-text-primary);
+}
+
+.vl-breadcrumb-separator {
+  color: var(--vl-text-disabled);
+}
+
+.vl-breadcrumb-current {
+  color: var(--vl-text-primary);
+  font-weight: var(--weight-medium);
+}

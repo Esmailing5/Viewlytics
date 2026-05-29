@@ -2,27 +2,26 @@
  * Viewlytics — Navbar
  *
  * Barra de navegación principal de la plataforma. Soporta:
- * - Logo oficial horizontal (desde /branding/)
+ * - Logo oficial horizontal (SVG component)
  * - Links de navegación del config
  * - Menú móvil con animación
- * - CTA button naranja
+ * - CTA button rojo
  * - Efecto glassmorphism al hacer scroll
  *
  * @see src/config/navigation.ts — Nav items
  * @see src/config/branding.ts — Logo paths
- * @see execution-pack/12-branding-system.md — Logo rules
  */
 
 'use client';
 
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Search, ChevronRight } from 'lucide-react';
 import { navigationConfig } from '@/config/navigation';
-import { brandConfig, logoAssets } from '@/config/branding';
+import { brandConfig } from '@/config/branding';
 import { Logo } from '@/components/shared/Logo';
+
 /**
  * Navbar — Barra de navegación sticky con glassmorphism y menú móvil animado.
  */
@@ -42,18 +41,11 @@ export function Navbar() {
   return (
     <>
       <header
-        className={`
-          fixed top-0 left-0 right-0 z-50
-          transition-all duration-500
-          ${scrolled
-            ? 'bg-[#071426]/80 backdrop-blur-xl border-b border-white/[0.06] shadow-xl shadow-black/20'
-            : 'bg-transparent'
-          }
-        `}
+        className={`vl-navbar ${scrolled ? 'vl-navbar-scrolled' : 'bg-transparent'}`}
         role="banner"
       >
         <nav
-          className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between"
+          className="vl-navbar-inner"
           aria-label="Main navigation"
         >
           {/* ── Logo ── */}
@@ -73,18 +65,11 @@ export function Navbar() {
                 <Link
                   href={item.href}
                   id={`nav-${item.id}`}
-                  className="
-                    relative flex items-center gap-1.5
-                    px-4 py-2 rounded-xl
-                    text-sm font-medium text-[#B8C4D4]
-                    hover:text-[#F5F7FA] hover:bg-white/[0.05]
-                    transition-all duration-200
-                    group
-                  "
+                  className="vl-nav-link group"
                 >
                   {item.label}
                   {item.badge && (
-                    <span className="inline-flex items-center px-1.5 py-0.5 rounded-md bg-[#FF7A00]/20 text-[#FF7A00] text-[10px] font-bold tracking-wide">
+                    <span className="vl-nav-badge">
                       {item.badge}
                     </span>
                   )}
@@ -99,16 +84,11 @@ export function Navbar() {
             <button
               id="navbar-search"
               aria-label="Buscar creador"
-              className="
-                flex items-center gap-2 px-3 py-2 rounded-xl
-                text-sm text-[#B8C4D4] hover:text-[#F5F7FA]
-                hover:bg-white/[0.05]
-                transition-all duration-200
-              "
+              className="vl-nav-link"
             >
               <Search className="w-4 h-4" />
               <span className="hidden lg:inline">Buscar creador</span>
-              <kbd className="hidden lg:inline-flex items-center px-1.5 py-0.5 rounded-md bg-white/5 border border-white/10 text-[10px] font-mono text-[#B8C4D4]">
+              <kbd className="vl-kbd hidden lg:inline-flex">
                 ⌘K
               </kbd>
             </button>
@@ -117,15 +97,7 @@ export function Navbar() {
             <Link
               href="/rankings"
               id="navbar-cta"
-              className="
-                flex items-center gap-1.5
-                px-4 py-2 rounded-xl
-                bg-[#FF7A00] hover:bg-[#FF9A33]
-                text-sm font-semibold text-white
-                transition-all duration-200
-                shadow-lg shadow-[#FF7A00]/20
-                hover:shadow-[#FF7A00]/30
-              "
+              className="vl-btn vl-btn-primary vl-btn-md"
             >
               Explorar Rankings
               <ChevronRight className="w-4 h-4" />
@@ -138,13 +110,7 @@ export function Navbar() {
             aria-label={mobileOpen ? 'Cerrar menú' : 'Abrir menú'}
             aria-expanded={mobileOpen}
             onClick={() => setMobileOpen((prev) => !prev)}
-            className="
-              md:hidden flex items-center justify-center
-              w-9 h-9 rounded-xl
-              text-[#B8C4D4] hover:text-[#F5F7FA]
-              hover:bg-white/[0.05]
-              transition-all duration-200
-            "
+            className="vl-btn vl-btn-ghost vl-btn-icon md:hidden"
           >
             {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
@@ -164,8 +130,7 @@ export function Navbar() {
             transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
             className="
               fixed top-16 left-0 right-0 z-40
-              bg-[#071426]/95 backdrop-blur-xl
-              border-b border-white/[0.06]
+              vl-glass-elevated
               px-4 pt-4 pb-6
               flex flex-col gap-2
               md:hidden
@@ -183,16 +148,14 @@ export function Navbar() {
                   onClick={() => setMobileOpen(false)}
                   className="
                     flex items-center justify-between
-                    px-4 py-3 rounded-xl
-                    text-[#B8C4D4] hover:text-[#F5F7FA] hover:bg-white/[0.05]
-                    font-medium text-sm
-                    transition-all duration-200
+                    vl-nav-link
+                    py-3
                   "
                 >
                   <span className="flex items-center gap-2">
                     {item.label}
                     {item.badge && (
-                      <span className="px-1.5 py-0.5 rounded-md bg-[#FF7A00]/20 text-[#FF7A00] text-[10px] font-bold">
+                      <span className="vl-nav-badge">
                         {item.badge}
                       </span>
                     )}
@@ -202,18 +165,12 @@ export function Navbar() {
               </motion.div>
             ))}
 
-            <div className="mt-2 pt-4 border-t border-white/[0.06]">
+            <div className="mt-2 pt-4 border-t border-[var(--vl-border)]">
               <Link
                 href="/rankings"
                 onClick={() => setMobileOpen(false)}
                 id="navbar-mobile-cta"
-                className="
-                  flex items-center justify-center gap-2
-                  w-full px-4 py-3 rounded-xl
-                  bg-[#FF7A00] hover:bg-[#FF9A33]
-                  text-sm font-semibold text-white
-                  transition-all duration-200
-                "
+                className="vl-btn vl-btn-primary w-full justify-center vl-btn-lg"
               >
                 Explorar Rankings
                 <ChevronRight className="w-4 h-4" />

@@ -44,28 +44,28 @@ export function SectionHeader({
   return (
     <motion.div
       id={id}
-      className={`mb-12 ${centered ? 'text-center' : ''}`}
+      className={`vl-section-header ${centered ? 'text-center' : ''}`}
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-80px' }}
       transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
     >
       {eyebrow && (
-        <div className="inline-flex items-center gap-2 mb-4">
-          <span className="w-5 h-px bg-[#FF7A00]" />
-          <span className="text-[#FF7A00] text-xs font-semibold tracking-widest uppercase">
+        <div className="vl-section-eyebrow">
+          <span className="vl-section-eyebrow-line" />
+          <span className="vl-section-eyebrow-text">
             {eyebrow}
           </span>
-          <span className="w-5 h-px bg-[#FF7A00]" />
+          <span className="vl-section-eyebrow-line" />
         </div>
       )}
 
-      <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#F5F7FA] leading-tight tracking-tight">
+      <h2 className="vl-section-title">
         {title}
       </h2>
 
       {subtitle && (
-        <p className="mt-4 text-base md:text-lg text-[#B8C4D4] max-w-2xl leading-relaxed">
+        <p className={`vl-section-subtitle ${centered ? 'mx-auto' : ''}`}>
           {subtitle}
         </p>
       )}

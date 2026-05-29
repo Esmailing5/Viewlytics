@@ -13,6 +13,12 @@ import { VIEWERS_DATA } from '@/constants/dashboard-mock-data';
 import type { ViewerDataPoint } from '@/constants/dashboard-mock-data';
 import { DashboardCard } from './DashboardCard';
 
+/* Chart colors — resolved from design system tokens (Recharts requires hex) */
+const cyanColor = '#00C2FF';    /* --vl-cyan */
+const purpleColor = '#7C5CFF';  /* --vl-purple */
+const gridColor = 'rgba(255,255,255,0.04)';
+const tickColor = '#98A2B3';    /* --vl-text-secondary */
+
 /** Custom tooltip */
 function CustomTooltip({
   active,
@@ -26,10 +32,10 @@ function CustomTooltip({
   if (!active || !payload?.length) return null;
 
   return (
-    <div className="dashboard-card px-3 py-2 !rounded-xl text-xs shadow-lg">
-      <p className="text-[var(--text-secondary)] mb-1">{label}</p>
+    <div className="vl-card-dashboard px-3 py-2 !rounded-xl text-xs shadow-lg">
+      <p className="text-[var(--vl-text-secondary)] mb-1">{label}</p>
       {payload.map((entry) => (
-        <p key={entry.name} className="text-[var(--text-primary)] font-semibold">
+        <p key={entry.name} className="text-[var(--vl-text-primary)] font-semibold">
           <span style={{ color: entry.color }}>●</span>{' '}
           {entry.name}: {entry.value.toLocaleString()}
         </p>
@@ -56,31 +62,31 @@ export function ViewersChart() {
           <AreaChart data={chartData} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
             <defs>
               <linearGradient id="viewersGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="var(--accent-cyan)" stopOpacity={0.3} />
-                <stop offset="100%" stopColor="var(--accent-cyan)" stopOpacity={0} />
+                <stop offset="0%" stopColor={cyanColor} stopOpacity={0.3} />
+                <stop offset="100%" stopColor={cyanColor} stopOpacity={0} />
               </linearGradient>
               <linearGradient id="uniqueGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="var(--accent-blue)" stopOpacity={0.2} />
-                <stop offset="100%" stopColor="var(--accent-blue)" stopOpacity={0} />
+                <stop offset="0%" stopColor={purpleColor} stopOpacity={0.2} />
+                <stop offset="100%" stopColor={purpleColor} stopOpacity={0} />
               </linearGradient>
             </defs>
 
             <CartesianGrid
               strokeDasharray="3 3"
-              stroke="var(--border-color)"
+              stroke={gridColor}
               vertical={false}
             />
 
             <XAxis
               dataKey="label"
-              tick={{ fill: 'var(--text-secondary)', fontSize: 11 }}
+              tick={{ fill: tickColor, fontSize: 11 }}
               tickLine={false}
               axisLine={false}
               interval={4}
             />
 
             <YAxis
-              tick={{ fill: 'var(--text-secondary)', fontSize: 11 }}
+              tick={{ fill: tickColor, fontSize: 11 }}
               tickLine={false}
               axisLine={false}
               tickFormatter={(v: number) => `${(v / 1000).toFixed(0)}K`}
@@ -92,7 +98,7 @@ export function ViewersChart() {
               type="monotone"
               dataKey="viewers"
               name="Viewers"
-              stroke="var(--accent-cyan)"
+              stroke={cyanColor}
               strokeWidth={2}
               fill="url(#viewersGrad)"
               animationDuration={800}
@@ -103,7 +109,7 @@ export function ViewersChart() {
               type="monotone"
               dataKey="uniqueViewers"
               name="Unique"
-              stroke="var(--accent-blue)"
+              stroke={purpleColor}
               strokeWidth={2}
               fill="url(#uniqueGrad)"
               animationDuration={1000}

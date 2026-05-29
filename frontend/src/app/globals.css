@@ -1,27 +1,46 @@
 /**
- * Viewlytics — Global Design System (Phase 1.5)
+ * Viewlytics — Global Design System v2
  *
  * Premium SaaS design system with full dark/light theme support.
- * All tokens defined as CSS custom properties, consumed by Tailwind v4.
+ * All tokens defined in dedicated files, consumed by Tailwind v4.
  *
- * Design direction: clean, flat, premium, subtle depth, minimal glow.
- * Inspired by: Linear, Vercel, Stripe Dashboard.
+ * Design direction: editorial, premium, cinematic, minimal glow.
+ * Inspired by: Linear, Raycast, Spotify Editorial, Vercel, YouTube Studio.
  *
- * @see implementation_plan.md — Phase 1.5 spec
+ * Architecture:
+ *   tokens.css      → Color, spacing, radius, shadow, typography, z-index
+ *   theme.css       → Dark/light mode shadcn/ui token mapping
+ *   animations.css  → Keyframes, hover presets, glass effects, marquee
+ *   components/*    → Buttons, cards, badges, inputs, navigation, layout
  */
 
+/* ═══ Tailwind v4 Core ═══ */
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+/* ═══ Design System Foundation ═══ */
+@import "../styles/tokens.css";
+@import "../styles/theme.css";
+@import "../styles/animations.css";
+
+/* ═══ Component Library ═══ */
+@import "../styles/components/buttons.css";
+@import "../styles/components/cards.css";
+@import "../styles/components/badges.css";
+@import "../styles/components/inputs.css";
+@import "../styles/components/navigation.css";
+@import "../styles/components/layout.css";
+
+/* ═══ Custom Variant ═══ */
 @custom-variant dark (&:is(.dark *));
 
-/* ============================================================================
- * THEME TOKENS — Tailwind v4 inline theme configuration
+/* ═══════════════════════════════════════════════════════════════════════════════
+ * THEME CONFIG — Tailwind v4 inline theme
  *
  * Maps CSS custom properties to Tailwind utility classes.
  * Semantic tokens from shadcn/ui + Viewlytics brand extensions.
- * ============================================================================ */
+ * ═══════════════════════════════════════════════════════════════════════════════ */
 @theme inline {
   /* --- shadcn/ui semantic color tokens --- */
   --color-background: var(--background);
@@ -60,22 +79,29 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  /* --- Viewlytics brand tokens (direct access) --- */
-  --color-vl-bg-main: var(--bg-main);
-  --color-vl-bg-surface: var(--bg-surface);
-  --color-vl-text-primary: var(--text-primary);
-  --color-vl-text-secondary: var(--text-secondary);
-  --color-vl-border: var(--border-color);
-  --color-vl-accent-cyan: var(--accent-cyan);
-  --color-vl-accent-blue: var(--accent-blue);
-  --color-vl-accent-purple: var(--accent-purple);
-  --color-vl-success: var(--success-green);
-  --color-vl-danger: var(--danger-red);
+  /* --- Viewlytics brand tokens (Tailwind access) --- */
+  --color-vl-bg-main: var(--vl-bg-primary);
+  --color-vl-bg-surface: var(--vl-bg-surface);
+  --color-vl-bg-elevated: var(--vl-bg-elevated);
+  --color-vl-text-primary: var(--vl-text-primary);
+  --color-vl-text-secondary: var(--vl-text-secondary);
+  --color-vl-text-tertiary: var(--vl-text-tertiary);
+  --color-vl-border: var(--vl-border);
+  --color-vl-border-hover: var(--vl-border-hover);
+  --color-vl-red: var(--vl-red);
+  --color-vl-red-soft: var(--vl-red-soft);
+  --color-vl-cyan: var(--vl-cyan);
+  --color-vl-cyan-soft: var(--vl-cyan-soft);
+  --color-vl-purple: var(--vl-purple);
+  --color-vl-purple-soft: var(--vl-purple-soft);
+  --color-vl-success: var(--vl-success);
+  --color-vl-warning: var(--vl-warning);
+  --color-vl-danger: var(--vl-danger);
 
   /* --- Typography --- */
-  --font-sans: var(--font-inter);
-  --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-inter);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  --font-heading: var(--font-heading);
 
   /* --- Border radius scale --- */
   --radius-sm: calc(var(--radius) * 0.6);
@@ -87,215 +113,128 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* ============================================================================
- * LIGHT MODE (default :root)
- * ============================================================================ */
-:root {
-  /* --- Viewlytics palette --- */
-  --bg-main: #f8f9fa;
-  --bg-surface: #ffffff;
-  --text-primary: #1a1c21;
-  --text-secondary: #6c757d;
-  --border-color: rgba(0, 0, 0, 0.06);
-  --accent-cyan: #00aaff;
-  --accent-blue: #3366ff;
-  --accent-purple: #7b61ff;
-  --success-green: #22c55e;
-  --danger-red: #ef4444;
 
-  /* --- shadcn/ui light tokens --- */
-  --background: #f8f9fa;
-  --foreground: #1a1c21;
-  --card: #ffffff;
-  --card-foreground: #1a1c21;
-  --popover: #ffffff;
-  --popover-foreground: #1a1c21;
-  --primary: #3366ff;
-  --primary-foreground: #ffffff;
-  --secondary: #f0f1f3;
-  --secondary-foreground: #1a1c21;
-  --muted: #f0f1f3;
-  --muted-foreground: #6c757d;
-  --accent: #f0f1f3;
-  --accent-foreground: #1a1c21;
-  --destructive: #ef4444;
-  --border: rgba(0, 0, 0, 0.06);
-  --input: rgba(0, 0, 0, 0.06);
-  --ring: #3366ff;
-  --chart-1: #3366ff;
-  --chart-2: #00aaff;
-  --chart-3: #7b61ff;
-  --chart-4: #22c55e;
-  --chart-5: #f59e0b;
-  --radius: 0.75rem;
-
-  /* Sidebar */
-  --sidebar: #ffffff;
-  --sidebar-foreground: #1a1c21;
-  --sidebar-primary: #3366ff;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #f0f1f3;
-  --sidebar-accent-foreground: #1a1c21;
-  --sidebar-border: rgba(0, 0, 0, 0.06);
-  --sidebar-ring: #3366ff;
-}
-
-/* ============================================================================
- * DARK MODE
- *
- * Primary visual mode for Viewlytics — premium dark SaaS aesthetic.
- * ============================================================================ */
-.dark {
-  /* --- Viewlytics palette --- */
-  --bg-main: #0b0e14;
-  --bg-surface: #161b22;
-  --text-primary: #ffffff;
-  --text-secondary: #8b949e;
-  --border-color: rgba(255, 255, 255, 0.06);
-  --accent-cyan: #00c6ff;
-  --accent-blue: #0072ff;
-  --accent-purple: #6e45e2;
-  --success-green: #22c55e;
-  --danger-red: #ef4444;
-
-  /* --- shadcn/ui dark tokens --- */
-  --background: #0b0e14;
-  --foreground: #ffffff;
-  --card: #161b22;
-  --card-foreground: #ffffff;
-  --popover: #161b22;
-  --popover-foreground: #ffffff;
-  --primary: #0072ff;
-  --primary-foreground: #ffffff;
-  --secondary: #161b22;
-  --secondary-foreground: #ffffff;
-  --muted: #161b22;
-  --muted-foreground: #8b949e;
-  --accent: #161b22;
-  --accent-foreground: #ffffff;
-  --destructive: #ef4444;
-  --border: rgba(255, 255, 255, 0.06);
-  --input: rgba(255, 255, 255, 0.08);
-  --ring: #0072ff;
-  --chart-1: #00c6ff;
-  --chart-2: #0072ff;
-  --chart-3: #6e45e2;
-  --chart-4: #22c55e;
-  --chart-5: #f59e0b;
-
-  /* Sidebar */
-  --sidebar: #0d1117;
-  --sidebar-foreground: #ffffff;
-  --sidebar-primary: #0072ff;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #161b22;
-  --sidebar-accent-foreground: #ffffff;
-  --sidebar-border: rgba(255, 255, 255, 0.06);
-  --sidebar-ring: #0072ff;
-}
-
-/* ============================================================================
+/* ═══════════════════════════════════════════════════════════════════════════════
  * BASE LAYER — Global resets and defaults
- * ============================================================================ */
+ * ═══════════════════════════════════════════════════════════════════════════════ */
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
 
   html {
-    @apply scroll-smooth font-sans;
+    @apply scroll-smooth;
+    font-family: var(--font-sans);
   }
 
   body {
-    background-color: var(--bg-main);
-    color: var(--text-primary);
+    background-color: var(--vl-bg-primary);
+    color: var(--vl-text-primary);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
   /* Premium heading styles */
   h1, h2, h3, h4, h5, h6 {
-    @apply font-heading tracking-tight;
+    font-family: var(--font-heading);
+    letter-spacing: var(--tracking-tight);
+    font-weight: var(--weight-bold);
+  }
+
+  /* Typography hierarchy */
+  h1 { font-size: var(--text-4xl); line-height: var(--leading-tight); }
+  h2 { font-size: var(--text-3xl); line-height: var(--leading-tight); }
+  h3 { font-size: var(--text-2xl); line-height: var(--leading-snug); }
+  h4 { font-size: var(--text-xl);  line-height: var(--leading-snug); }
+  h5 { font-size: var(--text-lg);  line-height: var(--leading-snug); }
+  h6 { font-size: var(--text-md);  line-height: var(--leading-normal); }
+
+  p {
+    line-height: var(--leading-relaxed);
+  }
+
+  small {
+    font-size: var(--text-xs);
+    color: var(--vl-text-secondary);
+  }
+
+  code, pre, kbd {
+    font-family: var(--font-mono);
   }
 }
 
-/* ============================================================================
+
+/* ═══════════════════════════════════════════════════════════════════════════════
  * UTILITY CLASSES — Viewlytics-specific patterns
- * ============================================================================ */
+ * ═══════════════════════════════════════════════════════════════════════════════ */
 @layer utilities {
   /**
-   * Dashboard card — 20px radius, subtle border, balanced shadow.
-   * Primary surface component for the dashboard grid.
-   */
-  .dashboard-card {
-    background: var(--bg-surface);
-    border: 1px solid var(--border-color);
-    border-radius: 20px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-  }
-
-  .dashboard-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-    border-color: var(--accent-cyan);
-  }
-
-  /**
-   * Accent gradient — Cyan → Blue directional gradient
+   * Accent gradients
    */
   .gradient-accent {
-    background: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-blue) 100%);
+    background: var(--vl-gradient-brand);
+  }
+
+  .gradient-cyan {
+    background: var(--vl-gradient-cyan);
+  }
+
+  .gradient-surface {
+    background: var(--vl-gradient-surface);
   }
 
   /**
-   * Purple gradient — Blue → Purple
-   */
-  .gradient-purple {
-    background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-purple) 100%);
-  }
-
-  /**
-   * Text gradient — Accent gradient on text
+   * Text gradients
    */
   .text-gradient {
-    background: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-blue) 50%, var(--accent-purple) 100%);
+    background: linear-gradient(135deg, var(--vl-red) 0%, var(--vl-cyan) 50%, var(--vl-purple) 100%);
     background-size: 200% auto;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
-  /**
-   * Premium shadow — Subtle depth for elevated surfaces
-   */
-  .shadow-premium {
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08),
-                0 4px 12px rgba(0, 0, 0, 0.06);
+  .text-gradient-brand {
+    background: var(--vl-gradient-brand);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
   /**
-   * Smooth transition presets
+   * Premium shadow
+   */
+  .shadow-premium {
+    box-shadow: var(--shadow-md);
+  }
+
+  /**
+   * Transition presets
    */
   .transition-premium {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all var(--duration-normal) var(--ease-default);
   }
 
   .transition-fast {
-    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all var(--duration-fast) var(--ease-default);
   }
 }
 
-/* ============================================================================
- * THEME TRANSITION — Smooth color transitions on theme switch
- * ============================================================================ */
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+ * THEME TRANSITION — Smooth theme switch
+ * ═══════════════════════════════════════════════════════════════════════════════ */
 html.dark,
-html.light {
-  transition: background-color 0.3s ease, color 0.2s ease;
+html.light,
+html:not(.dark) {
+  transition: background-color var(--duration-slow) var(--ease-default),
+              color var(--duration-normal) var(--ease-default);
 }
 
-/* ============================================================================
+
+/* ═══════════════════════════════════════════════════════════════════════════════
  * SCROLLBAR — Premium minimal scrollbar
- * ============================================================================ */
+ * ═══════════════════════════════════════════════════════════════════════════════ */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -306,29 +245,30 @@ html.light {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--border-color);
+  background: var(--vl-border);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--text-secondary);
+  background: var(--vl-text-tertiary);
 }
 
 /* Firefox */
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--border-color) transparent;
+  scrollbar-color: var(--vl-border) transparent;
 }
 
-/* ============================================================================
+
+/* ═══════════════════════════════════════════════════════════════════════════════
  * SELECTION — Brand-colored text selection
- * ============================================================================ */
+ * ═══════════════════════════════════════════════════════════════════════════════ */
 ::selection {
-  background: rgba(0, 114, 255, 0.25);
-  color: var(--text-primary);
+  background: var(--vl-red-soft);
+  color: var(--vl-text-primary);
 }
 
 ::-moz-selection {
-  background: rgba(0, 114, 255, 0.25);
-  color: var(--text-primary);
+  background: var(--vl-red-soft);
+  color: var(--vl-text-primary);
 }

@@ -36,12 +36,12 @@ const SIZE_MAP = {
 /** Genera color de fondo determinístico basado en el nombre */
 function getAvatarColor(name: string): string {
   const colors = [
-    'from-[#FF7A00] to-[#FF9A33]',
-    'from-blue-600 to-blue-400',
-    'from-purple-600 to-purple-400',
-    'from-emerald-600 to-emerald-400',
+    'from-[var(--vl-red)] to-[var(--vl-red-hover)]',
+    'from-[var(--vl-cyan)] to-[var(--vl-cyan-hover)]',
+    'from-[var(--vl-purple)] to-[var(--vl-purple-hover)]',
+    'from-[var(--vl-success)] to-emerald-400',
     'from-rose-600 to-rose-400',
-    'from-amber-600 to-amber-400',
+    'from-[var(--vl-warning)] to-amber-400',
   ];
   const index = name.charCodeAt(0) % colors.length;
   return colors[index];
@@ -80,7 +80,7 @@ export function CreatorAvatar({
           rounded-full flex items-center justify-center
           bg-gradient-to-br ${avatarColor}
           font-bold text-white ${sizeStyle.text}
-          ring-2 ring-white/10
+          ring-2 ring-[var(--vl-border)]
           overflow-hidden
         `}
       >
@@ -100,7 +100,7 @@ export function CreatorAvatar({
             ${sizeStyle.badge}
             rounded-full bg-red-600
             flex items-center justify-center
-            ring-2 ring-[#071426]
+            ring-2 ring-[var(--vl-bg-primary)]
           `}
         >
           <YoutubeIcon className={`${sizeStyle.badgeIcon} text-white`} />
@@ -113,10 +113,10 @@ export function CreatorAvatar({
           className="
             absolute -top-1 -left-1
             min-w-5 h-5 px-1
-            rounded-full bg-[#FF7A00]
+            rounded-full bg-[var(--vl-red)]
             flex items-center justify-center
             text-[10px] font-bold text-white
-            ring-2 ring-[#071426]
+            ring-2 ring-[var(--vl-bg-primary)]
           "
         >
           #{rank}

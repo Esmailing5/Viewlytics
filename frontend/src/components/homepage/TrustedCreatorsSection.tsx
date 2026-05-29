@@ -7,7 +7,7 @@
  * Incluye:
  * - Headline de confianza
  * - Cards de creadores con categoría e ícono
- * - Animación de scroll horizontal marquee
+ * - Animación de scroll horizontal marquee (via animations.css)
  *
  * @see src/constants/mock-data.ts — TRUSTED_CREATORS
  */
@@ -28,26 +28,26 @@ const CATEGORY_MAP: Record<
 > = {
   podcast: {
     icon: Mic,
-    color: 'text-purple-400',
-    bg: 'bg-purple-500/10 border-purple-500/20',
+    color: 'text-[var(--vl-purple)]',
+    bg: 'bg-[var(--vl-purple-soft)] border-[rgba(124,92,255,0.2)]',
     label: 'Podcast',
   },
   streamer: {
     icon: Radio,
-    color: 'text-blue-400',
-    bg: 'bg-blue-500/10 border-blue-500/20',
+    color: 'text-[var(--vl-cyan)]',
+    bg: 'bg-[var(--vl-cyan-soft)] border-[rgba(0,194,255,0.2)]',
     label: 'Streamer',
   },
   gaming: {
     icon: Gamepad2,
-    color: 'text-emerald-400',
-    bg: 'bg-emerald-500/10 border-emerald-500/20',
+    color: 'text-[var(--vl-success)]',
+    bg: 'bg-[var(--vl-success-soft)] border-[rgba(34,197,94,0.2)]',
     label: 'Gaming',
   },
   media: {
     icon: Video,
-    color: 'text-[#FF7A00]',
-    bg: 'bg-[#FF7A00]/10 border-[#FF7A00]/20',
+    color: 'text-[var(--vl-red)]',
+    bg: 'bg-[var(--vl-red-soft)] border-[rgba(255,59,48,0.2)]',
     label: 'Medio',
   },
 };
@@ -62,24 +62,23 @@ function CreatorBadge({ creator }: { creator: TrustedCreator }) {
       className="
         flex-shrink-0
         flex items-center gap-3
-        px-4 py-3 rounded-2xl
-        bg-[#0F2747]/60 backdrop-blur-sm
-        border border-white/[0.07]
-        hover:border-white/[0.14] hover:bg-[#0F2747]/80
-        transition-all duration-300
+        px-4 py-3 rounded-xl
+        vl-card-glass
+        hover:border-[var(--vl-border-hover)]
+        vl-transition
         group cursor-default
       "
     >
       {/* Avatar placeholder */}
       <div
         className="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-white text-sm flex-shrink-0"
-        style={{ background: 'linear-gradient(135deg, #FF7A00, #FF9A33)' }}
+        style={{ background: 'var(--vl-gradient-brand)' }}
       >
         {creator.name[0]}
       </div>
 
       <div>
-        <p className="text-[#F5F7FA] text-sm font-semibold leading-none whitespace-nowrap">
+        <p className="text-[var(--vl-text-primary)] text-sm font-semibold leading-none whitespace-nowrap">
           {creator.name}
         </p>
         <div className="flex items-center gap-1.5 mt-1">
@@ -87,7 +86,7 @@ function CreatorBadge({ creator }: { creator: TrustedCreator }) {
             <Icon className="w-2.5 h-2.5" />
             {cat.label}
           </div>
-          <span className="text-[10px] text-[#B8C4D4]">{creator.subscribers}</span>
+          <span className="text-[10px] text-[var(--vl-text-tertiary)]">{creator.subscribers}</span>
         </div>
       </div>
     </div>
@@ -105,30 +104,15 @@ export function TrustedCreatorsSection() {
     <section
       id="trusted-creators"
       aria-label="Trusted by Dominican Creators"
-      className="relative py-24 overflow-hidden"
+      className="vl-section"
     >
-      {/* Keyframes and classes for smooth, pause-on-hover marquee */}
-      <style dangerouslySetInnerHTML={{
-        __html: `
-        @keyframes marquee-scroll {
-          0% { transform: translate3d(0, 0, 0); }
-          100% { transform: translate3d(-50%, 0, 0); }
-        }
-        .animate-marquee-scroll {
-          animation: marquee-scroll 50s linear infinite;
-        }
-        .animate-marquee-scroll-reverse {
-          animation: marquee-scroll 50s linear infinite reverse;
-        }
-      `}} />
-
       {/* Background */}
       <div
         className="absolute inset-0 pointer-events-none"
         aria-hidden="true"
         style={{
           background:
-            'radial-gradient(ellipse at 20% 50%, rgba(15,39,71,0.8) 0%, transparent 60%)',
+            'radial-gradient(ellipse at 20% 50%, rgba(17,20,27,0.8) 0%, transparent 60%)',
         }}
       />
 
@@ -144,17 +128,11 @@ export function TrustedCreatorsSection() {
       {/* ── Marquee Row 1 ── */}
       <div className="relative overflow-hidden mb-4">
         {/* Left/right fade masks */}
-        <div className="absolute left-0 top-0 bottom-0 w-32 z-10 pointer-events-none"
-          style={{ background: 'linear-gradient(90deg, #071426, transparent)' }}
-          aria-hidden="true"
-        />
-        <div className="absolute right-0 top-0 bottom-0 w-32 z-10 pointer-events-none"
-          style={{ background: 'linear-gradient(-90deg, #071426, transparent)' }}
-          aria-hidden="true"
-        />
+        <div className="vl-fade-mask-left" aria-hidden="true" />
+        <div className="vl-fade-mask-right" aria-hidden="true" />
 
         <div
-          className="flex gap-4 w-max px-4 animate-marquee-scroll hover:[animation-play-state:paused]"
+          className="flex gap-4 w-max px-4 vl-animate-marquee"
           aria-hidden="true"
         >
           {marqueeItems.map((creator, i) => (
@@ -165,17 +143,11 @@ export function TrustedCreatorsSection() {
 
       {/* ── Marquee Row 2 (reverse) ── */}
       <div className="relative overflow-hidden">
-        <div className="absolute left-0 top-0 bottom-0 w-32 z-10 pointer-events-none"
-          style={{ background: 'linear-gradient(90deg, #071426, transparent)' }}
-          aria-hidden="true"
-        />
-        <div className="absolute right-0 top-0 bottom-0 w-32 z-10 pointer-events-none"
-          style={{ background: 'linear-gradient(-90deg, #071426, transparent)' }}
-          aria-hidden="true"
-        />
+        <div className="vl-fade-mask-left" aria-hidden="true" />
+        <div className="vl-fade-mask-right" aria-hidden="true" />
 
         <div
-          className="flex gap-4 w-max px-4 animate-marquee-scroll-reverse hover:[animation-play-state:paused]"
+          className="flex gap-4 w-max px-4 vl-animate-marquee-reverse"
           aria-hidden="true"
         >
           {[...marqueeItems].reverse().map((creator, i) => (
@@ -200,10 +172,10 @@ export function TrustedCreatorsSection() {
           ].map((stat) => (
             <div
               key={stat.label}
-              className="text-center p-4 rounded-2xl bg-[#0F2747]/40 border border-white/[0.06]"
+              className="text-center p-4 vl-card-glass rounded-xl"
             >
-              <p className="text-xl font-bold text-[#FF7A00]">{stat.value}</p>
-              <p className="text-xs text-[#B8C4D4] mt-1">{stat.label}</p>
+              <p className="text-xl font-bold text-[var(--vl-red)]">{stat.value}</p>
+              <p className="text-xs text-[var(--vl-text-secondary)] mt-1">{stat.label}</p>
             </div>
           ))}
         </div>

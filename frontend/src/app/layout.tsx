@@ -1,14 +1,27 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Inter, Geist_Mono } from 'next/font/google';
 import type { Viewport } from 'next';
 import { brandConfig } from '@/config/branding';
 import Providers from '@/lib/providers';
 import './globals.css';
 
-// Load Inter from Google Fonts — variable maps to our Tailwind CSS font token
+/**
+ * Font Loading — Viewlytics Design System v2
+ *
+ * Three font families:
+ * - Inter: Body text, UI elements (Google Fonts)
+ * - Satoshi: Headings, display text (Fontshare CDN)
+ * - Geist Mono: Code, data, metrics (Google Fonts)
+ */
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
+  display: 'swap',
+});
+
+const geistMono = Geist_Mono({
+  subsets: ['latin'],
+  variable: '--font-geist-mono',
   display: 'swap',
 });
 
@@ -61,9 +74,18 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} h-full antialiased`}
+      className={`${inter.variable} ${geistMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
+      <head>
+        {/* Satoshi font from Fontshare (self-hosted CDN — free for commercial use) */}
+        <link
+          href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,600,700,800&display=swap"
+          rel="stylesheet"
+        />
+        {/* Map Satoshi to CSS variable for design system tokens */}
+        <style dangerouslySetInnerHTML={{ __html: `:root { --font-satoshi: 'Satoshi', sans-serif; }` }} />
+      </head>
       <body className="min-h-full flex flex-col">
         <Providers>
           {children}

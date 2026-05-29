@@ -1,0 +1,192 @@
+/**
+ * Viewlytics — Button Component Styles
+ *
+ * Design System button variants. These CSS classes provide the visual
+ * foundation; the React Button component (CVA) maps to these patterns.
+ *
+ * Variants: primary, secondary, ghost, danger, accent
+ * Sizes: sm, md, lg
+ */
+
+/* ═══ BASE BUTTON ═══ */
+.vl-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  font-family: var(--font-sans);
+  font-weight: var(--weight-semibold);
+  font-size: var(--text-sm);
+  line-height: var(--leading-none);
+  white-space: nowrap;
+  border-radius: var(--radius-lg);
+  border: 1px solid transparent;
+  cursor: pointer;
+  user-select: none;
+  transition-property: color, background-color, border-color, box-shadow, transform, opacity;
+  transition-duration: var(--duration-normal);
+  transition-timing-function: var(--ease-default);
+  outline: none;
+}
+
+.vl-btn:focus-visible {
+  outline: 2px solid var(--vl-red);
+  outline-offset: 2px;
+}
+
+.vl-btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.vl-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+
+/* ═══ VARIANT: PRIMARY (Red) ═══ */
+.vl-btn-primary {
+  background: var(--vl-red);
+  color: #FFFFFF;
+  box-shadow: var(--shadow-sm);
+}
+
+.vl-btn-primary:hover:not(:disabled) {
+  background: var(--vl-red-hover);
+  box-shadow: var(--shadow-glow-red);
+  transform: translateY(-1px);
+}
+
+.vl-btn-primary:active:not(:disabled) {
+  background: var(--vl-red-active);
+  box-shadow: var(--shadow-xs);
+}
+
+
+/* ═══ VARIANT: SECONDARY ═══ */
+.vl-btn-secondary {
+  background: var(--vl-bg-surface);
+  color: var(--vl-text-primary);
+  border-color: var(--vl-border);
+}
+
+.vl-btn-secondary:hover:not(:disabled) {
+  background: var(--vl-bg-elevated);
+  border-color: var(--vl-border-hover);
+  box-shadow: var(--shadow-sm);
+}
+
+.vl-btn-secondary:active:not(:disabled) {
+  background: var(--vl-bg-surface);
+}
+
+
+/* ═══ VARIANT: GHOST ═══ */
+.vl-btn-ghost {
+  background: transparent;
+  color: var(--vl-text-secondary);
+}
+
+.vl-btn-ghost:hover:not(:disabled) {
+  background: var(--vl-bg-surface);
+  color: var(--vl-text-primary);
+}
+
+.vl-btn-ghost:active:not(:disabled) {
+  background: var(--vl-bg-secondary);
+}
+
+
+/* ═══ VARIANT: DANGER ═══ */
+.vl-btn-danger {
+  background: var(--vl-danger-soft);
+  color: var(--vl-danger);
+  border-color: transparent;
+}
+
+.vl-btn-danger:hover:not(:disabled) {
+  background: rgba(255, 59, 48, 0.2);
+  box-shadow: var(--shadow-glow-red);
+}
+
+
+/* ═══ VARIANT: ACCENT (Cyan) ═══ */
+.vl-btn-accent {
+  background: var(--vl-cyan);
+  color: #06070A;
+}
+
+.vl-btn-accent:hover:not(:disabled) {
+  background: var(--vl-cyan-hover);
+  box-shadow: var(--shadow-glow-cyan);
+  transform: translateY(-1px);
+}
+
+
+/* ═══ VARIANT: OUTLINE ═══ */
+.vl-btn-outline {
+  background: transparent;
+  color: var(--vl-text-primary);
+  border-color: var(--vl-border-hover);
+}
+
+.vl-btn-outline:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: var(--vl-border-active);
+}
+
+
+/* ═══ SIZES ═══ */
+.vl-btn-sm {
+  height: 32px;
+  padding: 0 var(--space-3);
+  font-size: var(--text-xs);
+  border-radius: var(--radius-md);
+  gap: var(--space-1);
+}
+
+.vl-btn-md {
+  height: 36px;
+  padding: 0 var(--space-4);
+  font-size: var(--text-sm);
+  border-radius: var(--radius-lg);
+  gap: var(--space-2);
+}
+
+.vl-btn-lg {
+  height: 44px;
+  padding: 0 var(--space-6);
+  font-size: var(--text-base);
+  border-radius: var(--radius-lg);
+  gap: var(--space-2);
+}
+
+.vl-btn-xl {
+  height: 52px;
+  padding: 0 var(--space-8);
+  font-size: var(--text-md);
+  border-radius: var(--radius-xl);
+  gap: var(--space-3);
+}
+
+
+/* ═══ ICON BUTTON ═══ */
+.vl-btn-icon {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: var(--radius-lg);
+}
+
+.vl-btn-icon.vl-btn-sm {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-md);
+}
+
+.vl-btn-icon.vl-btn-lg {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-lg);
+}

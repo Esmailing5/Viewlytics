@@ -26,10 +26,10 @@ export function ThemeToggle({ className = '', showLabel = false }: ThemeTogglePr
       className={`
         inline-flex items-center gap-2
         rounded-xl px-3 py-2
-        text-[var(--text-secondary)]
-        hover:text-[var(--text-primary)]
-        hover:bg-[var(--bg-surface)]
-        transition-all duration-200
+        text-[var(--vl-text-secondary)]
+        hover:text-[var(--vl-text-primary)]
+        hover:bg-[var(--vl-bg-surface)]
+        vl-transition-fast
         ${className}
       `}
     >

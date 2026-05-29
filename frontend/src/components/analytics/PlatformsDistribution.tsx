@@ -24,8 +24,8 @@ function CustomTooltip({
   const data = payload[0].payload;
 
   return (
-    <div className="dashboard-card px-3 py-2 !rounded-xl text-xs shadow-lg">
-      <p className="text-[var(--text-primary)] font-semibold">
+    <div className="vl-card-dashboard px-3 py-2 !rounded-xl text-xs shadow-lg">
+      <p className="text-[var(--vl-text-primary)] font-semibold">
         <span style={{ color: data.color }}>●</span> {data.name}: {formatCount(data.value)}
       </p>
     </div>
@@ -55,7 +55,7 @@ export function PlatformsDistribution() {
                 dataKey="value"
                 animationDuration={800}
                 animationEasing="ease-out"
-                stroke="var(--bg-main)"
+                stroke="#06070A" /* --vl-bg-primary */
                 strokeWidth={2}
               >
                 {PLATFORMS_DATA.map((entry) => (
@@ -69,10 +69,10 @@ export function PlatformsDistribution() {
           {/* Center label */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <div className="text-center">
-              <p className="text-lg font-bold text-[var(--text-primary)]">
+              <p className="text-lg font-bold text-[var(--vl-text-primary)]">
                 {formatCount(total)}
               </p>
-              <p className="text-[10px] text-[var(--text-secondary)]">Total</p>
+              <p className="text-[10px] text-[var(--vl-text-secondary)]">Total</p>
             </div>
           </div>
         </div>
@@ -85,8 +85,8 @@ export function PlatformsDistribution() {
                 className="w-2.5 h-2.5 rounded-full flex-shrink-0"
                 style={{ backgroundColor: entry.color }}
               />
-              <span className="text-[var(--text-secondary)]">{entry.name}</span>
-              <span className="text-[var(--text-primary)] font-semibold">
+              <span className="text-[var(--vl-text-secondary)]">{entry.name}</span>
+              <span className="text-[var(--vl-text-primary)] font-semibold">
                 {formatCount(entry.value)}
               </span>
             </div>

@@ -1,0 +1,234 @@
+/**
+ * Viewlytics — Theme Layer v2
+ *
+ * Maps Viewlytics design tokens to shadcn/ui semantic tokens.
+ * Dark mode is the primary visual mode; light mode is adjusted for coherence.
+ *
+ * This file overrides :root and .dark with the official Viewlytics palette.
+ * Consumed by Tailwind v4 via @theme inline in globals.css.
+ */
+
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+ * DARK MODE (Primary — .dark class on <html>)
+ *
+ * The flagship Viewlytics experience. Premium dark SaaS aesthetic.
+ * ═══════════════════════════════════════════════════════════════════════════════ */
+.dark {
+  /* ── Viewlytics Brand Palette ── */
+  --bg-main:        var(--vl-bg-primary);
+  --bg-surface:     var(--vl-bg-surface);
+  --text-primary:   var(--vl-text-primary);
+  --text-secondary: var(--vl-text-secondary);
+  --border-color:   var(--vl-border);
+  --accent-red:     var(--vl-red);
+  --accent-cyan:    var(--vl-cyan);
+  --accent-purple:  var(--vl-purple);
+  --success-green:  var(--vl-success);
+  --danger-red:     var(--vl-danger);
+  --warning-amber:  var(--vl-warning);
+
+  /* ── shadcn/ui Semantic Tokens ── */
+  --background:          var(--vl-bg-primary);
+  --foreground:          var(--vl-text-primary);
+
+  --card:                var(--vl-bg-surface);
+  --card-foreground:     var(--vl-text-primary);
+
+  --popover:             var(--vl-bg-elevated);
+  --popover-foreground:  var(--vl-text-primary);
+
+  --primary:             var(--vl-red);
+  --primary-foreground:  #FFFFFF;
+
+  --secondary:           var(--vl-bg-surface);
+  --secondary-foreground: var(--vl-text-primary);
+
+  --muted:               var(--vl-bg-secondary);
+  --muted-foreground:    var(--vl-text-secondary);
+
+  --accent:              var(--vl-bg-surface);
+  --accent-foreground:   var(--vl-text-primary);
+
+  --destructive:         var(--vl-danger);
+
+  --border:              var(--vl-border);
+  --input:               rgba(255, 255, 255, 0.08);
+  --ring:                var(--vl-red);
+
+  /* Charts */
+  --chart-1:             var(--vl-chart-1);
+  --chart-2:             var(--vl-chart-2);
+  --chart-3:             var(--vl-chart-3);
+  --chart-4:             var(--vl-chart-4);
+  --chart-5:             var(--vl-chart-5);
+
+  /* Sidebar */
+  --sidebar:                    var(--vl-bg-primary);
+  --sidebar-foreground:         var(--vl-text-primary);
+  --sidebar-primary:            var(--vl-red);
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent:             var(--vl-bg-surface);
+  --sidebar-accent-foreground:  var(--vl-text-primary);
+  --sidebar-border:             var(--vl-border);
+  --sidebar-ring:               var(--vl-red);
+
+  /* Radius */
+  --radius: 0.75rem;
+
+  color-scheme: dark;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+ * LIGHT MODE (default :root)
+ *
+ * Premium light variant. Maintains the same editorial feel with
+ * inverted contrast. Not the default experience but fully supported.
+ * ═══════════════════════════════════════════════════════════════════════════════ */
+:root {
+  /* ── Viewlytics Light Palette ── */
+  --bg-main:        #F6F7F9;
+  --bg-surface:     #FFFFFF;
+  --text-primary:   #0F1117;
+  --text-secondary: #667085;
+  --border-color:   rgba(0, 0, 0, 0.08);
+  --accent-red:     #FF3B30;
+  --accent-cyan:    #0091D5;
+  --accent-purple:  #6B47FF;
+  --success-green:  #16A34A;
+  --danger-red:     #EF4444;
+  --warning-amber:  #D97706;
+
+  /* ── shadcn/ui Semantic Tokens ── */
+  --background:          #F6F7F9;
+  --foreground:          #0F1117;
+
+  --card:                #FFFFFF;
+  --card-foreground:     #0F1117;
+
+  --popover:             #FFFFFF;
+  --popover-foreground:  #0F1117;
+
+  --primary:             #FF3B30;
+  --primary-foreground:  #FFFFFF;
+
+  --secondary:           #F0F2F5;
+  --secondary-foreground: #0F1117;
+
+  --muted:               #F0F2F5;
+  --muted-foreground:    #667085;
+
+  --accent:              #F0F2F5;
+  --accent-foreground:   #0F1117;
+
+  --destructive:         #EF4444;
+
+  --border:              rgba(0, 0, 0, 0.08);
+  --input:               rgba(0, 0, 0, 0.08);
+  --ring:                #FF3B30;
+
+  /* Charts */
+  --chart-1:             #FF3B30;
+  --chart-2:             #0091D5;
+  --chart-3:             #6B47FF;
+  --chart-4:             #16A34A;
+  --chart-5:             #D97706;
+
+  /* Sidebar */
+  --sidebar:                    #FFFFFF;
+  --sidebar-foreground:         #0F1117;
+  --sidebar-primary:            #FF3B30;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent:             #F0F2F5;
+  --sidebar-accent-foreground:  #0F1117;
+  --sidebar-border:             rgba(0, 0, 0, 0.08);
+  --sidebar-ring:               #FF3B30;
+
+  /* Radius */
+  --radius: 0.75rem;
+
+  color-scheme: light;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+ * LIGHT MODE — Override Viewlytics Token Defaults
+ *
+ * Because tokens.css defines dark values on :root, light mode needs
+ * to override the --vl-* tokens for components that use them directly.
+ * ═══════════════════════════════════════════════════════════════════════════════ */
+:root:not(.dark) {
+  --vl-bg-primary:    #F6F7F9;
+  --vl-bg-secondary:  #ECEEF2;
+  --vl-bg-surface:    #FFFFFF;
+  --vl-bg-elevated:   #FFFFFF;
+  --vl-bg-overlay:    rgba(0, 0, 0, 0.3);
+
+  --vl-border:        rgba(0, 0, 0, 0.08);
+  --vl-border-hover:  rgba(0, 0, 0, 0.15);
+  --vl-border-active: rgba(0, 0, 0, 0.22);
+  --vl-border-focus:  rgba(255, 59, 48, 0.4);
+
+  --vl-text-primary:   #0F1117;
+  --vl-text-secondary: #667085;
+  --vl-text-tertiary:  #98A2B3;
+  --vl-text-disabled:  #D0D5DD;
+  --vl-text-inverse:   #F5F7FA;
+
+  --vl-red:            #FF3B30;
+  --vl-red-hover:      #E6352B;
+  --vl-red-active:     #CC2F27;
+  --vl-red-soft:       rgba(255, 59, 48, 0.08);
+  --vl-red-glow:       rgba(255, 59, 48, 0.15);
+
+  --vl-cyan:           #0091D5;
+  --vl-cyan-hover:     #007AB8;
+  --vl-cyan-soft:      rgba(0, 145, 213, 0.08);
+  --vl-cyan-glow:      rgba(0, 145, 213, 0.12);
+
+  --vl-purple:         #6B47FF;
+  --vl-purple-hover:   #5A3AE6;
+  --vl-purple-soft:    rgba(107, 71, 255, 0.08);
+  --vl-purple-glow:    rgba(107, 71, 255, 0.12);
+
+  --vl-success:        #16A34A;
+  --vl-success-soft:   rgba(22, 163, 74, 0.08);
+  --vl-warning:        #D97706;
+  --vl-warning-soft:   rgba(217, 119, 6, 0.08);
+  --vl-danger:         #EF4444;
+  --vl-danger-soft:    rgba(239, 68, 68, 0.08);
+  --vl-info:           #0091D5;
+  --vl-info-soft:      rgba(0, 145, 213, 0.08);
+
+  --vl-chart-1:        #FF3B30;
+  --vl-chart-2:        #0091D5;
+  --vl-chart-3:        #6B47FF;
+  --vl-chart-4:        #16A34A;
+  --vl-chart-5:        #D97706;
+  --vl-chart-6:        #DB2777;
+
+  --vl-gradient-brand:   linear-gradient(135deg, #FF3B30 0%, #FF6B5E 100%);
+  --vl-gradient-cyan:    linear-gradient(135deg, #0091D5 0%, #6B47FF 100%);
+  --vl-gradient-surface: linear-gradient(180deg, #FFFFFF 0%, #F6F7F9 100%);
+  --vl-gradient-hero:    linear-gradient(135deg, rgba(255,59,48,0.04) 0%, transparent 40%, rgba(0,145,213,0.03) 100%);
+
+  /* Lighter shadows for light mode */
+  --shadow-xs:   0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-sm:   0 1px 3px rgba(0, 0, 0, 0.08),
+                 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-md:   0 4px 6px rgba(0, 0, 0, 0.07),
+                 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow-lg:   0 10px 15px rgba(0, 0, 0, 0.08),
+                 0 4px 6px rgba(0, 0, 0, 0.04);
+  --shadow-xl:   0 20px 25px rgba(0, 0, 0, 0.1),
+                 0 8px 10px rgba(0, 0, 0, 0.04);
+  --shadow-2xl:  0 25px 50px rgba(0, 0, 0, 0.12);
+
+  --shadow-glow-red:    0 0 16px rgba(255, 59, 48, 0.1),
+                        0 0 40px rgba(255, 59, 48, 0.04);
+  --shadow-glow-cyan:   0 0 16px rgba(0, 145, 213, 0.08),
+                        0 0 40px rgba(0, 145, 213, 0.03);
+  --shadow-glow-purple: 0 0 16px rgba(107, 71, 255, 0.08),
+                        0 0 40px rgba(107, 71, 255, 0.03);
+}

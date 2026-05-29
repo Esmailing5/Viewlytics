@@ -1,0 +1,337 @@
+/**
+ * Viewlytics — Animation System v2
+ *
+ * Centralized keyframes and utility classes for all motion in the product.
+ * Replaces scattered inline animations and dangerouslySetInnerHTML CSS.
+ *
+ * Principles:
+ * - Subtle, purposeful motion (not decorative)
+ * - Consistent timing via token durations/easings
+ * - Performance: prefer transform/opacity over layout-triggering properties
+ * - Respect prefers-reduced-motion
+ */
+
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+ * KEYFRAMES
+ * ═══════════════════════════════════════════════════════════════════════════════ */
+
+/* ── Entrance Animations ── */
+@keyframes vl-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes vl-slide-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes vl-slide-down {
+  from { opacity: 0; transform: translateY(-12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes vl-slide-left {
+  from { opacity: 0; transform: translateX(12px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes vl-slide-right {
+  from { opacity: 0; transform: translateX(-12px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes vl-scale-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* ── Status Animations ── */
+@keyframes vl-pulse-glow {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.5; }
+}
+
+@keyframes vl-pulse-ring {
+  0%   { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+
+@keyframes vl-shimmer {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@keyframes vl-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ── Marquee (infinite scroll) ── */
+@keyframes vl-marquee {
+  0%   { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
+}
+
+/* ── Glow Pulse (for accent elements) ── */
+@keyframes vl-glow-pulse {
+  0%, 100% { box-shadow: 0 0 20px var(--vl-red-glow); }
+  50%      { box-shadow: 0 0 40px var(--vl-red-glow), 0 0 80px rgba(255, 59, 48, 0.1); }
+}
+
+/* ── Float (subtle hovering) ── */
+@keyframes vl-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+
+/* ── Gradient Shift ── */
+@keyframes vl-gradient-shift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+ * ANIMATION UTILITY CLASSES
+ * ═══════════════════════════════════════════════════════════════════════════════ */
+
+.vl-animate-fade-in {
+  animation: vl-fade-in var(--duration-normal) var(--ease-out) both;
+}
+
+.vl-animate-slide-up {
+  animation: vl-slide-up var(--duration-normal) var(--ease-out) both;
+}
+
+.vl-animate-slide-down {
+  animation: vl-slide-down var(--duration-normal) var(--ease-out) both;
+}
+
+.vl-animate-scale-in {
+  animation: vl-scale-in var(--duration-normal) var(--ease-out) both;
+}
+
+.vl-animate-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.vl-animate-shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.04) 50%,
+    transparent 100%
+  );
+  animation: vl-shimmer 2s ease-in-out infinite;
+}
+
+.vl-animate-spin {
+  animation: vl-spin 1s linear infinite;
+}
+
+.vl-animate-pulse {
+  animation: vl-pulse-glow 2s var(--ease-in-out) infinite;
+}
+
+.vl-animate-float {
+  animation: vl-float 6s var(--ease-in-out) infinite;
+}
+
+/* ── Marquee ── */
+.vl-animate-marquee {
+  animation: vl-marquee 50s linear infinite;
+}
+
+.vl-animate-marquee-reverse {
+  animation: vl-marquee 50s linear infinite reverse;
+}
+
+.vl-animate-marquee:hover,
+.vl-animate-marquee-reverse:hover {
+  animation-play-state: paused;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+ * HOVER EFFECT PRESETS
+ * Apply these classes for consistent interactive feedback.
+ * ═══════════════════════════════════════════════════════════════════════════════ */
+
+/* Subtle lift on hover */
+.vl-hover-lift {
+  transition: transform var(--duration-normal) var(--ease-default),
+              box-shadow var(--duration-normal) var(--ease-default);
+}
+.vl-hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Glow effect on hover — Red accent */
+.vl-hover-glow-red {
+  transition: box-shadow var(--duration-normal) var(--ease-default),
+              border-color var(--duration-normal) var(--ease-default);
+}
+.vl-hover-glow-red:hover {
+  box-shadow: var(--shadow-glow-red);
+  border-color: var(--vl-red-soft);
+}
+
+/* Glow effect on hover — Cyan accent */
+.vl-hover-glow-cyan {
+  transition: box-shadow var(--duration-normal) var(--ease-default),
+              border-color var(--duration-normal) var(--ease-default);
+}
+.vl-hover-glow-cyan:hover {
+  box-shadow: var(--shadow-glow-cyan);
+  border-color: var(--vl-cyan-soft);
+}
+
+/* Glow effect on hover — Purple accent */
+.vl-hover-glow-purple {
+  transition: box-shadow var(--duration-normal) var(--ease-default),
+              border-color var(--duration-normal) var(--ease-default);
+}
+.vl-hover-glow-purple:hover {
+  box-shadow: var(--shadow-glow-purple);
+  border-color: var(--vl-purple-soft);
+}
+
+/* Scale on hover (subtle) */
+.vl-hover-scale {
+  transition: transform var(--duration-fast) var(--ease-spring);
+}
+.vl-hover-scale:hover {
+  transform: scale(1.02);
+}
+
+/* Brightness on hover */
+.vl-hover-brighten {
+  transition: filter var(--duration-fast) var(--ease-default);
+}
+.vl-hover-brighten:hover {
+  filter: brightness(1.15);
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+ * GLASS SURFACE EFFECTS
+ * ═══════════════════════════════════════════════════════════════════════════════ */
+
+.vl-glass {
+  background: rgba(17, 20, 27, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--vl-border);
+}
+
+.vl-glass-elevated {
+  background: rgba(17, 20, 27, 0.8);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--vl-border);
+  box-shadow: var(--shadow-lg);
+}
+
+.vl-glass-subtle {
+  background: rgba(17, 20, 27, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Light mode glass overrides */
+:root:not(.dark) .vl-glass {
+  background: rgba(255, 255, 255, 0.7);
+}
+:root:not(.dark) .vl-glass-elevated {
+  background: rgba(255, 255, 255, 0.85);
+}
+:root:not(.dark) .vl-glass-subtle {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+ * TRANSITION PRESETS
+ * ═══════════════════════════════════════════════════════════════════════════════ */
+
+.vl-transition {
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-timing-function: var(--ease-default);
+  transition-duration: var(--duration-normal);
+}
+
+.vl-transition-fast {
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-timing-function: var(--ease-default);
+  transition-duration: var(--duration-fast);
+}
+
+.vl-transition-slow {
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-timing-function: var(--ease-default);
+  transition-duration: var(--duration-slow);
+}
+
+.vl-transition-colors {
+  transition-property: color, background-color, border-color;
+  transition-timing-function: var(--ease-default);
+  transition-duration: var(--duration-normal);
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+ * TEXT GRADIENT EFFECTS
+ * ═══════════════════════════════════════════════════════════════════════════════ */
+
+.vl-text-gradient-brand {
+  background: var(--vl-gradient-brand);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.vl-text-gradient-cyan {
+  background: var(--vl-gradient-cyan);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.vl-text-gradient-multi {
+  background: linear-gradient(135deg, var(--vl-red) 0%, var(--vl-cyan) 50%, var(--vl-purple) 100%);
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+ * REDUCED MOTION
+ * ═══════════════════════════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .vl-hover-lift:hover {
+    transform: none;
+  }
+
+  .vl-animate-marquee,
+  .vl-animate-marquee-reverse {
+    animation: none;
+  }
+}

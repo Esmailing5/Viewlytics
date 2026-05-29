@@ -23,8 +23,8 @@ function CustomTooltip({
   const data = payload[0].payload;
 
   return (
-    <div className="dashboard-card px-3 py-2 !rounded-xl text-xs shadow-lg">
-      <p className="text-[var(--text-primary)] font-semibold">
+    <div className="vl-card-dashboard px-3 py-2 !rounded-xl text-xs shadow-lg">
+      <p className="text-[var(--vl-text-primary)] font-semibold">
         <span style={{ color: data.color }}>●</span> {data.name}: {data.value}%
       </p>
     </div>
@@ -51,7 +51,7 @@ export function PlaytimeDistribution() {
                 dataKey="value"
                 animationDuration={800}
                 animationEasing="ease-out"
-                stroke="var(--bg-main)"
+                stroke="#06070A" /* --vl-bg-primary */
                 strokeWidth={2}
               >
                 {PLAYTIME_DATA.map((entry) => (
@@ -71,8 +71,8 @@ export function PlaytimeDistribution() {
                 className="w-2.5 h-2.5 rounded-full flex-shrink-0"
                 style={{ backgroundColor: entry.color }}
               />
-              <span className="text-[var(--text-secondary)]">{entry.name}</span>
-              <span className="text-[var(--text-primary)] font-semibold">{entry.value}%</span>
+              <span className="text-[var(--vl-text-secondary)]">{entry.name}</span>
+              <span className="text-[var(--vl-text-primary)] font-semibold">{entry.value}%</span>
             </div>
           ))}
         </div>

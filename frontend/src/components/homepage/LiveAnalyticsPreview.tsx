@@ -4,13 +4,6 @@
  * Sección de vista previa del dashboard analítico en vivo.
  * Muestra un perfil de creador con gráficos reales y métricas de engagement.
  *
- * Incluye:
- * - Tarjeta de perfil del creador (avatar, nombre, badge de plataforma)
- * - Gráfico de área de suscriptores (12 meses)
- * - Gráfico de barras de vistas mensuales
- * - Métricas de engagement: tasa, vistas promedio, videos
- * - Badges de crecimiento
- *
  * @see execution-pack/08-stage-prompts.md — Live Dashboard Preview
  */
 
@@ -43,12 +36,12 @@ export function LiveAnalyticsPreview() {
     <section
       id="analytics-preview"
       aria-label="Live Analytics Preview"
-      className="relative py-24 overflow-hidden"
+      className="vl-section"
     >
       {/* Background glow */}
       <div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full opacity-[0.04] pointer-events-none"
-        style={{ background: 'radial-gradient(circle, #FF7A00, transparent)' }}
+        style={{ background: 'radial-gradient(circle, var(--vl-red), transparent)' }}
         aria-hidden="true"
       />
 
@@ -68,32 +61,30 @@ export function LiveAnalyticsPreview() {
           viewport={{ once: true, margin: '-60px' }}
           transition={{ duration: 0.7, ease: [0.4, 0, 0.2, 1] }}
           className="
-            rounded-3xl
-            bg-[#0A1B35]/80 backdrop-blur-xl
-            border border-white/[0.07]
+            rounded-2xl
+            vl-glass-elevated
             overflow-hidden
-            shadow-2xl shadow-black/40
           "
           style={{
-            boxShadow: '0 0 80px rgba(255,122,0,0.05), 0 40px 80px rgba(0,0,0,0.3)',
+            boxShadow: '0 0 80px rgba(255,59,48,0.04), 0 40px 80px rgba(0,0,0,0.3)',
           }}
         >
           {/* ── Dashboard Header Bar ── */}
-          <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.06] bg-[#071426]/40">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--vl-border)] bg-[var(--vl-bg-primary)]/40">
             {/* Browser-style dots */}
             <div className="flex items-center gap-2" aria-hidden="true">
-              <span className="w-3 h-3 rounded-full bg-red-500/60" />
-              <span className="w-3 h-3 rounded-full bg-yellow-500/60" />
-              <span className="w-3 h-3 rounded-full bg-emerald-500/60" />
+              <span className="w-3 h-3 rounded-full bg-[var(--vl-danger)]/60" />
+              <span className="w-3 h-3 rounded-full bg-[var(--vl-warning)]/60" />
+              <span className="w-3 h-3 rounded-full bg-[var(--vl-success)]/60" />
             </div>
-            <span className="text-xs text-[#B8C4D4]/40 font-mono">viewlytics.app/channel/el-circo-podcast</span>
-            <span className="flex items-center gap-1.5 text-[10px] text-emerald-400 font-semibold">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="text-xs text-[var(--vl-text-disabled)] font-mono">viewlytics.app/channel/el-circo-podcast</span>
+            <span className="flex items-center gap-1.5 text-[10px] text-[var(--vl-success)] font-semibold">
+              <span className="vl-status-dot vl-status-dot-live" />
               En vivo
             </span>
           </div>
 
-          <div className="grid lg:grid-cols-[280px_1fr] divide-x divide-white/[0.05]">
+          <div className="grid lg:grid-cols-[280px_1fr] divide-x divide-[var(--vl-border)]">
 
             {/* ── Sidebar: Creator Profile ── */}
             <div className="p-6 flex flex-col gap-5">
@@ -101,13 +92,13 @@ export function LiveAnalyticsPreview() {
               <div className="flex items-start gap-4">
                 <CreatorAvatar name={creator.name} platform="youtube" size="lg" />
                 <div className="min-w-0">
-                  <p className="text-[#F5F7FA] font-bold text-base leading-tight truncate">
+                  <p className="text-[var(--vl-text-primary)] font-bold text-base leading-tight truncate">
                     {creator.name}
                   </p>
-                  <p className="text-[#B8C4D4] text-xs mt-0.5">{creator.handle}</p>
+                  <p className="text-[var(--vl-text-secondary)] text-xs mt-0.5">{creator.handle}</p>
                   <div className="flex items-center gap-1.5 mt-2">
                     <YoutubeIcon className="w-3.5 h-3.5 text-red-500" />
-                    <span className="text-xs text-[#B8C4D4] capitalize">YouTube</span>
+                    <span className="text-xs text-[var(--vl-text-secondary)] capitalize">YouTube</span>
                   </div>
                 </div>
               </div>
@@ -115,15 +106,15 @@ export function LiveAnalyticsPreview() {
               {/* Growth badge */}
               <div className="flex items-center gap-2">
                 <GrowthBadge rate={metrics.growthRate} />
-                <span className="text-xs text-[#B8C4D4]">este mes</span>
+                <span className="text-xs text-[var(--vl-text-secondary)]">este mes</span>
               </div>
 
               {/* Subscriber highlight */}
-              <div className="p-4 rounded-2xl bg-[#FF7A00]/10 border border-[#FF7A00]/20">
-                <p className="text-2xl font-bold text-[#F5F7FA]">
+              <div className="p-4 rounded-xl bg-[var(--vl-red-soft)] border border-[rgba(255,59,48,0.15)]">
+                <p className="text-2xl font-bold text-[var(--vl-text-primary)]">
                   {formatCount(metrics.followers)}
                 </p>
-                <p className="text-xs text-[#FF7A00] font-semibold mt-0.5">Suscriptores</p>
+                <p className="text-xs text-[var(--vl-red)] font-semibold mt-0.5">Suscriptores</p>
               </div>
 
               {/* Sidebar metrics */}
@@ -138,10 +129,10 @@ export function LiveAnalyticsPreview() {
                   return (
                     <div key={item.label} className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <Icon className="w-3.5 h-3.5 text-[#B8C4D4]" />
-                        <span className="text-xs text-[#B8C4D4]">{item.label}</span>
+                        <Icon className="w-3.5 h-3.5 text-[var(--vl-text-tertiary)]" />
+                        <span className="text-xs text-[var(--vl-text-secondary)]">{item.label}</span>
                       </div>
-                      <span className="text-xs font-semibold text-[#F5F7FA]">{item.value}</span>
+                      <span className="text-xs font-semibold text-[var(--vl-text-primary)]">{item.value}</span>
                     </div>
                   );
                 })}
@@ -158,7 +149,7 @@ export function LiveAnalyticsPreview() {
                   change={`+${metrics.growthRate}%`}
                   positive
                   icon={<Users className="w-4 h-4" />}
-                  accent="orange"
+                  accent="red"
                   animationDelay={0}
                 />
                 <MetricCard
@@ -167,7 +158,7 @@ export function LiveAnalyticsPreview() {
                   change="+8.2%"
                   positive
                   icon={<Eye className="w-4 h-4" />}
-                  accent="blue"
+                  accent="cyan"
                   animationDelay={0.05}
                 />
                 <MetricCard
@@ -189,11 +180,11 @@ export function LiveAnalyticsPreview() {
               </div>
 
               {/* Subscribers area chart */}
-              <div className="p-4 rounded-2xl bg-[#071426]/60 border border-white/[0.05]">
+              <div className="p-4 rounded-xl bg-[var(--vl-bg-secondary)] border border-[var(--vl-border)]">
                 <div className="flex items-center justify-between mb-4">
                   <div>
-                    <p className="text-[#F5F7FA] text-sm font-semibold">Crecimiento de Suscriptores</p>
-                    <p className="text-[#B8C4D4] text-xs mt-0.5">Últimos 12 meses</p>
+                    <p className="text-[var(--vl-text-primary)] text-sm font-semibold">Crecimiento de Suscriptores</p>
+                    <p className="text-[var(--vl-text-secondary)] text-xs mt-0.5">Últimos 12 meses</p>
                   </div>
                   <GrowthBadge rate={metrics.growthRate} size="sm" />
                 </div>
@@ -201,11 +192,11 @@ export function LiveAnalyticsPreview() {
               </div>
 
               {/* Views bar chart */}
-              <div className="p-4 rounded-2xl bg-[#071426]/60 border border-white/[0.05]">
+              <div className="p-4 rounded-xl bg-[var(--vl-bg-secondary)] border border-[var(--vl-border)]">
                 <div className="flex items-center justify-between mb-4">
                   <div>
-                    <p className="text-[#F5F7FA] text-sm font-semibold">Vistas Mensuales</p>
-                    <p className="text-[#B8C4D4] text-xs mt-0.5">Destacado: mes pico</p>
+                    <p className="text-[var(--vl-text-primary)] text-sm font-semibold">Vistas Mensuales</p>
+                    <p className="text-[var(--vl-text-secondary)] text-xs mt-0.5">Destacado: mes pico</p>
                   </div>
                 </div>
                 <ViewsChart data={VIEWS_GROWTH_DATA} height={130} />

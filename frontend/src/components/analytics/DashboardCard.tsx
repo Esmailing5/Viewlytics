@@ -1,7 +1,7 @@
 /**
  * DashboardCard — Shared card wrapper for dashboard grid items.
  *
- * Provides consistent styling: 20px radius, subtle border, hover effect.
+ * Provides consistent styling using design system card classes.
  */
 
 interface DashboardCardProps {
@@ -19,15 +19,15 @@ interface DashboardCardProps {
 
 export function DashboardCard({ title, subtitle, action, children, className = '' }: DashboardCardProps) {
   return (
-    <div className={`dashboard-card p-5 ${className}`}>
+    <div className={`vl-card-dashboard p-5 ${className}`}>
       {/* Header */}
-      <div className="flex items-start justify-between mb-4">
+      <div className="vl-card-header">
         <div>
-          <h3 className="text-sm font-semibold text-[var(--text-primary)]">
+          <h3 className="vl-card-title">
             {title}
           </h3>
           {subtitle && (
-            <p className="text-xs text-[var(--text-secondary)] mt-0.5">
+            <p className="vl-card-subtitle">
               {subtitle}
             </p>
           )}
