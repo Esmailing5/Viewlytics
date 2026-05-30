@@ -3,52 +3,107 @@
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import {
-  LayoutDashboard,
-  BarChart3,
-  Users,
-  FileText,
-  Settings,
-  ChevronLeft,
-  ChevronRight,
-  X,
-  Home,
-} from 'lucide-react';
 import { navigationConfig } from '@/config/navigation';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
 import { Logo } from '@/components/shared/Logo';
 import type { SidebarItem } from '@/types';
 
-/** Map sidebar icon names to Lucide components */
+/**
+ * Premium SVG icon set for sidebar — hand-crafted, 1.5 stroke-width.
+ * Replaces generic Lucide-only approach for a more editorial look.
+ */
+const IconHome = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M3 9.5L10 3l7 6.5V17a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z" />
+    <path d="M7.5 18V12h5v6" />
+  </svg>
+);
+
+const IconDashboard = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="3" y="3" width="6" height="6" rx="1.5" />
+    <rect x="11" y="3" width="6" height="6" rx="1.5" />
+    <rect x="3" y="11" width="6" height="6" rx="1.5" />
+    <rect x="11" y="11" width="6" height="6" rx="1.5" />
+  </svg>
+);
+
+const IconAnalytics = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M3 16l4-5 3 3 4-6 3 3" />
+    <path d="M17 16H3" />
+  </svg>
+);
+
+const IconAudience = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="8" cy="7" r="3" />
+    <path d="M2 17c0-3 2.7-5 6-5" />
+    <circle cx="14" cy="8" r="2.5" />
+    <path d="M11.5 17c0-2 1.1-3.5 2.5-3.5s2.5 1.5 2.5 3.5" />
+  </svg>
+);
+
+const IconReports = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M5 3h10a1 1 0 011 1v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4a1 1 0 011-1z" />
+    <path d="M7 8h6M7 11h6M7 14h4" />
+  </svg>
+);
+
+const IconSettings = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="10" cy="10" r="2.5" />
+    <path d="M10 2v2M10 16v2M2 10h2M16 10h2M4.22 4.22l1.42 1.42M14.36 14.36l1.42 1.42M4.22 15.78l1.42-1.42M14.36 5.64l1.42-1.42" />
+  </svg>
+);
+
+const IconChevronLeft = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M10 4L6 8l4 4" />
+  </svg>
+);
+
+const IconChevronRight = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M6 4l4 4-4 4" />
+  </svg>
+);
+
+const IconClose = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M4 4l8 8M12 4l-8 8" />
+  </svg>
+);
+
+/** Map icon names to custom SVG components */
 const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
-  Home,
-  LayoutDashboard,
-  BarChart3,
-  Users,
-  FileText,
-  Settings,
+  Home: IconHome,
+  LayoutDashboard: IconDashboard,
+  BarChart3: IconAnalytics,
+  Users: IconAudience,
+  FileText: IconReports,
+  Settings: IconSettings,
 };
 
 const COLLAPSED_KEY = 'viewlytics-sidebar-collapsed';
 
 interface SidebarProps {
-  /** Whether the mobile drawer is open */
   mobileOpen: boolean;
-  /** Callback to close the mobile drawer */
   onMobileClose: () => void;
 }
 
 /**
- * Sidebar — Fixed left navigation panel.
+ * Sidebar v3 — Editorial left navigation.
  *
- * Desktop: 260px expanded / 88px collapsed, with toggle button.
+ * Desktop: 240px expanded / 72px collapsed, smooth toggle.
  * Mobile: Slide-in drawer with backdrop overlay.
+ * Active states: subtle, not garish. Non-template aesthetic.
  */
 export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
 
-  // Read persisted collapsed state
   useEffect(() => {
     try {
       const stored = localStorage.getItem(COLLAPSED_KEY);
@@ -109,16 +164,24 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
           className={`
             vl-nav-item
             ${active ? 'vl-nav-item-active' : ''}
-            ${collapsed ? 'justify-center' : ''}
+            ${collapsed ? 'justify-center px-0' : ''}
           `}
           title={collapsed ? item.label : undefined}
+          aria-current={active ? 'page' : undefined}
         >
-          {Icon && <Icon className={`vl-nav-icon ${active ? 'text-[var(--vl-red)]' : ''}`} />}
-          {!collapsed && <span>{item.label}</span>}
+          {Icon && (
+            <Icon
+              className={`
+                vl-nav-icon flex-shrink-0
+                ${collapsed ? 'w-[18px] h-[18px]' : 'w-4 h-4'}
+              `}
+            />
+          )}
+          {!collapsed && (
+            <span className="truncate">{item.label}</span>
+          )}
           {!collapsed && item.badge && (
-            <span className="vl-nav-badge">
-              {item.badge}
-            </span>
+            <span className="vl-nav-badge ml-auto">{item.badge}</span>
           )}
         </Link>
       </li>
@@ -127,26 +190,49 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
 
   const sidebarContent = (
     <div className="flex flex-col h-full">
-      {/* Logo */}
-      <div className={`flex items-center h-[72px] px-4 border-b border-[var(--vl-border)] ${collapsed ? 'justify-center' : ''}`}>
-        <Link href="/" className="flex items-center gap-2 flex-shrink-0" aria-label="Viewlytics Home">
-          <Logo variant={collapsed ? 'icon' : 'full'} className={collapsed ? 'h-8 w-auto' : 'h-9 w-auto'} />
+
+      {/* Logo area */}
+      <div
+        className={`
+          flex items-center h-[56px] flex-shrink-0
+          border-b border-[var(--vl-border)]
+          ${collapsed ? 'justify-center px-0' : 'px-4'}
+        `}
+      >
+        <Link
+          href="/"
+          className="flex items-center gap-2 flex-shrink-0"
+          aria-label="Viewlytics Home"
+        >
+          <Logo
+            variant={collapsed ? 'icon' : 'full'}
+            className={collapsed ? 'h-7 w-auto' : 'h-8 w-auto'}
+          />
         </Link>
       </div>
 
       {/* Main navigation */}
-      <nav className="flex-1 px-3 py-4 overflow-y-auto" aria-label="Sidebar navigation">
-        <ul className="space-y-1" role="list">
+      <nav
+        className={`flex-1 overflow-y-auto overflow-x-hidden py-3 ${collapsed ? 'px-2' : 'px-2'}`}
+        aria-label="Sidebar navigation"
+      >
+        <ul className="space-y-0.5" role="list">
           {mainItems.map(renderNavItem)}
         </ul>
       </nav>
 
       {/* Bottom section */}
-      <div className="px-3 py-4 border-t border-[var(--vl-border)] space-y-1">
-        <ul className="space-y-1" role="list">
+      <div
+        className={`
+          flex-shrink-0 pb-3 pt-2
+          border-t border-[var(--vl-border)]
+          ${collapsed ? 'px-2' : 'px-2'}
+        `}
+      >
+        <ul className="space-y-0.5 mb-2" role="list">
           {bottomItems.map(renderNavItem)}
         </ul>
-        <div className={`mt-2 ${collapsed ? 'flex justify-center' : ''}`}>
+        <div className={`${collapsed ? 'flex justify-center' : ''}`}>
           <ThemeToggle showLabel={!collapsed} />
         </div>
       </div>
@@ -156,13 +242,27 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
         id="sidebar-collapse-toggle"
         onClick={toggleCollapsed}
         aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-        className="
-          hidden lg:flex items-center justify-center
-          h-10 mx-3 mb-3
-          vl-btn vl-btn-ghost vl-btn-icon
-        "
+        className={`
+          hidden lg:flex items-center justify-center gap-2
+          mx-2 mb-2 h-8
+          rounded-md
+          text-xs font-medium
+          text-[var(--vl-text-disabled)]
+          hover:text-[var(--vl-text-secondary)]
+          hover:bg-[rgba(255,255,255,0.03)]
+          transition-colors duration-150
+          flex-shrink-0
+        `}
       >
-        {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
+        {collapsed
+          ? <IconChevronRight className="w-4 h-4" />
+          : (
+            <>
+              <IconChevronLeft className="w-4 h-4" />
+              <span>Collapse</span>
+            </>
+          )
+        }
       </button>
     </div>
   );
@@ -177,6 +277,7 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
           vl-sidebar
           ${collapsed ? 'vl-sidebar-collapsed' : 'vl-sidebar-expanded'}
         `}
+        aria-label="Sidebar"
       >
         {sidebarContent}
       </aside>
@@ -185,33 +286,41 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
       {mobileOpen && (
         <div
           className="fixed inset-0 z-50 lg:hidden"
-          aria-hidden="true"
         >
           {/* Backdrop */}
           <div
             className="absolute inset-0 bg-[var(--vl-bg-overlay)] backdrop-blur-sm"
             onClick={onMobileClose}
+            aria-hidden="true"
           />
           {/* Drawer */}
           <aside
             id="sidebar-mobile"
             className="
-              relative w-[280px] h-full
+              relative w-[260px] h-full
               bg-[var(--vl-bg-primary)] border-r border-[var(--vl-border)]
               shadow-2xl
-              animate-in slide-in-from-left duration-300
+              flex flex-col
             "
+            style={{ animation: 'vl-slide-right 0.25s var(--ease-out) both' }}
+            aria-label="Mobile navigation"
           >
             {/* Close button */}
             <button
               onClick={onMobileClose}
               aria-label="Close sidebar"
               className="
-                absolute top-4 right-4
-                vl-btn vl-btn-ghost vl-btn-icon vl-btn-sm
+                absolute top-3 right-3
+                w-7 h-7 flex items-center justify-center
+                rounded-md
+                text-[var(--vl-text-tertiary)]
+                hover:text-[var(--vl-text-primary)]
+                hover:bg-[rgba(255,255,255,0.06)]
+                transition-colors duration-150
+                z-10
               "
             >
-              <X className="w-4 h-4" />
+              <IconClose className="w-3.5 h-3.5" />
             </button>
             {sidebarContent}
           </aside>

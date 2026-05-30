@@ -12,26 +12,19 @@ interface DashboardLayoutProps {
 const COLLAPSED_KEY = 'viewlytics-sidebar-collapsed';
 
 /**
- * DashboardLayout — Main layout wrapper with sidebar + topbar + content + footer.
+ * DashboardLayout v3 — Main wrapper with sidebar + topbar + content + footer.
  *
- * Manages sidebar collapse state and mobile drawer visibility.
- * Content area adjusts margin-left based on sidebar width.
+ * Sidebar: 240px expanded / 72px collapsed.
+ * Content area transitions margin-left smoothly.
+ * Mobile: sidebar is a drawer, no margin offset needed.
  */
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
-  // Sync collapse state from localStorage
+  // Sync collapse state from localStorage (same-tab polling)
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem(COLLAPSED_KEY);
-      if (stored === 'true') setSidebarCollapsed(true);
-    } catch {
-      // localStorage unavailable
-    }
-
-    // Listen for storage changes (sidebar toggle updates this)
-    const handleStorage = () => {
+    const syncCollapsed = () => {
       try {
         const stored = localStorage.getItem(COLLAPSED_KEY);
         setSidebarCollapsed(stored === 'true');
@@ -40,24 +33,13 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       }
     };
 
-    window.addEventListener('storage', handleStorage);
+    syncCollapsed();
+    window.addEventListener('storage', syncCollapsed);
 
-    // Also listen for custom sidebar collapse events
-    const observer = new MutationObserver(() => {
-      try {
-        const stored = localStorage.getItem(COLLAPSED_KEY);
-        setSidebarCollapsed(stored === 'true');
-      } catch {
-        // ignore
-      }
-    });
-
-    // Poll localStorage on a short interval to catch same-tab changes
-    const interval = setInterval(handleStorage, 300);
+    const interval = setInterval(syncCollapsed, 250);
 
     return () => {
-      window.removeEventListener('storage', handleStorage);
-      observer.disconnect();
+      window.removeEventListener('storage', syncCollapsed);
       clearInterval(interval);
     };
   }, []);
@@ -71,24 +53,27 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-[var(--vl-bg-primary)]">
       {/* Sidebar */}
       <Sidebar mobileOpen={mobileOpen} onMobileClose={handleMobileClose} />
 
-      {/* Main content area — shifts right based on sidebar width */}
+      {/* Main content — shifts right on desktop based on sidebar width */}
       <div
         className={`
-          flex flex-col flex-1
-          transition-[margin-left] duration-300
-          lg:ml-[260px]
-          ${sidebarCollapsed ? 'lg:!ml-[88px]' : ''}
+          flex flex-col flex-1 min-w-0
+          transition-[margin-left] duration-300 ease-[var(--ease-default)]
+          lg:ml-[240px]
+          ${sidebarCollapsed ? 'lg:!ml-[72px]' : ''}
         `}
       >
         {/* Topbar */}
         <Topbar onMobileMenuToggle={handleMobileToggle} />
 
         {/* Page content */}
-        <main id="main-content" className="flex-1 p-4 md:p-6">
+        <main
+          id="main-content"
+          className="flex-1 p-4 md:p-5 lg:p-6 min-w-0"
+        >
           {children}
         </main>
 

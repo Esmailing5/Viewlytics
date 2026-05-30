@@ -1,97 +1,122 @@
 /**
- * Viewlytics — Navigation Component Styles
+ * Viewlytics — Navigation Component Styles v3
  *
- * Sidebar nav items, tabs, breadcrumbs, and nav link patterns.
- * Consistent active indicators and hover states.
+ * Editorial, premium, anti-template. Inspired by Linear, Vercel, Raycast.
+ * Refined active states, surgical hover effects, zero generic dashboard vibes.
  */
 
-/* ═══ NAV ITEM (Sidebar / Menu) ═══ */
+
+/* ═══ NAV ITEM (Sidebar) ═══ */
 .vl-nav-item {
   position: relative;
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  padding: var(--space-2\.5) var(--space-3);
-  border-radius: var(--radius-lg);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
   font-family: var(--font-sans);
   font-size: var(--text-sm);
   font-weight: var(--weight-medium);
-  color: var(--vl-text-secondary);
+  color: var(--vl-text-tertiary);
   text-decoration: none;
-  transition-property: color, background-color;
-  transition-duration: var(--duration-fast);
-  transition-timing-function: var(--ease-default);
+  transition:
+    color var(--duration-fast) var(--ease-default),
+    background-color var(--duration-fast) var(--ease-default),
+    opacity var(--duration-fast) var(--ease-default);
   cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  letter-spacing: -0.01em;
 }
 
 .vl-nav-item:hover {
   color: var(--vl-text-primary);
-  background: var(--vl-bg-surface);
+  background: rgba(255, 255, 255, 0.04);
 }
 
-/* Active state */
+:root:not(.dark) .vl-nav-item:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+/* Active state — surgical, not garish */
 .vl-nav-item-active {
   color: var(--vl-text-primary);
-  background: var(--vl-red-soft);
+  background: rgba(255, 255, 255, 0.06);
+  font-weight: var(--weight-semibold);
 }
 
-/* Active indicator bar */
-.vl-nav-item-active::before {
+:root:not(.dark) .vl-nav-item-active {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+/* Active accent dot — left edge */
+.vl-nav-item-active::after {
   content: '';
   position: absolute;
   left: 0;
   top: 50%;
   transform: translateY(-50%);
-  width: 3px;
-  height: 20px;
-  border-radius: 0 var(--radius-full) var(--radius-full) 0;
+  width: 2px;
+  height: 14px;
+  border-radius: 0 2px 2px 0;
   background: var(--vl-red);
+  opacity: 0.9;
 }
 
-/* Active icon color */
+/* Active icon tint */
 .vl-nav-item-active .vl-nav-icon {
   color: var(--vl-red);
+  opacity: 1;
 }
 
 /* Icon */
 .vl-nav-icon {
-  width: var(--icon-md);
-  height: var(--icon-md);
+  width: 16px;
+  height: 16px;
   flex-shrink: 0;
   color: inherit;
+  opacity: 0.6;
+  transition: opacity var(--duration-fast) var(--ease-default);
+  stroke-width: 1.75;
 }
 
-/* Badge in nav */
+.vl-nav-item:hover .vl-nav-icon {
+  opacity: 0.9;
+}
+
+/* Badge in sidebar */
 .vl-nav-badge {
   margin-left: auto;
   display: inline-flex;
   align-items: center;
-  padding: 2px var(--space-1\.5);
-  border-radius: var(--radius-sm);
+  padding: 2px 6px;
+  border-radius: var(--radius-full);
   background: var(--vl-red-soft);
   color: var(--vl-red);
-  font-size: var(--text-2xs);
+  font-size: 10px;
   font-weight: var(--weight-bold);
-  line-height: var(--leading-none);
+  letter-spacing: 0.02em;
+  line-height: 1;
 }
 
 
-/* ═══ NAV LINK (Navbar / Topbar inline) ═══ */
+/* ═══ NAV LINK (Navbar inline) ═══ */
 .vl-nav-link {
   position: relative;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: var(--space-1\.5);
-  padding: var(--space-2) var(--space-4);
-  border-radius: var(--radius-lg);
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: var(--radius-md);
   font-family: var(--font-sans);
   font-size: var(--text-sm);
   font-weight: var(--weight-medium);
   color: var(--vl-text-secondary);
   text-decoration: none;
-  transition-property: color, background-color;
-  transition-duration: var(--duration-fast);
-  transition-timing-function: var(--ease-default);
+  transition:
+    color var(--duration-fast) var(--ease-default),
+    background-color var(--duration-fast) var(--ease-default);
+  letter-spacing: -0.01em;
 }
 
 .vl-nav-link:hover {
@@ -103,6 +128,44 @@
   background: rgba(0, 0, 0, 0.04);
 }
 
+/* Navbar badge (e.g. "New") */
+.vl-nav-link .vl-nav-badge {
+  margin-left: var(--space-1-5);
+}
+
+/* Keyboard shortcut */
+.vl-kbd {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--vl-border);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: var(--weight-medium);
+  color: var(--vl-text-tertiary);
+  letter-spacing: 0;
+}
+
+:root:not(.dark) .vl-kbd {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+
+/* ═══ SIDEBAR SECTION LABEL ═══ */
+.vl-nav-section-label {
+  display: block;
+  padding: var(--space-2) var(--space-3) var(--space-1);
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--vl-text-disabled);
+  user-select: none;
+}
+
 
 /* ═══ TABS ═══ */
 .vl-tabs {
@@ -110,15 +173,15 @@
   align-items: center;
   gap: var(--space-1);
   border-bottom: 1px solid var(--vl-border);
-  padding-bottom: var(--space-px);
+  padding-bottom: 0;
 }
 
 .vl-tab {
   position: relative;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  padding: var(--space-2\.5) var(--space-4);
+  padding: var(--space-2) var(--space-4);
   font-family: var(--font-sans);
   font-size: var(--text-sm);
   font-weight: var(--weight-medium);
@@ -127,9 +190,8 @@
   border: none;
   border-radius: var(--radius-md) var(--radius-md) 0 0;
   cursor: pointer;
-  transition-property: color, background-color;
-  transition-duration: var(--duration-fast);
-  transition-timing-function: var(--ease-default);
+  transition: color var(--duration-fast) var(--ease-default),
+              background-color var(--duration-fast) var(--ease-default);
 }
 
 .vl-tab:hover {
@@ -139,12 +201,13 @@
 
 .vl-tab-active {
   color: var(--vl-text-primary);
+  font-weight: var(--weight-semibold);
 }
 
 .vl-tab-active::after {
   content: '';
   position: absolute;
-  bottom: -1px;
+  bottom: 0;
   left: var(--space-4);
   right: var(--space-4);
   height: 2px;
@@ -155,14 +218,18 @@
 /* Pill tabs variant */
 .vl-tabs-pill {
   border-bottom: none;
-  padding: var(--space-1);
-  background: var(--vl-bg-secondary);
+  padding: 3px;
+  background: rgba(255, 255, 255, 0.04);
   border-radius: var(--radius-lg);
-  gap: var(--space-0\.5);
+  gap: 2px;
+}
+
+:root:not(.dark) .vl-tabs-pill {
+  background: rgba(0, 0, 0, 0.04);
 }
 
 .vl-tab-pill {
-  padding: var(--space-1\.5) var(--space-3);
+  padding: var(--space-1-5) var(--space-3);
   border-radius: var(--radius-md);
   font-size: var(--text-xs);
   border: none;
@@ -182,9 +249,9 @@
 .vl-breadcrumb {
   display: flex;
   align-items: center;
-  gap: var(--space-1\.5);
+  gap: var(--space-1-5);
   font-family: var(--font-sans);
-  font-size: var(--text-sm);
+  font-size: var(--text-xs);
   color: var(--vl-text-tertiary);
 }
 
@@ -200,6 +267,7 @@
 
 .vl-breadcrumb-separator {
   color: var(--vl-text-disabled);
+  font-size: 10px;
 }
 
 .vl-breadcrumb-current {
