@@ -1,0 +1,170 @@
+/**
+ * Viewlytics — Homepage-Specific Style Extensions
+ *
+ * Provides specialized visual effects for the marketing landing page:
+ * - Subtle noise overlay (film grain texture)
+ * - Cinematic mesh gradient backdrops
+ * - Floating background orbs
+ * - Editorial typography helpers
+ * - Premium interactive borders and glows
+ */
+
+/* ── film grain noise overlay ── */
+.vl-noise-container {
+  position: relative;
+}
+
+.vl-noise-container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.025; /* ultra-subtle grain */
+  pointer-events: none;
+  z-index: 2;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* ── mesh gradients & glowing orbs ── */
+.vl-mesh-gradient {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.vl-orb {
+  position: absolute;
+  border-radius: var(--radius-full);
+  filter: blur(120px);
+  opacity: 0.08;
+  mix-blend-mode: screen;
+  transition: transform 10s ease-in-out, opacity 5s ease-in-out;
+}
+
+.vl-orb-1 {
+  top: -10%;
+  left: 5%;
+  width: 50vw;
+  height: 50vw;
+  background: radial-gradient(circle, var(--vl-red) 0%, transparent 70%);
+}
+
+.vl-orb-2 {
+  bottom: 10%;
+  right: -5%;
+  width: 45vw;
+  height: 45vw;
+  background: radial-gradient(circle, var(--vl-cyan) 0%, transparent 70%);
+}
+
+.vl-orb-3 {
+  top: 40%;
+  left: 35%;
+  width: 35vw;
+  height: 35vw;
+  background: radial-gradient(circle, var(--vl-purple) 0%, transparent 70%);
+  opacity: 0.05;
+}
+
+/* ── watermark text watermark ── */
+.vl-brand-watermark {
+  position: absolute;
+  font-family: var(--font-heading);
+  font-size: 15vw;
+  font-weight: 900;
+  color: var(--vl-text-primary);
+  opacity: 0.015;
+  letter-spacing: -0.06em;
+  user-select: none;
+  pointer-events: none;
+  line-height: 1;
+}
+
+/* ── hero typography ── */
+.vl-hero-title {
+  font-family: var(--font-heading);
+  font-size: clamp(2.5rem, 8vw, 5.5rem);
+  font-weight: 850;
+  line-height: 0.95;
+  letter-spacing: -0.045em;
+}
+
+/* ── premium grid line system ── */
+.vl-bg-line-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.vl-bg-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--vl-border) 0%, transparent 80%);
+}
+
+/* ── interactive glow effects for cards ── */
+.vl-premium-card-glow {
+  position: relative;
+  transition: all var(--duration-normal) var(--ease-default);
+}
+
+.vl-premium-card-glow::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  transition: opacity var(--duration-normal) var(--ease-default);
+  opacity: 0.5;
+}
+
+.vl-premium-card-glow:hover::after {
+  background: linear-gradient(135deg, var(--vl-red), var(--vl-cyan));
+  opacity: 1;
+}
+
+.vl-trending-card {
+  background: rgba(17, 20, 27, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--vl-border);
+  border-radius: var(--radius-2xl);
+  padding: var(--space-5);
+  transition: transform var(--duration-normal) var(--ease-default), border-color var(--duration-normal) var(--ease-default);
+}
+
+.vl-trending-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 59, 48, 0.3);
+}
+
+/* ── broadcast style leaderboard ── */
+.vl-broadcast-row {
+  position: relative;
+  transition: all var(--duration-fast) var(--ease-default);
+  border-left: 3px solid transparent;
+}
+
+.vl-broadcast-row:hover {
+  background: rgba(255, 255, 255, 0.02);
+  border-left-color: var(--vl-red);
+}
+
+.vl-broadcast-number {
+  font-family: var(--font-heading);
+  font-size: var(--text-2xl);
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: -0.05em;
+}

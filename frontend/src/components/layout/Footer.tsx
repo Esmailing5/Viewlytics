@@ -32,10 +32,10 @@ export function Footer() {
       <div className="vl-footer-inner">
 
         {/* Top: Brand + Links grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10 mb-10 lg:mb-12">
 
           {/* Brand column */}
-          <div className="lg:col-span-1">
+          <div className="col-span-2 lg:col-span-1">
             <Link href="/" id="footer-logo" aria-label={`${brandConfig.name} — Home`}>
               <Logo className="h-7 w-auto mb-4" variant="full" />
             </Link>

@@ -1,0 +1,140 @@
+/**
+ * Viewlytics — Creator Dashboard Styles
+ *
+ * Dedicated styling extensions for the analytics dashboard area:
+ * - Immersive banner gradients & overlays
+ * - Interactive platform-colored avatar rings
+ * - Dynamic metric card glow effects
+ * - Custom glassmorphism charts and tooltips
+ * - Refined video thumbnail overlays
+ * - Compact spacing and density improvements
+ */
+
+/* ── density tweaks ── */
+.vl-dashboard-grid {
+  display: grid;
+  gap: 16px;
+}
+
+/* ── banner visual overrides ── */
+.vl-dashboard-banner {
+  position: relative;
+  width: 100%;
+  background: var(--vl-bg-surface);
+  border: 1px solid var(--vl-border);
+  border-radius: var(--radius-2xl);
+  overflow: hidden;
+}
+
+.vl-dashboard-banner-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(6, 7, 10, 0.95) 0%, rgba(6, 7, 10, 0.4) 60%, rgba(6, 7, 10, 0.15) 100%);
+  z-index: 1;
+}
+
+/* ── platform rings ── */
+.vl-avatar-ring-youtube {
+  box-shadow: 0 0 0 4px var(--vl-bg-primary), 0 0 0 7px rgba(255, 59, 48, 0.7), 0 0 30px rgba(255, 59, 48, 0.3);
+}
+
+.vl-avatar-ring-twitch {
+  box-shadow: 0 0 0 4px var(--vl-bg-primary), 0 0 0 7px rgba(145, 70, 255, 0.7), 0 0 30px rgba(145, 70, 255, 0.3);
+}
+
+.vl-avatar-ring-kick {
+  box-shadow: 0 0 0 4px var(--vl-bg-primary), 0 0 0 7px rgba(83, 252, 24, 0.7), 0 0 30px rgba(83, 252, 24, 0.3);
+}
+
+/* ── chart tooltip styling ── */
+.vl-chart-tooltip {
+  background: rgba(17, 20, 27, 0.85) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: var(--radius-xl) !important;
+  box-shadow: var(--shadow-2xl) !important;
+  padding: 10px 14px !important;
+  z-index: 50;
+}
+
+/* ── recent video thumbnail play indicator ── */
+.vl-video-thumbnail-container {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--vl-border);
+  background: var(--vl-bg-primary);
+}
+
+.vl-video-play-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(6, 7, 10, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  opacity: 0;
+  transition: opacity var(--duration-fast) var(--ease-default);
+  z-index: 10;
+}
+
+.vl-video-thumbnail-container:hover .vl-video-play-overlay {
+  opacity: 1;
+}
+
+/* ── metric cards visual elevation ── */
+.vl-metric-card-interactive {
+  background: rgba(17, 20, 27, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--vl-border);
+  border-radius: var(--radius-xl);
+  padding: 16px 20px;
+  transition: all var(--duration-normal) var(--ease-default);
+}
+
+.vl-metric-card-interactive:hover {
+  transform: translateY(-2px);
+  border-color: var(--vl-border-hover);
+  box-shadow: var(--shadow-md);
+}
+
+/* ── header buttons ── */
+.vl-header-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--vl-text-primary);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: var(--radius-lg);
+  transition: all var(--duration-fast) var(--ease-default);
+  cursor: pointer;
+}
+
+.vl-header-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.vl-header-btn-icon {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: var(--radius-lg);
+}
+
+/* ── sparkline wrapper ── */
+.vl-sparkline-container {
+  width: 90px;
+  height: 28px;
+  flex-shrink: 0;
+}

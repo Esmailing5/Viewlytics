@@ -2,7 +2,7 @@
 
 import { useMemo } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { DollarSign } from 'lucide-react';
+import { Landmark, TrendingUp } from 'lucide-react';
 
 interface GrowthProps {
   views_30d: number;
@@ -77,87 +77,111 @@ export function EstimatedIncomeChart({ growth, recentVideos = [] }: ChartProps) 
     return data;
   }, [views30d, recentVideos]);
 
-  /* Chart color — uses success green from design system */
-  const chartColor = '#22C55E';
-  const gridColor = 'rgba(255,255,255,0.04)';
-  const tickColor = '#98A2B3';
+  // Premium area gradient colors
+  const chartColor = 'var(--vl-success)';
+  const gridColor = 'rgba(255,255,255,0.03)';
+  const tickColor = '#667085';
+
+  // Custom tooltips with glassmorphism styling
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="vl-chart-tooltip">
+          <p className="text-[10px] uppercase tracking-wider font-bold text-[var(--vl-text-tertiary)] mb-1">{label}</p>
+          <div className="flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-[var(--vl-success)]" />
+            <p className="text-sm font-black text-[var(--vl-text-primary)]">
+              Estimado: <span className="text-[var(--vl-success)]">{formatMoney(payload[0].value)}</span>
+            </p>
+          </div>
+        </div>
+      );
+    }
+    return null;
+  };
 
   return (
-    <div className="vl-card-dashboard p-6 h-full flex flex-col">
+    <div className="vl-card-dashboard p-6 h-full flex flex-col border border-[var(--vl-border)] rounded-2xl bg-[var(--vl-bg-surface)]/60 backdrop-blur-md">
+      {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
         <div>
-          <h3 className="text-xl font-bold text-[var(--vl-text-primary)]">Ingresos Estimados</h3>
-          <p className="text-sm text-[var(--vl-text-secondary)] mt-1">
+          <div className="flex items-center gap-2 mb-1.5">
+            <h3 className="text-lg font-bold text-[var(--vl-text-primary)]">Ingresos Estimados</h3>
+          </div>
+          <p className="text-xs text-[var(--vl-text-secondary)] font-medium">
             Basado en CPM de $0.25 - $4.00 y tráfico de 30 días
           </p>
         </div>
-        <div className="flex items-center gap-2 px-4 py-2 bg-[var(--vl-success-soft)] text-[var(--vl-success)] rounded-xl font-semibold">
-          <DollarSign className="w-5 h-5" /> Monetización Activa
+        
+        <div className="flex items-center gap-1.5 px-3 py-1 bg-[var(--vl-success-soft)] text-[var(--vl-success)] rounded-full text-xs font-bold border border-[var(--vl-success)]/20 shadow-sm animate-pulse">
+          <span className="w-1.5 h-1.5 rounded-full bg-[var(--vl-success)]" />
+          Monetización Activa
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-        <div className="p-5 rounded-2xl bg-[var(--vl-bg-primary)] border border-[var(--vl-border)]">
-          <p className="text-sm font-medium text-[var(--vl-text-secondary)] mb-1">Ingreso Estimado Mensual</p>
-          <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-[var(--vl-text-primary)] break-words">
-            {formatMoney(monthlyLow)} <span className="text-[var(--vl-text-secondary)] font-normal text-lg mx-1">-</span> {formatMoney(monthlyHigh)}
-          </p>
+      {/* Grid: Left column (cards) & Right column (chart) */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1 items-stretch">
+        
+        {/* Left Column (Stacking Monthly/Yearly projections) */}
+        <div className="grid grid-cols-2 lg:flex lg:flex-col gap-4">
+          <div className="p-3 sm:p-4.5 rounded-xl bg-white/[0.01] border border-[var(--vl-border)]/55 hover:border-white/10 transition-all duration-300 flex-1 flex flex-col justify-center">
+            <p className="text-[9px] sm:text-[10px] font-bold text-[var(--vl-text-tertiary)] uppercase tracking-wider mb-1">Ingreso Estimado Mensual</p>
+            <p className="text-base sm:text-2xl font-black text-[var(--vl-text-primary)] tracking-tight">
+              {formatMoney(monthlyLow)} <span className="text-[var(--vl-text-secondary)] font-medium text-xs sm:text-base mx-0.5 sm:mx-1">-</span> {formatMoney(monthlyHigh)}
+            </p>
+          </div>
+          <div className="p-3 sm:p-4.5 rounded-xl bg-white/[0.01] border border-[var(--vl-border)]/55 hover:border-white/10 transition-all duration-300 flex-1 flex flex-col justify-center">
+            <p className="text-[9px] sm:text-[10px] font-bold text-[var(--vl-text-tertiary)] uppercase tracking-wider mb-1">Ingreso Estimado Anual</p>
+            <p className="text-base sm:text-2xl font-black text-[var(--vl-text-primary)] tracking-tight">
+              {formatMoney(yearlyLow)} <span className="text-[var(--vl-text-secondary)] font-medium text-xs sm:text-base mx-0.5 sm:mx-1">-</span> {formatMoney(yearlyHigh)}
+            </p>
+          </div>
         </div>
-        <div className="p-5 rounded-2xl bg-[var(--vl-bg-primary)] border border-[var(--vl-border)]">
-          <p className="text-sm font-medium text-[var(--vl-text-secondary)] mb-1">Ingreso Estimado Anual</p>
-          <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-[var(--vl-text-primary)] break-words">
-            {formatMoney(yearlyLow)} <span className="text-[var(--vl-text-secondary)] font-normal text-lg mx-1">-</span> {formatMoney(yearlyHigh)}
-          </p>
-        </div>
-      </div>
 
-      <div className="flex-1 w-full min-h-[250px]">
-        <h4 className="text-sm font-semibold text-[var(--vl-text-secondary)] mb-4">Proyección de Generación Diaria (Últimos 14 días)</h4>
-        <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 10 }}>
-            <defs>
-              <linearGradient id="colorIncome" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor={chartColor} stopOpacity={0.3}/>
-                <stop offset="95%" stopColor={chartColor} stopOpacity={0}/>
-              </linearGradient>
-            </defs>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={gridColor} opacity={0.5} />
-            <XAxis 
-              dataKey="date" 
-              axisLine={false}
-              tickLine={false}
-              tick={{ fill: tickColor, fontSize: 11 }}
-              tickMargin={12}
-              minTickGap={20}
-            />
-            <YAxis 
-              axisLine={false}
-              tickLine={false}
-              tick={{ fill: tickColor, fontSize: 12 }}
-              tickFormatter={(value) => `$${value}`}
-            />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: 'var(--vl-bg-elevated)',
-                borderColor: 'var(--vl-border)',
-                borderRadius: '12px',
-                boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)'
-              }}
-              itemStyle={{ color: 'var(--vl-text-primary)', fontWeight: 'bold' }}
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              formatter={(value: any) => [`$${value}`, 'Ingreso Diario']}
-              labelStyle={{ color: 'var(--vl-text-secondary)', marginBottom: '4px' }}
-            />
-            <Area 
-              type="monotone" 
-              dataKey="income" 
-              stroke={chartColor} 
-              strokeWidth={3}
-              fillOpacity={1} 
-              fill="url(#colorIncome)" 
-            />
-          </AreaChart>
-        </ResponsiveContainer>
+        {/* Right Column (Area Chart) */}
+        <div className="lg:col-span-2 flex flex-col min-h-[220px] sm:min-h-[250px]">
+          <div className="flex items-center gap-1.5 mb-3">
+            <TrendingUp className="w-4 h-4 text-[var(--vl-text-tertiary)]" />
+            <h4 className="text-[10px] font-bold text-[var(--vl-text-tertiary)] uppercase tracking-wider">Proyección de Generación Diaria (Últimos 14 días)</h4>
+          </div>
+          <div className="flex-1 w-full min-h-[180px] sm:min-h-[220px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -25, bottom: 5 }}>
+                <defs>
+                  <linearGradient id="colorIncome" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor={chartColor} stopOpacity={0.25}/>
+                    <stop offset="95%" stopColor={chartColor} stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={gridColor} />
+                <XAxis 
+                  dataKey="date" 
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fill: tickColor, fontSize: 10 }}
+                  tickMargin={8}
+                />
+                <YAxis 
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fill: tickColor, fontSize: 10 }}
+                  tickFormatter={(value) => `$${value}`}
+                />
+                <Tooltip content={<CustomTooltip />} />
+                <Area 
+                  type="monotone" 
+                  dataKey="income" 
+                  stroke={chartColor} 
+                  strokeWidth={2}
+                  fillOpacity={1} 
+                  fill="url(#colorIncome)" 
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
       </div>
     </div>
   );
