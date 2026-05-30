@@ -40,9 +40,11 @@ function CustomTooltip({
   if (!active || !payload?.length) return null;
 
   return (
-    <div className="bg-[var(--vl-bg-elevated)] border border-[var(--vl-border-hover)] rounded-xl px-3 py-2 shadow-xl">
-      <p className="text-[var(--vl-text-secondary)] text-xs mb-1">{label}</p>
-      <p className="text-[var(--vl-text-primary)] text-sm font-bold">{formatCount(payload[0].value)}</p>
+    <div className="bg-[#0b0c10]/90 backdrop-blur-md border border-white/[0.08] rounded-xl px-3.5 py-2.5 shadow-2xl">
+      <p className="text-[var(--vl-text-tertiary)] font-bold text-[9px] uppercase tracking-wider mb-0.5">{label}</p>
+      <p className="text-[var(--vl-text-primary)] text-sm font-black tracking-tight">
+        {formatCount(payload[0].value)} <span className="text-[var(--vl-text-secondary)] font-medium text-xs">suscriptores</span>
+      </p>
     </div>
   );
 }
@@ -56,44 +58,47 @@ export function SubscribersChart({ data, height = 160 }: SubscribersChartProps) 
     value: d.value,
   }));
 
-  /* Chart colors — resolved from design system tokens (Recharts requires hex) */
+  /* Chart colors */
   const chartColor = '#FF3B30';       /* --vl-red */
-  const gridColor = 'rgba(255,255,255,0.04)';
-  const tickColor = '#98A2B3';        /* --vl-text-secondary */
+  const gridColor = 'rgba(255,255,255,0.02)';
+  const tickColor = '#667085';
 
   return (
     <ResponsiveContainer width="100%" height={height}>
-      <AreaChart data={chartData} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
+      <AreaChart data={chartData} margin={{ top: 4, right: 4, left: -22, bottom: 0 }}>
         <defs>
           {/* Brand red gradient for the area fill */}
           <linearGradient id="subscribersGradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor={chartColor} stopOpacity={0.25} />
+            <stop offset="0%" stopColor={chartColor} stopOpacity={0.18} />
             <stop offset="100%" stopColor={chartColor} stopOpacity={0} />
           </linearGradient>
         </defs>
 
         <CartesianGrid
-          strokeDasharray="3 3"
+          strokeDasharray="4 4"
           stroke={gridColor}
           vertical={false}
         />
 
         <XAxis
           dataKey="month"
-          tick={{ fill: tickColor, fontSize: 11 }}
+          tick={{ fill: tickColor, fontSize: 9, fontWeight: 600 }}
           tickLine={false}
           axisLine={false}
           interval={2}
         />
 
         <YAxis
-          tick={{ fill: tickColor, fontSize: 11 }}
+          tick={{ fill: tickColor, fontSize: 9, fontWeight: 600 }}
           tickLine={false}
           axisLine={false}
           tickFormatter={formatCount}
         />
 
-        <Tooltip content={<CustomTooltip />} />
+        <Tooltip 
+          content={<CustomTooltip />} 
+          cursor={{ stroke: 'rgba(255, 255, 255, 0.08)', strokeWidth: 1, strokeDasharray: '3 3' }}
+        />
 
         <Area
           type="monotone"
@@ -104,7 +109,7 @@ export function SubscribersChart({ data, height = 160 }: SubscribersChartProps) 
           animationDuration={1200}
           animationEasing="ease-out"
           dot={false}
-          activeDot={{ r: 4, fill: chartColor, stroke: '#06070A', strokeWidth: 2 }}
+          activeDot={{ r: 4.5, fill: chartColor, stroke: '#06070A', strokeWidth: 2 }}
         />
       </AreaChart>
     </ResponsiveContainer>

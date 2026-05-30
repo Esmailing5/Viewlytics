@@ -79,7 +79,7 @@ export function EstimatedIncomeChart({ growth, recentVideos = [] }: ChartProps) 
 
   // Premium area gradient colors
   const chartColor = 'var(--vl-success)';
-  const gridColor = 'rgba(255,255,255,0.03)';
+  const gridColor = 'rgba(255,255,255,0.02)';
   const tickColor = '#667085';
 
   // Custom tooltips with glassmorphism styling
@@ -87,10 +87,10 @@ export function EstimatedIncomeChart({ growth, recentVideos = [] }: ChartProps) 
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className="vl-chart-tooltip">
-          <p className="text-[10px] uppercase tracking-wider font-bold text-[var(--vl-text-tertiary)] mb-1">{label}</p>
+        <div className="bg-[#0b0c10]/90 backdrop-blur-md border border-white/[0.08] rounded-xl px-3.5 py-2.5 shadow-2xl">
+          <p className="text-[var(--vl-text-tertiary)] font-bold text-[9px] uppercase tracking-wider mb-0.5">{label}</p>
           <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-[var(--vl-success)]" />
+            <span className="w-2 h-2 rounded-full bg-[var(--vl-success)]" />
             <p className="text-sm font-black text-[var(--vl-text-primary)]">
               Estimado: <span className="text-[var(--vl-success)]">{formatMoney(payload[0].value)}</span>
             </p>
@@ -150,25 +150,28 @@ export function EstimatedIncomeChart({ growth, recentVideos = [] }: ChartProps) 
               <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -25, bottom: 5 }}>
                 <defs>
                   <linearGradient id="colorIncome" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor={chartColor} stopOpacity={0.25}/>
+                    <stop offset="5%" stopColor={chartColor} stopOpacity={0.18}/>
                     <stop offset="95%" stopColor={chartColor} stopOpacity={0}/>
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={gridColor} />
+                <CartesianGrid strokeDasharray="4 4" vertical={false} stroke={gridColor} />
                 <XAxis 
                   dataKey="date" 
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fill: tickColor, fontSize: 10 }}
+                  tick={{ fill: tickColor, fontSize: 9, fontWeight: 600 }}
                   tickMargin={8}
                 />
                 <YAxis 
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fill: tickColor, fontSize: 10 }}
+                  tick={{ fill: tickColor, fontSize: 9, fontWeight: 600 }}
                   tickFormatter={(value) => `$${value}`}
                 />
-                <Tooltip content={<CustomTooltip />} />
+                <Tooltip 
+                  content={<CustomTooltip />} 
+                  cursor={{ stroke: 'rgba(255, 255, 255, 0.08)', strokeWidth: 1, strokeDasharray: '3 3' }}
+                />
                 <Area 
                   type="monotone" 
                   dataKey="income" 
@@ -176,6 +179,8 @@ export function EstimatedIncomeChart({ growth, recentVideos = [] }: ChartProps) 
                   strokeWidth={2}
                   fillOpacity={1} 
                   fill="url(#colorIncome)" 
+                  dot={false}
+                  activeDot={{ r: 4.5, fill: chartColor, stroke: '#06070A', strokeWidth: 2 }}
                 />
               </AreaChart>
             </ResponsiveContainer>

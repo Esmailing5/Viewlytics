@@ -41,9 +41,11 @@ function CustomTooltip({
   if (!active || !payload?.length) return null;
 
   return (
-    <div className="bg-[var(--vl-bg-elevated)] border border-[var(--vl-border-hover)] rounded-xl px-3 py-2 shadow-xl">
-      <p className="text-[var(--vl-text-secondary)] text-xs mb-1">{label}</p>
-      <p className="text-[var(--vl-text-primary)] text-sm font-bold">{formatCount(payload[0].value)} vistas</p>
+    <div className="bg-[#0b0c10]/90 backdrop-blur-md border border-white/[0.08] rounded-xl px-3.5 py-2.5 shadow-2xl">
+      <p className="text-[var(--vl-text-tertiary)] font-bold text-[9px] uppercase tracking-wider mb-0.5">{label}</p>
+      <p className="text-[var(--vl-text-primary)] text-sm font-black tracking-tight">
+        {formatCount(payload[0].value)} <span className="text-[var(--vl-text-secondary)] font-medium text-xs">vistas</span>
+      </p>
     </div>
   );
 }
@@ -59,43 +61,54 @@ export function ViewsChart({ data, height = 130 }: ViewsChartProps) {
 
   const maxValue = Math.max(...chartData.map((d) => d.value));
 
-  /* Chart colors — resolved from design system tokens (Recharts requires hex) */
-  const barColorActive = '#FF3B30';             /* --vl-red */
-  const barColorMuted = 'rgba(255, 59, 48, 0.25)'; /* --vl-red at 25% */
-  const gridColor = 'rgba(255,255,255,0.04)';
-  const tickColor = '#98A2B3';                  /* --vl-text-secondary */
+  const gridColor = 'rgba(255,255,255,0.02)';
+  const tickColor = '#667085';
 
   return (
     <ResponsiveContainer width="100%" height={height}>
-      <BarChart data={chartData} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
+      <BarChart data={chartData} margin={{ top: 4, right: 4, left: -22, bottom: 0 }}>
+        <defs>
+          <linearGradient id="barActiveGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#FF3B30" stopOpacity={1} />
+            <stop offset="100%" stopColor="#A81A12" stopOpacity={0.65} />
+          </linearGradient>
+          <linearGradient id="barMutedGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="rgba(255, 59, 48, 0.18)" stopOpacity={1} />
+            <stop offset="100%" stopColor="rgba(255, 59, 48, 0.02)" stopOpacity={1} />
+          </linearGradient>
+        </defs>
+
         <CartesianGrid
-          strokeDasharray="3 3"
+          strokeDasharray="4 4"
           stroke={gridColor}
           vertical={false}
         />
 
         <XAxis
           dataKey="month"
-          tick={{ fill: tickColor, fontSize: 11 }}
+          tick={{ fill: tickColor, fontSize: 9, fontWeight: 600 }}
           tickLine={false}
           axisLine={false}
           interval={2}
         />
 
         <YAxis
-          tick={{ fill: tickColor, fontSize: 11 }}
+          tick={{ fill: tickColor, fontSize: 9, fontWeight: 600 }}
           tickLine={false}
           axisLine={false}
           tickFormatter={formatCount}
         />
 
-        <Tooltip content={<CustomTooltip />} />
+        <Tooltip 
+          content={<CustomTooltip />} 
+          cursor={{ fill: 'rgba(255, 255, 255, 0.02)', radius: 4 }}
+        />
 
         <Bar dataKey="value" radius={[4, 4, 0, 0]} animationDuration={1000} animationEasing="ease-out">
           {chartData.map((entry, index) => (
             <Cell
               key={`cell-${index}`}
-              fill={entry.value === maxValue ? barColorActive : barColorMuted}
+              fill={entry.value === maxValue ? 'url(#barActiveGrad)' : 'url(#barMutedGrad)'}
             />
           ))}
         </Bar>

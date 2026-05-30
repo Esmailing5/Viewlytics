@@ -72,7 +72,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         {/* Page content */}
         <main
           id="main-content"
-          className="flex-1 p-4 md:p-5 lg:p-6 min-w-0"
+          className="flex-1 p-4 md:p-5 lg:p-6 min-w-0 vl-page-transition"
         >
           {children}
         </main>

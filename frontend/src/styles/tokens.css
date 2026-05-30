@@ -39,19 +39,19 @@
   --vl-red-hover:      #FF5147;
   --vl-red-active:     #E6352B;
   --vl-red-soft:       rgba(255, 59, 48, 0.12);
-  --vl-red-glow:       rgba(255, 59, 48, 0.35);
+  --vl-red-glow:       rgba(255, 59, 48, 0.18);
 
   /* ── Accent Cyan (Secondary) ── */
   --vl-cyan:           #00C2FF;
   --vl-cyan-hover:     #33CEFF;
   --vl-cyan-soft:      rgba(0, 194, 255, 0.12);
-  --vl-cyan-glow:      rgba(0, 194, 255, 0.25);
+  --vl-cyan-glow:      rgba(0, 194, 255, 0.12);
 
   /* ── Accent Purple (Tertiary) ── */
   --vl-purple:         #7C5CFF;
   --vl-purple-hover:   #917AFF;
   --vl-purple-soft:    rgba(124, 92, 255, 0.12);
-  --vl-purple-glow:    rgba(124, 92, 255, 0.25);
+  --vl-purple-glow:    rgba(124, 92, 255, 0.12);
 
   /* ── Semantic Colors ── */
   --vl-success:        #22C55E;

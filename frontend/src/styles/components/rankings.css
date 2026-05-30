@@ -1,0 +1,212 @@
+/**
+ * Viewlytics — Rankings & Leaderboard Premium Styles
+ *
+ * Broadcast-inspired esports & media leaderboards:
+ * - Refined Podium Cards for Top 3 (Gold, Silver, Bronze)
+ * - Broadcast-style table rows with premium interactive glows
+ * - Custom SVG trend animations & badges
+ * - Responsive containers with horizontal drag/scroll safety
+ */
+
+/* ─── Podiums (Top 3 Showcase) ─── */
+.vl-podium-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  align-items: end;
+  width: 100%;
+}
+
+.vl-podium-card {
+  position: relative;
+  background: rgba(17, 20, 27, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--vl-border);
+  border-radius: var(--radius-2xl);
+  padding: var(--space-6) var(--space-5);
+  text-align: center;
+  transition: all var(--duration-normal) var(--ease-default);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+
+/* Light mode override */
+:root:not(.dark) .vl-podium-card {
+  background: #FFFFFF;
+  box-shadow: var(--shadow-md);
+}
+
+.vl-podium-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 50%, rgba(255, 255, 255, 0.01) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.vl-podium-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-2xl);
+}
+
+/* Rank-Specific Podiums */
+.vl-podium-1st {
+  height: 320px;
+  border-color: rgba(234, 179, 8, 0.25);
+  z-index: 10;
+}
+.vl-podium-1st:hover {
+  border-color: rgba(234, 179, 8, 0.5);
+  box-shadow: 0 10px 30px -10px rgba(234, 179, 8, 0.2), var(--shadow-2xl);
+}
+.vl-podium-1st .vl-podium-glow {
+  position: absolute;
+  top: -20px;
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle, rgba(234, 179, 8, 0.15) 0%, transparent 70%);
+  filter: blur(20px);
+  pointer-events: none;
+}
+
+.vl-podium-2nd {
+  height: 290px;
+  border-color: rgba(148, 163, 184, 0.2);
+  z-index: 5;
+}
+.vl-podium-2nd:hover {
+  border-color: rgba(148, 163, 184, 0.4);
+  box-shadow: 0 10px 30px -10px rgba(148, 163, 184, 0.15), var(--shadow-2xl);
+}
+.vl-podium-2nd .vl-podium-glow {
+  position: absolute;
+  top: -20px;
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle, rgba(148, 163, 184, 0.12) 0%, transparent 70%);
+  filter: blur(15px);
+  pointer-events: none;
+}
+
+.vl-podium-3rd {
+  height: 270px;
+  border-color: rgba(180, 83, 9, 0.2);
+  z-index: 4;
+}
+.vl-podium-3rd:hover {
+  border-color: rgba(180, 83, 9, 0.4);
+  box-shadow: 0 10px 30px -10px rgba(180, 83, 9, 0.15), var(--shadow-2xl);
+}
+.vl-podium-3rd .vl-podium-glow {
+  position: absolute;
+  top: -20px;
+  width: 100px;
+  height: 100px;
+  background: radial-gradient(circle, rgba(180, 83, 9, 0.1) 0%, transparent 70%);
+  filter: blur(15px);
+  pointer-events: none;
+}
+
+/* ─── Podium Badges ─── */
+.vl-podium-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 14px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  margin-bottom: var(--space-4);
+  border: 2px solid currentColor;
+  box-shadow: 0 0 12px currentColor;
+  z-index: 2;
+}
+
+.vl-podium-1st .vl-podium-badge {
+  color: #EAB308; /* Gold */
+  background: rgba(234, 179, 8, 0.1);
+}
+.vl-podium-2nd .vl-podium-badge {
+  color: #94A3B8; /* Silver */
+  background: rgba(148, 163, 184, 0.1);
+}
+.vl-podium-3rd .vl-podium-badge {
+  color: #B45309; /* Bronze */
+  background: rgba(180, 83, 9, 0.1);
+}
+
+/* ─── Broadcast Leaderboard Rows ─── */
+.vl-broadcast-row {
+  background: transparent;
+  border-bottom: 1px solid var(--vl-border);
+  transition: all var(--duration-normal) var(--ease-default);
+}
+
+.vl-broadcast-row td {
+  vertical-align: middle;
+  transition: all var(--duration-normal) var(--ease-default);
+}
+
+.vl-broadcast-row:hover td {
+  background: rgba(255, 255, 255, 0.015);
+}
+
+:root:not(.dark) .vl-broadcast-row:hover td {
+  background: rgba(0, 0, 0, 0.01);
+}
+
+.vl-broadcast-row:hover td:first-child {
+  box-shadow: inset 3px 0 0 var(--vl-red);
+}
+
+/* Typography hierarchy inside row */
+.vl-broadcast-number {
+  font-family: var(--font-heading);
+  font-weight: var(--weight-black);
+  font-size: var(--text-lg);
+  font-style: italic;
+  letter-spacing: -0.03em;
+}
+
+/* Responsive Table Wrapper */
+.vl-rankings-scroll-container {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  position: relative;
+}
+
+/* Trend Arrow Styles */
+.vl-trend-indicator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+}
+
+.vl-trend-up {
+  color: var(--vl-success);
+  background: var(--vl-success-soft);
+}
+
+.vl-trend-down {
+  color: var(--vl-danger);
+  background: var(--vl-danger-soft);
+}
+
+.vl-trend-stable {
+  color: var(--vl-text-tertiary);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+:root:not(.dark) .vl-trend-stable {
+  background: rgba(0, 0, 0, 0.03);
+}

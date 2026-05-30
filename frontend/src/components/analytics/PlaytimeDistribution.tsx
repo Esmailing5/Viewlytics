@@ -23,9 +23,9 @@ function CustomTooltip({
   const data = payload[0].payload;
 
   return (
-    <div className="vl-card-dashboard px-3 py-2 !rounded-xl text-xs shadow-lg">
-      <p className="text-[var(--vl-text-primary)] font-semibold">
-        <span style={{ color: data.color }}>●</span> {data.name}: {data.value}%
+    <div className="bg-[#0b0c10]/90 backdrop-blur-md border border-white/[0.08] rounded-xl px-3.5 py-2.5 shadow-2xl">
+      <p className="text-[var(--vl-text-primary)] text-xs font-semibold">
+        <span style={{ color: data.color }}>●</span> {data.name}: <span className="font-black text-sm">{data.value}%</span>
       </p>
     </div>
   );
@@ -47,12 +47,13 @@ export function PlaytimeDistribution() {
                 data={PLAYTIME_DATA}
                 cx="50%"
                 cy="50%"
+                innerRadius={45}
                 outerRadius={65}
+                paddingAngle={4}
                 dataKey="value"
                 animationDuration={800}
                 animationEasing="ease-out"
-                stroke="#06070A" /* --vl-bg-primary */
-                strokeWidth={2}
+                stroke="none"
               >
                 {PLAYTIME_DATA.map((entry) => (
                   <Cell key={entry.name} fill={entry.color} />

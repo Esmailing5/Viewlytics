@@ -6,7 +6,8 @@
  */
 
 /* ═══ BASE CARD ═══ */
-.vl-card {
+.vl-card,
+.vl-card-interactive {
   background: var(--vl-bg-surface);
   border: 1px solid var(--vl-border);
   border-radius: var(--radius-xl);
@@ -19,7 +20,6 @@
 
 /* ═══ INTERACTIVE CARD ═══ */
 .vl-card-interactive {
-  composes: vl-card;
   cursor: pointer;
 }
 

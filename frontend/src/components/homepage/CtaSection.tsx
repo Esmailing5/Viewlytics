@@ -6,11 +6,12 @@ import { motion } from 'framer-motion';
 
 export function CtaSection() {
   return (
-    <section className="py-32 relative overflow-hidden bg-[var(--vl-bg-primary)] border-t border-[var(--vl-border)] vl-noise-container">
-      {/* Cinematic backing mesh */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[var(--vl-bg-primary)] via-[var(--vl-bg-surface)]/20 to-[var(--vl-bg-primary)] z-0" />
-      
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-gradient-to-r from-[var(--vl-red)]/10 to-[var(--vl-cyan)]/10 rounded-full blur-[130px] opacity-40 z-0 pointer-events-none" />
+    <section className="py-32 relative bg-[var(--vl-bg-primary)] border-t border-[var(--vl-border)] vl-noise-container z-10">
+      {/* Cinematic backing mesh wrapper to prevent horizontal overflow without clipping the dropdown */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        <div className="absolute inset-0 bg-gradient-to-b from-[var(--vl-bg-primary)] via-[var(--vl-bg-surface)]/20 to-[var(--vl-bg-primary)]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-gradient-to-r from-[var(--vl-red)]/10 to-[var(--vl-cyan)]/10 rounded-full blur-[130px] opacity-40" />
+      </div>
 
       <div className="container mx-auto px-6 relative z-10 text-center">
         <motion.div

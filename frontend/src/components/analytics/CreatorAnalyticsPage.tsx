@@ -58,32 +58,32 @@ function StatCard({ metric, platform }: StatCardProps) {
   }[platform.toLowerCase()] || 'bg-[var(--vl-bg-primary)] text-[var(--vl-text-secondary)] border-[var(--vl-border)]';
 
   return (
-    <div className="vl-metric-card-interactive border border-[var(--vl-border)]/55 rounded-xl flex items-start justify-between gap-3 p-4 bg-[var(--vl-bg-surface)]/40 backdrop-blur-md">
+    <div className="vl-metric-card-interactive border border-[var(--vl-border)]/55 bg-[var(--vl-bg-surface)]/40 backdrop-blur-md">
       <div className="flex-1 min-w-0">
-        <p className="text-[10px] font-bold text-[var(--vl-text-tertiary)] uppercase tracking-wider">
+        <p className="vl-metric-label">
           {metric.label}
         </p>
-        <p className="text-2xl font-black text-[var(--vl-text-primary)] tracking-tight mt-1.5 leading-none">
+        <p className="vl-metric-value truncate">
           {metric.value}
         </p>
         {metric.id === 'platform' ? (
-          <div className="mt-3 flex">
-            <span className={`px-2 py-0.5 rounded text-[9px] font-extrabold border ${badgeColorClass} tracking-wider`}>
+          <div className="vl-platform-badge-container">
+            <span className={`vl-platform-badge border ${badgeColorClass}`}>
               {platform.toUpperCase()} PARTNER
             </span>
           </div>
         ) : (
           metric.change && (
-            <p className="text-[10px] font-bold text-[var(--vl-success)] mt-3 flex items-center gap-1.5 flex-wrap">
-              <span>{metric.change}</span>
-              <span className="text-[var(--vl-text-tertiary)] font-medium">vs 30 días anteriores</span>
+            <p className="vl-metric-comparison">
+              <span className="text-[var(--vl-success)]">{metric.change}</span>
+              <span className="text-[var(--vl-text-tertiary)] font-medium">vs 30d</span>
             </p>
           )
         )}
       </div>
       
-      <div className={`w-9 h-9 rounded-xl flex items-center justify-center border flex-shrink-0 ${iconColorClass}`}>
-        {Icon && <Icon className="w-4.5 h-4.5" />}
+      <div className={`vl-metric-icon-container ${iconColorClass}`}>
+        {Icon && <Icon className="w-full h-full" />}
       </div>
     </div>
   );
@@ -230,26 +230,26 @@ export function CreatorAnalyticsPage({
         <div className="vl-dashboard-banner h-auto min-h-[340px] sm:h-[350px] flex items-end">
           {/* Banner Overlays */}
           <div className="vl-dashboard-banner-overlay" />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/20 to-black/80 z-1" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-black/40 z-1" />
 
           {data.profile?.banner_url ? (
             <img
               src={data.profile.banner_url}
               alt="Banner"
-              className="absolute inset-0 w-full h-full object-cover opacity-50 sm:opacity-75"
+              className="absolute inset-0 w-full h-full object-cover opacity-85 sm:opacity-90"
             />
           ) : (
             <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-[var(--vl-bg-primary)] via-[var(--vl-bg-surface)] to-[var(--vl-bg-primary)]" />
           )}
 
           {/* Desktop/Tablet Profile details */}
-          <div className="relative w-full p-6 sm:p-8 flex flex-col sm:flex-row items-center sm:items-end justify-between gap-6 z-10">
+          <div className="relative w-full p-4 sm:p-8 flex flex-col sm:flex-row items-center sm:items-end justify-between gap-6 z-10">
             <div className="flex flex-col sm:flex-row items-center sm:items-end gap-5 text-center sm:text-left">
               {data.profile?.avatar_url && (
                 <img
                   src={data.profile.avatar_url}
                   alt={data.profile.display_name}
-                  className={`w-24 h-24 sm:w-28 sm:h-28 rounded-full border-4 border-[var(--vl-bg-surface)] object-cover shadow-2xl shrink-0 ${activeRingClass}`}
+                  className={`w-20 h-20 sm:w-28 sm:h-28 rounded-full border-4 border-[var(--vl-bg-surface)] object-cover shadow-2xl shrink-0 ${activeRingClass}`}
                 />
               )}
               <div className="sm:mb-2 min-w-0">
@@ -267,17 +267,17 @@ export function CreatorAnalyticsPage({
                   )}
                 </div>
                 
-                <div className="flex items-center justify-center sm:justify-start gap-2 text-xs text-gray-300 mt-2.5 font-semibold">
-                  <span className="uppercase">{platform}</span>
+                <div className="flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 text-[10px] sm:text-xs text-gray-300 mt-2.5 font-semibold flex-wrap">
+                  <span className="uppercase whitespace-nowrap">{platform}</span>
                   <span className="opacity-40">•</span>
-                  <span>
+                  <span className="whitespace-nowrap">
                     {new Intl.NumberFormat('es-ES', { notation: 'compact' }).format(
                       data.profile?.subscribers || 0
                     )}{' '}
                     Subs ▾
                   </span>
                   <span className="opacity-40">•</span>
-                  <span className="flex items-center gap-1">
+                  <span className="flex items-center gap-1 whitespace-nowrap">
                     República Dominicana 🇩🇴
                   </span>
                 </div>
@@ -308,7 +308,7 @@ export function CreatorAnalyticsPage({
       </div>
 
       {/* ── KPI Cards Redesign ── */}
-      <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {dynamicMetrics.map((metric) => (
           <StatCard key={metric.id} metric={metric} platform={platform} />
         ))}
@@ -334,36 +334,37 @@ export function CreatorAnalyticsPage({
               <AreaChart data={growthChartsData.subsData} margin={{ top: 10, right: 10, left: -25, bottom: 5 }}>
                 <defs>
                   <linearGradient id="colorSubs" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="var(--vl-warning)" stopOpacity={0.2}/>
+                    <stop offset="5%" stopColor="var(--vl-warning)" stopOpacity={0.18}/>
                     <stop offset="95%" stopColor="var(--vl-warning)" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.03)" />
+                <CartesianGrid strokeDasharray="4 4" vertical={false} stroke="rgba(255,255,255,0.02)" />
                 <XAxis 
                   dataKey="date" 
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fill: '#667085', fontSize: 10 }}
+                  tick={{ fill: '#667085', fontSize: 9, fontWeight: 600 }}
                 />
                 <YAxis 
                   domain={['auto', 'auto']}
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fill: '#667085', fontSize: 10 }}
+                  tick={{ fill: '#667085', fontSize: 9, fontWeight: 600 }}
                   tickFormatter={(val) => `${val}M`}
                 />
                 <Tooltip
                   content={({ active, payload, label }) => {
                     if (active && payload && payload.length) {
                       return (
-                        <div className="vl-chart-tooltip text-xs">
-                          <p className="text-[var(--vl-text-tertiary)] uppercase tracking-wider font-bold mb-0.5">{label}</p>
-                          <p className="font-extrabold text-[var(--vl-text-primary)]">Subs: <span className="text-amber-500">{payload[0].value}M</span></p>
+                        <div className="bg-[#0b0c10]/90 backdrop-blur-md border border-white/[0.08] rounded-xl px-3.5 py-2.5 shadow-2xl">
+                          <p className="text-[var(--vl-text-tertiary)] font-bold text-[9px] uppercase tracking-wider mb-0.5">{label}</p>
+                          <p className="font-extrabold text-[var(--vl-text-primary)] text-sm tracking-tight">Subs: <span className="text-amber-500">{payload[0].value}M</span></p>
                         </div>
                       );
                     }
                     return null;
                   }}
+                  cursor={{ stroke: 'rgba(255, 255, 255, 0.08)', strokeWidth: 1, strokeDasharray: '3 3' }}
                 />
                 <Area 
                   type="monotone" 
@@ -372,6 +373,8 @@ export function CreatorAnalyticsPage({
                   strokeWidth={2}
                   fillOpacity={1} 
                   fill="url(#colorSubs)" 
+                  dot={false}
+                  activeDot={{ r: 4.5, fill: 'var(--vl-warning)', stroke: '#06070A', strokeWidth: 2 }}
                 />
               </AreaChart>
             </ResponsiveContainer>
@@ -396,35 +399,36 @@ export function CreatorAnalyticsPage({
               <AreaChart data={growthChartsData.viewsData} margin={{ top: 10, right: 10, left: -15, bottom: 5 }}>
                 <defs>
                   <linearGradient id="colorViews" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="var(--vl-red)" stopOpacity={0.2}/>
+                    <stop offset="5%" stopColor="var(--vl-red)" stopOpacity={0.18}/>
                     <stop offset="95%" stopColor="var(--vl-red)" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.03)" />
+                <CartesianGrid strokeDasharray="4 4" vertical={false} stroke="rgba(255,255,255,0.02)" />
                 <XAxis 
                   dataKey="date" 
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fill: '#667085', fontSize: 10 }}
+                  tick={{ fill: '#667085', fontSize: 9, fontWeight: 600 }}
                 />
                 <YAxis 
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fill: '#667085', fontSize: 10 }}
+                  tick={{ fill: '#667085', fontSize: 9, fontWeight: 600 }}
                   tickFormatter={(val) => `${new Intl.NumberFormat('es-ES', { notation: "compact" }).format(val)}`}
                 />
                 <Tooltip
                   content={({ active, payload, label }) => {
                     if (active && payload && payload.length) {
                       return (
-                        <div className="vl-chart-tooltip text-xs">
-                          <p className="text-[var(--vl-text-tertiary)] uppercase tracking-wider font-bold mb-0.5">{label}</p>
-                          <p className="font-extrabold text-[var(--vl-text-primary)]">Vistas: <span className="text-red-500">{new Intl.NumberFormat('es-ES', { notation: "compact" }).format(payload[0].value as number)}</span></p>
+                        <div className="bg-[#0b0c10]/90 backdrop-blur-md border border-white/[0.08] rounded-xl px-3.5 py-2.5 shadow-2xl">
+                          <p className="text-[var(--vl-text-tertiary)] font-bold text-[9px] uppercase tracking-wider mb-0.5">{label}</p>
+                          <p className="font-extrabold text-[var(--vl-text-primary)] text-sm tracking-tight">Vistas: <span className="text-red-500">{new Intl.NumberFormat('es-ES', { notation: "compact" }).format(payload[0].value as number)}</span></p>
                         </div>
                       );
                     }
                     return null;
                   }}
+                  cursor={{ stroke: 'rgba(255, 255, 255, 0.08)', strokeWidth: 1, strokeDasharray: '3 3' }}
                 />
                 <Area 
                   type="monotone" 
@@ -433,6 +437,8 @@ export function CreatorAnalyticsPage({
                   strokeWidth={2}
                   fillOpacity={1} 
                   fill="url(#colorViews)" 
+                  dot={false}
+                  activeDot={{ r: 4.5, fill: 'var(--vl-red)', stroke: '#06070A', strokeWidth: 2 }}
                 />
               </AreaChart>
             </ResponsiveContainer>

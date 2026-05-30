@@ -240,15 +240,16 @@ export interface RankingEntry {
   readonly platform: 'youtube' | 'twitch' | 'kick';
   readonly avatarInitials: string;
   readonly category: string;
-  readonly followers: string;
-  readonly views: string;
+  readonly subscribers: number;
+  readonly views_30d: number;
+  readonly videos_30d: number;
   readonly growth: string;
 }
 
 export const FEATURED_RANKINGS: RankingEntry[] = [
-  { rank: 1, creatorName: 'Alofoke Radio Show', slug: 'alofoke-radio-show', platform: 'youtube', avatarInitials: 'AR', category: 'Podcast', followers: '5.2M', views: '2.1B', growth: '+12%' },
-  { rank: 2, creatorName: 'Carlos Durán', slug: 'carlos-duran', platform: 'youtube', avatarInitials: 'CD', category: 'Entertainment', followers: '4.8M', views: '1.5B', growth: '+8%' },
-  { rank: 3, creatorName: 'Capricornio TV', slug: 'capricornio-tv', platform: 'youtube', avatarInitials: 'CT', category: 'Interviews', followers: '3.1M', views: '800M', growth: '+15%' },
-  { rank: 4, creatorName: 'El Dotol Nastra', slug: 'el-dotol-nastra', platform: 'youtube', avatarInitials: 'DN', category: 'Podcast', followers: '2.4M', views: '650M', growth: '+10%' },
-  { rank: 5, creatorName: 'Mata Lluvia', slug: 'mata-lluvia', platform: 'twitch', avatarInitials: 'ML', category: 'Gaming', followers: '850K', views: '12M', growth: '+25%' },
+  { rank: 1, creatorName: 'Alofoke Radio Show', slug: 'alofoke-radio-show', platform: 'youtube', avatarInitials: 'AR', category: 'Podcast', subscribers: 9100000, views_30d: 880000, videos_30d: 4, growth: '+12%' },
+  { rank: 2, creatorName: 'Carlos Durán', slug: 'carlos-duran', platform: 'youtube', avatarInitials: 'CD', category: 'Entertainment', subscribers: 4800000, views_30d: 640000, videos_30d: 4, growth: '+8%' },
+  { rank: 3, creatorName: 'Capricornio TV', slug: 'capricornio-tv', platform: 'youtube', avatarInitials: 'CT', category: 'Interviews', subscribers: 3100000, views_30d: 480000, videos_30d: 4, growth: '+15%' },
+  { rank: 4, creatorName: 'El Dotol Nastra', slug: 'el-dotol-nastra', platform: 'youtube', avatarInitials: 'DN', category: 'Podcast', subscribers: 2400000, views_30d: 400000, videos_30d: 4, growth: '+10%' },
+  { rank: 5, creatorName: 'Mata Lluvia', slug: 'mata-lluvia', platform: 'twitch', avatarInitials: 'ML', category: 'Gaming', subscribers: 850000, views_30d: 150000, videos_30d: 3, growth: '+25%' },
 ];

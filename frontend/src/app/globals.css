@@ -33,6 +33,7 @@
 @import "../styles/components/layout.css";
 @import "../styles/components/homepage.css";
 @import "../styles/components/dashboard.css";
+@import "../styles/components/rankings.css";
 
 /* ═══ Custom Variant ═══ */
 @custom-variant dark (&:is(.dark *));
@@ -44,6 +45,8 @@
  * Semantic tokens from shadcn/ui + Viewlytics brand extensions.
  * ═══════════════════════════════════════════════════════════════════════════════ */
 @theme inline {
+  --breakpoint-xs: 480px;
+
   /* --- shadcn/ui semantic color tokens --- */
   --color-background: var(--background);
   --color-foreground: var(--foreground);

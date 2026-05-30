@@ -35,7 +35,7 @@
 }
 
 .vl-btn:active:not(:disabled) {
-  transform: translateY(1px);
+  transform: scale(0.97);
 }
 
 .vl-btn:disabled {
