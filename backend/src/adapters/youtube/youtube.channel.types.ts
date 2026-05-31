@@ -64,6 +64,11 @@ export interface GrowthPlaceholders {
   likes_30d: number;
   comments_30d: number;
   videos_30d: number;
+  subscribers_change_pct?: number;
+  views_change_pct?: number;
+  videos_change_pct?: number;
+  likes_change_pct?: number;
+  comments_change_pct?: number;
 }
 
 export interface FullCreatorAnalytics {
@@ -71,4 +76,5 @@ export interface FullCreatorAnalytics {
   metrics: ChannelMetrics;
   recentVideos: any[]; // We will reuse NormalizedVideo from youtube.types
   growth: GrowthPlaceholders;
+  snapshots?: any[];
 }

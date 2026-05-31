@@ -126,30 +126,57 @@ export function CreatorAnalyticsPage({
   }, [platform, channelId]);
 
   // Create dual growth charts mock data based on channel metrics to match IMAGE B
+  // Create dual growth charts mock data based on channel snapshots to match DB records
   const growthChartsData = useMemo(() => {
-    if (!data) return { subsData: [], viewsData: [] };
-    
-    const subsBase = data.profile?.subscribers || 9100000;
-    const viewsBase = data.metrics?.total_views || 3014000000;
-    
-    // Generate dates: 15 abr, 22 abr, 29 abr, 6 may, 13 may, 20 may, 28 may
-    const dates = ['15 abr', '22 abr', '29 abr', '6 may', '13 may', '20 may', '28 may'];
-    
-    // Custom curves matching image graphs
-    const subFactors = [0.963, 0.971, 0.978, 0.976, 0.988, 0.986, 1.0];
-    const viewFactors = [0.25, 0.35, 0.33, 0.42, 0.4, 0.65, 0.58]; // views30d scale spikes
-    
-    const subsData = dates.map((date, i) => ({
-      date,
-      value: Math.round(subsBase * subFactors[i] / 1000000 * 100) / 100 // format as e.g. 9.06M
-    }));
+    if (!data) return { subsData: [], viewsData: [], subsChangePercent: 'Datos insuficientes', subsChangeAbsolute: '—', viewsChangePercent: 'Datos insuficientes', viewsChangeAbsolute: '—' };
 
-    const viewsData = dates.map((date, i) => ({
-      date,
-      value: Math.round(viewsBase * 0.05 + viewFactors[i] * 180000000)
-    }));
+    let subsData: Array<{ date: string; value: number }> = [];
+    let subsChangePercent = 'Datos insuficientes';
+    let subsChangeAbsolute = '—';
 
-    return { subsData, viewsData };
+    let viewsData: Array<{ date: string; value: number }> = [];
+    let viewsChangePercent = 'Datos insuficientes';
+    let viewsChangeAbsolute = '—';
+
+    if (data.snapshots && data.snapshots.length >= 7) {
+      // 1. Process Subscribers
+      subsData = data.snapshots.map((s: any) => {
+        const dateObj = new Date(s.snapshotDate);
+        const formattedDate = dateObj.toLocaleDateString('es-ES', { day: '2-digit', month: 'short' });
+        return {
+          date: formattedDate,
+          value: Math.round((s.subscribers / 1000000) * 100) / 100 // format as e.g. 9.06M
+        };
+      });
+
+      const firstSubs = data.snapshots[0].subscribers;
+      const lastSubs = data.snapshots[data.snapshots.length - 1].subscribers;
+      const diff = lastSubs - firstSubs;
+      subsChangeAbsolute = diff >= 0 ? `+${new Intl.NumberFormat('es-ES', { notation: 'compact' }).format(diff)}` : `${new Intl.NumberFormat('es-ES', { notation: 'compact' }).format(diff)}`;
+      
+      const pct = firstSubs > 0 ? (diff / firstSubs) * 100 : 0;
+      subsChangePercent = `${pct >= 0 ? '↑' : '↓'} ${Math.abs(pct).toFixed(1)}%`;
+
+      // 2. Process Views
+      viewsData = data.snapshots.map((s: any) => {
+        const dateObj = new Date(s.snapshotDate);
+        const formattedDate = dateObj.toLocaleDateString('es-ES', { day: '2-digit', month: 'short' });
+        return {
+          date: formattedDate,
+          value: s.totalViews
+        };
+      });
+
+      const firstViews = data.snapshots[0].totalViews;
+      const lastViews = data.snapshots[data.snapshots.length - 1].totalViews;
+      const diffViews = lastViews - firstViews;
+      viewsChangeAbsolute = diffViews >= 0 ? `+${new Intl.NumberFormat('es-ES', { notation: 'compact' }).format(diffViews)}` : `${new Intl.NumberFormat('es-ES', { notation: 'compact' }).format(diffViews)}`;
+      
+      const pctViews = firstViews > 0 ? (diffViews / firstViews) * 100 : 0;
+      viewsChangePercent = `${pctViews >= 0 ? '↑' : '↓'} ${Math.abs(pctViews).toFixed(1)}%`;
+    }
+
+    return { subsData, viewsData, subsChangePercent, subsChangeAbsolute, viewsChangePercent, viewsChangeAbsolute };
   }, [data]);
 
   if (loading) {
@@ -194,7 +221,9 @@ export function CreatorAnalyticsPage({
       value: new Intl.NumberFormat('es-ES', { notation: 'compact' }).format(
         data.profile?.subscribers || 0
       ),
-      change: '↑ 1.7%',
+      change: data.growth?.subscribers_change_pct !== undefined 
+        ? `${data.growth.subscribers_change_pct >= 0 ? '↑' : '↓'} ${Math.abs(data.growth.subscribers_change_pct)}%`
+        : '—',
       icon: 'Users',
     },
     {
@@ -203,7 +232,9 @@ export function CreatorAnalyticsPage({
       value: new Intl.NumberFormat('es-ES', { notation: 'compact' }).format(
         data.metrics?.total_views || 0
       ),
-      change: '↑ 8.4%',
+      change: data.growth?.views_change_pct !== undefined 
+        ? `${data.growth.views_change_pct >= 0 ? '↑' : '↓'} ${Math.abs(data.growth.views_change_pct)}%`
+        : '—',
       icon: 'Eye',
     },
     {
@@ -212,7 +243,9 @@ export function CreatorAnalyticsPage({
       value: new Intl.NumberFormat('es-ES', { notation: 'standard' }).format(
         data.metrics?.total_videos || 0
       ),
-      change: '↑ 2',
+      change: data.growth?.videos_change_pct !== undefined 
+        ? `${data.growth.videos_change_pct >= 0 ? '↑' : '↓'} ${Math.abs(data.growth.videos_change_pct)}%`
+        : '—',
       icon: 'Clock',
     },
     {
@@ -321,63 +354,69 @@ export function CreatorAnalyticsPage({
           <div className="flex justify-between items-start mb-6">
             <div>
               <h3 className="text-sm font-bold text-[var(--vl-text-secondary)]">Crecimiento de Suscriptores</h3>
-              <p className="text-2xl font-black text-[var(--vl-text-primary)] mt-1">+150K</p>
+              <p className="text-2xl font-black text-[var(--vl-text-primary)] mt-1">{growthChartsData.subsChangeAbsolute}</p>
               <p className="text-[10px] text-[var(--vl-text-tertiary)] uppercase tracking-wider font-semibold mt-0.5">Nuevos suscriptores</p>
             </div>
             <span className="text-xs font-bold text-[var(--vl-success)] bg-green-500/10 px-2 py-0.5 rounded border border-green-500/20">
-              ↑ 12.4% <span className="text-[var(--vl-text-secondary)] font-medium text-[10px]">vs 30 días</span>
+              {growthChartsData.subsChangePercent} <span className="text-[var(--vl-text-secondary)] font-medium text-[10px]">vs 30 días</span>
             </span>
           </div>
 
           <div className="h-[220px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={growthChartsData.subsData} margin={{ top: 10, right: 10, left: -25, bottom: 5 }}>
-                <defs>
-                  <linearGradient id="colorSubs" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="var(--vl-warning)" stopOpacity={0.18}/>
-                    <stop offset="95%" stopColor="var(--vl-warning)" stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="4 4" vertical={false} stroke="rgba(255,255,255,0.02)" />
-                <XAxis 
-                  dataKey="date" 
-                  axisLine={false}
-                  tickLine={false}
-                  tick={{ fill: '#667085', fontSize: 9, fontWeight: 600 }}
-                />
-                <YAxis 
-                  domain={['auto', 'auto']}
-                  axisLine={false}
-                  tickLine={false}
-                  tick={{ fill: '#667085', fontSize: 9, fontWeight: 600 }}
-                  tickFormatter={(val) => `${val}M`}
-                />
-                <Tooltip
-                  content={({ active, payload, label }) => {
-                    if (active && payload && payload.length) {
-                      return (
-                        <div className="bg-[#0b0c10]/90 backdrop-blur-md border border-white/[0.08] rounded-xl px-3.5 py-2.5 shadow-2xl">
-                          <p className="text-[var(--vl-text-tertiary)] font-bold text-[9px] uppercase tracking-wider mb-0.5">{label}</p>
-                          <p className="font-extrabold text-[var(--vl-text-primary)] text-sm tracking-tight">Subs: <span className="text-amber-500">{payload[0].value}M</span></p>
-                        </div>
-                      );
-                    }
-                    return null;
-                  }}
-                  cursor={{ stroke: 'rgba(255, 255, 255, 0.08)', strokeWidth: 1, strokeDasharray: '3 3' }}
-                />
-                <Area 
-                  type="monotone" 
-                  dataKey="value" 
-                  stroke="var(--vl-warning)" 
-                  strokeWidth={2}
-                  fillOpacity={1} 
-                  fill="url(#colorSubs)" 
-                  dot={false}
-                  activeDot={{ r: 4.5, fill: 'var(--vl-warning)', stroke: '#06070A', strokeWidth: 2 }}
-                />
-              </AreaChart>
-            </ResponsiveContainer>
+            {data.snapshots && data.snapshots.length >= 7 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={growthChartsData.subsData} margin={{ top: 10, right: 10, left: -25, bottom: 5 }}>
+                  <defs>
+                    <linearGradient id="colorSubs" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="var(--vl-warning)" stopOpacity={0.18}/>
+                      <stop offset="95%" stopColor="var(--vl-warning)" stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="4 4" vertical={false} stroke="rgba(255,255,255,0.02)" />
+                  <XAxis 
+                    dataKey="date" 
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fill: '#667085', fontSize: 9, fontWeight: 600 }}
+                  />
+                  <YAxis 
+                    domain={['auto', 'auto']}
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fill: '#667085', fontSize: 9, fontWeight: 600 }}
+                    tickFormatter={(val) => `${val}M`}
+                  />
+                  <Tooltip
+                    content={({ active, payload, label }) => {
+                      if (active && payload && payload.length) {
+                        return (
+                          <div className="bg-[#0b0c10]/90 backdrop-blur-md border border-white/[0.08] rounded-xl px-3.5 py-2.5 shadow-2xl">
+                            <p className="text-[var(--vl-text-tertiary)] font-bold text-[9px] uppercase tracking-wider mb-0.5">{label}</p>
+                            <p className="font-extrabold text-[var(--vl-text-primary)] text-sm tracking-tight">Subs: <span className="text-amber-500">{payload[0].value}M</span></p>
+                          </div>
+                        );
+                      }
+                      return null;
+                    }}
+                    cursor={{ stroke: 'rgba(255, 255, 255, 0.08)', strokeWidth: 1, strokeDasharray: '3 3' }}
+                  />
+                  <Area 
+                    type="monotone" 
+                    dataKey="value" 
+                    stroke="var(--vl-warning)" 
+                    strokeWidth={2}
+                    fillOpacity={1} 
+                    fill="url(#colorSubs)" 
+                    dot={false}
+                    activeDot={{ r: 4.5, fill: 'var(--vl-warning)', stroke: '#06070A', strokeWidth: 2 }}
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="w-full h-full flex items-center justify-center border border-dashed border-[var(--vl-border)] rounded-xl bg-white/[0.01]">
+                <p className="text-xs font-semibold text-[var(--vl-text-tertiary)] uppercase tracking-wider">Recolectando historial</p>
+              </div>
+            )}
           </div>
         </div>
 
@@ -386,62 +425,68 @@ export function CreatorAnalyticsPage({
           <div className="flex justify-between items-start mb-6">
             <div>
               <h3 className="text-sm font-bold text-[var(--vl-text-secondary)]">Vistas Totales</h3>
-              <p className="text-2xl font-black text-[var(--vl-text-primary)] mt-1">+412M</p>
+              <p className="text-2xl font-black text-[var(--vl-text-primary)] mt-1">{growthChartsData.viewsChangeAbsolute}</p>
               <p className="text-[10px] text-[var(--vl-text-tertiary)] uppercase tracking-wider font-semibold mt-0.5">Nuevas vistas</p>
             </div>
             <span className="text-xs font-bold text-[var(--vl-success)] bg-green-500/10 px-2 py-0.5 rounded border border-green-500/20">
-              ↑ 9.3% <span className="text-[var(--vl-text-secondary)] font-medium text-[10px]">vs 30 días</span>
+              {growthChartsData.viewsChangePercent} <span className="text-[var(--vl-text-secondary)] font-medium text-[10px]">vs 30 días</span>
             </span>
           </div>
 
           <div className="h-[220px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={growthChartsData.viewsData} margin={{ top: 10, right: 10, left: -15, bottom: 5 }}>
-                <defs>
-                  <linearGradient id="colorViews" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="var(--vl-red)" stopOpacity={0.18}/>
-                    <stop offset="95%" stopColor="var(--vl-red)" stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="4 4" vertical={false} stroke="rgba(255,255,255,0.02)" />
-                <XAxis 
-                  dataKey="date" 
-                  axisLine={false}
-                  tickLine={false}
-                  tick={{ fill: '#667085', fontSize: 9, fontWeight: 600 }}
-                />
-                <YAxis 
-                  axisLine={false}
-                  tickLine={false}
-                  tick={{ fill: '#667085', fontSize: 9, fontWeight: 600 }}
-                  tickFormatter={(val) => `${new Intl.NumberFormat('es-ES', { notation: "compact" }).format(val)}`}
-                />
-                <Tooltip
-                  content={({ active, payload, label }) => {
-                    if (active && payload && payload.length) {
-                      return (
-                        <div className="bg-[#0b0c10]/90 backdrop-blur-md border border-white/[0.08] rounded-xl px-3.5 py-2.5 shadow-2xl">
-                          <p className="text-[var(--vl-text-tertiary)] font-bold text-[9px] uppercase tracking-wider mb-0.5">{label}</p>
-                          <p className="font-extrabold text-[var(--vl-text-primary)] text-sm tracking-tight">Vistas: <span className="text-red-500">{new Intl.NumberFormat('es-ES', { notation: "compact" }).format(payload[0].value as number)}</span></p>
-                        </div>
-                      );
-                    }
-                    return null;
-                  }}
-                  cursor={{ stroke: 'rgba(255, 255, 255, 0.08)', strokeWidth: 1, strokeDasharray: '3 3' }}
-                />
-                <Area 
-                  type="monotone" 
-                  dataKey="value" 
-                  stroke="var(--vl-red)" 
-                  strokeWidth={2}
-                  fillOpacity={1} 
-                  fill="url(#colorViews)" 
-                  dot={false}
-                  activeDot={{ r: 4.5, fill: 'var(--vl-red)', stroke: '#06070A', strokeWidth: 2 }}
-                />
-              </AreaChart>
-            </ResponsiveContainer>
+            {data.snapshots && data.snapshots.length >= 7 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={growthChartsData.viewsData} margin={{ top: 10, right: 10, left: -15, bottom: 5 }}>
+                  <defs>
+                    <linearGradient id="colorViews" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="var(--vl-red)" stopOpacity={0.18}/>
+                      <stop offset="95%" stopColor="var(--vl-red)" stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="4 4" vertical={false} stroke="rgba(255,255,255,0.02)" />
+                  <XAxis 
+                    dataKey="date" 
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fill: '#667085', fontSize: 9, fontWeight: 600 }}
+                  />
+                  <YAxis 
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fill: '#667085', fontSize: 9, fontWeight: 600 }}
+                    tickFormatter={(val) => `${new Intl.NumberFormat('es-ES', { notation: "compact" }).format(val)}`}
+                  />
+                  <Tooltip
+                    content={({ active, payload, label }) => {
+                      if (active && payload && payload.length) {
+                        return (
+                          <div className="bg-[#0b0c10]/90 backdrop-blur-md border border-white/[0.08] rounded-xl px-3.5 py-2.5 shadow-2xl">
+                            <p className="text-[var(--vl-text-tertiary)] font-bold text-[9px] uppercase tracking-wider mb-0.5">{label}</p>
+                            <p className="font-extrabold text-[var(--vl-text-primary)] text-sm tracking-tight">Vistas: <span className="text-red-500">{new Intl.NumberFormat('es-ES', { notation: "compact" }).format(payload[0].value as number)}</span></p>
+                          </div>
+                        );
+                      }
+                      return null;
+                    }}
+                    cursor={{ stroke: 'rgba(255, 255, 255, 0.08)', strokeWidth: 1, strokeDasharray: '3 3' }}
+                  />
+                  <Area 
+                    type="monotone" 
+                    dataKey="value" 
+                    stroke="var(--vl-red)" 
+                    strokeWidth={2}
+                    fillOpacity={1} 
+                    fill="url(#colorViews)" 
+                    dot={false}
+                    activeDot={{ r: 4.5, fill: 'var(--vl-red)', stroke: '#06070A', strokeWidth: 2 }}
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="w-full h-full flex items-center justify-center border border-dashed border-[var(--vl-border)] rounded-xl bg-white/[0.01]">
+                <p className="text-xs font-semibold text-[var(--vl-text-tertiary)] uppercase tracking-wider">Recolectando historial</p>
+              </div>
+            )}
           </div>
         </div>
       </div>

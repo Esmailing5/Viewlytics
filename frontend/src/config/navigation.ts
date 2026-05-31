@@ -56,6 +56,14 @@ export const navigationConfig: NavigationConfig = {
       section: 'main',
     },
     {
+      id: 'admin',
+      label: 'Admin',
+      href: '/admin',
+      icon: 'Admin',
+      enabled: true,
+      section: 'bottom',
+    },
+    {
       id: 'settings',
       label: 'Settings',
       href: '/settings',

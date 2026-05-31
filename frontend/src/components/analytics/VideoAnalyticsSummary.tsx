@@ -15,6 +15,11 @@ interface GrowthProps {
   comments_30d: number;
   videos_30d: number;
   subscribers_30d?: number;
+  subscribers_change_pct?: number;
+  views_change_pct?: number;
+  videos_change_pct?: number;
+  likes_change_pct?: number;
+  comments_change_pct?: number;
 }
 
 export function VideoAnalyticsSummary({ growth }: { growth?: GrowthProps }) {
@@ -35,7 +40,9 @@ export function VideoAnalyticsSummary({ growth }: { growth?: GrowthProps }) {
       color: 'text-[var(--vl-cyan)]',
       bg: 'bg-[var(--vl-cyan-soft)] border-[var(--vl-cyan)]/25',
       icon: <TrendingUp className="w-4.5 h-4.5" />,
-      change: '↑ 5.2%',
+      change: growth?.views_change_pct !== undefined 
+        ? `${growth.views_change_pct >= 0 ? '↑' : '↓'} ${Math.abs(growth.views_change_pct)}%`
+        : '—',
     },
     {
       label: 'Nuevos Suscriptores',
@@ -43,7 +50,9 @@ export function VideoAnalyticsSummary({ growth }: { growth?: GrowthProps }) {
       color: 'text-[var(--vl-red)]',
       bg: 'bg-[var(--vl-red-soft)] border-[var(--vl-red)]/25',
       icon: <Users className="w-4.5 h-4.5" />,
-      change: '↑ 12.4%',
+      change: growth?.subscribers_change_pct !== undefined 
+        ? `${growth.subscribers_change_pct >= 0 ? '↑' : '↓'} ${Math.abs(growth.subscribers_change_pct)}%`
+        : '—',
     },
     {
       label: 'Likes Acumulados',
@@ -53,7 +62,9 @@ export function VideoAnalyticsSummary({ growth }: { growth?: GrowthProps }) {
       color: 'text-[var(--vl-purple)]',
       bg: 'bg-[var(--vl-purple-soft)] border-[var(--vl-purple)]/25',
       icon: <ThumbsUp className="w-4.5 h-4.5" />,
-      change: '↑ 4.1%',
+      change: growth?.likes_change_pct !== undefined 
+        ? `${growth.likes_change_pct >= 0 ? '↑' : '↓'} ${Math.abs(growth.likes_change_pct)}%`
+        : '—',
     },
     {
       label: 'Comentarios Nuevos',
@@ -63,7 +74,9 @@ export function VideoAnalyticsSummary({ growth }: { growth?: GrowthProps }) {
       color: 'text-amber-500',
       bg: 'bg-amber-500/10 border-amber-500/20',
       icon: <MessageCircle className="w-4.5 h-4.5" />,
-      change: '↑ 8.3%',
+      change: growth?.comments_change_pct !== undefined 
+        ? `${growth.comments_change_pct >= 0 ? '↑' : '↓'} ${Math.abs(growth.comments_change_pct)}%`
+        : '—',
     },
   ];
 
