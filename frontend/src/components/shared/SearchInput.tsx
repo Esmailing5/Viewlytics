@@ -13,6 +13,7 @@ interface SearchResult {
   subscribers: number;
   verified: boolean;
   avatar_url?: string;
+  alreadyExists?: boolean;
 }
 
 const PLACEHOLDERS = [
@@ -29,9 +30,43 @@ export function SearchInput({ variant = 'default', onSelect }: { variant?: 'defa
   const [isSearching, setIsSearching] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
+  const [importStates, setImportStates] = useState<Record<string, 'idle' | 'importing' | 'imported' | 'alreadyExists'>>({});
   const dropdownRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+
+  const handleImport = async (e: React.MouseEvent, result: SearchResult) => {
+    e.stopPropagation();
+    setImportStates(prev => ({ ...prev, [result.channel_id]: 'importing' }));
+
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+      const res = await fetch(`${apiUrl}/api/admin/channels/import`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          channelId: result.channel_id,
+          platform: 'youtube'
+        })
+      });
+
+      if (!res.ok) throw new Error('Import failed');
+
+      const data = await res.json();
+      if (data.alreadyExists) {
+        setImportStates(prev => ({ ...prev, [result.channel_id]: 'alreadyExists' }));
+      } else {
+        setImportStates(prev => ({ ...prev, [result.channel_id]: 'imported' }));
+      }
+      
+      router.refresh();
+    } catch (error) {
+      console.error('Error importing channel:', error);
+      setImportStates(prev => ({ ...prev, [result.channel_id]: 'idle' }));
+    }
+  };
 
   useEffect(() => {
     // Handle clicking outside to close dropdown
@@ -213,6 +248,34 @@ export function SearchInput({ variant = 'default', onSelect }: { variant?: 'defa
                   <span>{new Intl.NumberFormat('es-ES', { notation: "compact", compactDisplay: "short" }).format(result.subscribers)} subs</span>
                 </div>
               </div>
+              {result.platform === 'youtube' && (
+                <button
+                  onClick={(e) => handleImport(e, result)}
+                  disabled={importStates[result.channel_id] === 'importing' || result.alreadyExists || importStates[result.channel_id] === 'imported' || importStates[result.channel_id] === 'alreadyExists'}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 shrink-0 ${
+                    result.alreadyExists || importStates[result.channel_id] === 'alreadyExists'
+                      ? 'bg-white/[0.04] text-[var(--vl-text-tertiary)] border border-[var(--vl-border)]/50 cursor-not-allowed'
+                      : importStates[result.channel_id] === 'imported'
+                      ? 'bg-green-500/10 text-green-400 border border-green-500/20'
+                      : importStates[result.channel_id] === 'importing'
+                      ? 'bg-red-500/10 text-red-400 border border-red-500/20 cursor-wait'
+                      : 'bg-[var(--vl-red)] hover:bg-[var(--vl-red-hover)] text-white'
+                  }`}
+                >
+                  {importStates[result.channel_id] === 'importing' ? (
+                    <span className="flex items-center gap-1.5">
+                      <Loader2 className="w-3 h-3 animate-spin" />
+                      <span>Importando</span>
+                    </span>
+                  ) : importStates[result.channel_id] === 'imported' ? (
+                    <span>Agregado</span>
+                  ) : result.alreadyExists || importStates[result.channel_id] === 'alreadyExists' ? (
+                    <span>Ya existe</span>
+                  ) : (
+                    <span>Agregar a Viewlytics</span>
+                  )}
+                </button>
+              )}
             </button>
           ))}
         </div>

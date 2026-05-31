@@ -1,6 +1,7 @@
 import { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import { YouTubeAdapter } from '../../adapters/youtube/youtube.adapter';
+import { prisma } from '../../lib/prisma';
 
 const searchSchema = z.object({
   q: z.string().min(1, 'Query is required'),
@@ -15,10 +16,27 @@ export async function searchRoutes(fastify: FastifyInstance) {
       
       // TODO: Wrap this in a SearchModule that handles caching and multiple platforms
       const results = await youtubeAdapter.searchChannels(q);
+
+      // Check which channel IDs exist in the database
+      const channelIds = results.map(r => r.channel_id);
+      const existingCreators = await prisma.creator.findMany({
+        where: {
+          channelId: { in: channelIds }
+        },
+        select: {
+          channelId: true
+        }
+      });
+      const existingIds = new Set(existingCreators.map(c => c.channelId));
+
+      const resultsWithStatus = results.map(r => ({
+        ...r,
+        alreadyExists: existingIds.has(r.channel_id)
+      }));
       
       return {
         query: q,
-        results
+        results: resultsWithStatus
       };
     } catch (error) {
       if (error instanceof z.ZodError) {

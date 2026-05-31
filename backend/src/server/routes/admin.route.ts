@@ -4,6 +4,7 @@ import { runDailySnapshots } from '../../modules/snapshots/run-daily-snapshots';
 import { schedulerStatus } from '../jobs/snapshot-scheduler';
 import { prisma } from '../../lib/prisma';
 import { TrackingStatus } from '@prisma/client';
+import { YouTubeChannelAdapter } from '../../adapters/youtube/youtube.channel.adapter';
 
 export const adminRoutes: FastifyPluginAsync = async (fastify: FastifyInstance) => {
   // Archivar automáticamente los 4 registros seed detectados al registrar las rutas de admin
@@ -136,4 +137,65 @@ export const adminRoutes: FastifyPluginAsync = async (fastify: FastifyInstance) 
       });
     }
   });
+
+  // POST import channel
+  fastify.post<{ Body: { channelId: string; platform: string } }>(
+    '/channels/import',
+    async (request, reply) => {
+      const { channelId, platform } = request.body;
+
+      if (!channelId || platform !== 'youtube') {
+        return reply.status(400).send({
+          success: false,
+          error: 'Invalid request body. platform must be "youtube" and channelId is required.'
+        });
+      }
+
+      try {
+        const existing = await prisma.creator.findUnique({
+          where: { channelId }
+        });
+
+        if (existing) {
+          return reply.send({
+            success: true,
+            alreadyExists: true
+          });
+        }
+
+        const adapter = new YouTubeChannelAdapter();
+        const analytics = await adapter.getFullAnalytics(channelId);
+        const { profile } = analytics;
+
+        await prisma.creator.create({
+          data: {
+            platform: 'youtube',
+            channelId: profile.channel_id,
+            slug: profile.slug,
+            displayName: profile.display_name,
+            description: profile.description || null,
+            avatarUrl: profile.avatar_url || null,
+            bannerUrl: profile.banner_url || null,
+            verified: profile.verified || false,
+            country: profile.country || null,
+            category: null,
+            trackingStatus: TrackingStatus.searched,
+            isFeatured: false
+          }
+        });
+
+        return reply.send({
+          success: true,
+          created: true
+        });
+      } catch (error) {
+        fastify.log.error(error);
+        return reply.status(500).send({
+          success: false,
+          error: 'Failed to import channel',
+          details: error instanceof Error ? error.message : String(error)
+        });
+      }
+    }
+  );
 };
