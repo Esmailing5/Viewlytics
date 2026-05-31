@@ -30,6 +30,7 @@ export const adminRoutes: FastifyPluginAsync = async (fastify: FastifyInstance) 
 
   // GET all channels for administration
   fastify.get('/channels', async (request, reply) => {
+    fastify.log.info('[Admin Debug] Starting prisma.creator.findMany query...');
     try {
       const creators = await prisma.creator.findMany({
         orderBy: {
@@ -41,13 +42,21 @@ export const adminRoutes: FastifyPluginAsync = async (fastify: FastifyInstance) 
           }
         }
       });
+      fastify.log.info(`[Admin Debug] Successfully retrieved ${creators.length} creators.`);
       return reply.send(creators);
-    } catch (error) {
-      fastify.log.error(error);
+    } catch (error: any) {
+      fastify.log.error(`[Admin Debug Exception] Error in prisma.creator.findMany:`);
+      fastify.log.error(`Query context: findMany with orderBy displayName: asc and include _count snapshots`);
+      fastify.log.error(`error.message: ${error?.message}`);
+      fastify.log.error(`error.stack: ${error?.stack}`);
+      
       return reply.status(500).send({
         success: false,
         error: 'Failed to fetch channels',
-        details: error instanceof Error ? error.message : String(error)
+        details: error instanceof Error ? error.message : String(error),
+        debugMessage: error?.message,
+        debugStack: error?.stack,
+        failedQuery: 'prisma.creator.findMany({ orderBy: { displayName: asc }, include: { _count: { select: { snapshots: true } } } })'
       });
     }
   });
