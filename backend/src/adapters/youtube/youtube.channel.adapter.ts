@@ -225,8 +225,8 @@ export class YouTubeChannelAdapter {
             snapshotDate: s.date
           }));
 
-          // Calculate actual growth metrics using service only if there are at least 7 snapshots
-          if (snapshots.length >= 7) {
+          // Calculate actual growth metrics using service only if there are at least 2 snapshots
+          if (snapshots.length >= 2) {
             const subsGrowth = await HistoricalAnalyticsService.getSubscriberGrowth(creator.id, 30);
             const viewsGrowth = await HistoricalAnalyticsService.getViewGrowth(creator.id, 30);
 

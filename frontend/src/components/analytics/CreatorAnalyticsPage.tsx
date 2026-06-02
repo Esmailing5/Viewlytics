@@ -138,6 +138,24 @@ export function CreatorAnalyticsPage({
     let viewsChangePercent = 'Datos insuficientes';
     let viewsChangeAbsolute = '—';
 
+    if (data.snapshots && data.snapshots.length >= 2) {
+      const firstSubs = data.snapshots[0].subscribers;
+      const lastSubs = data.snapshots[data.snapshots.length - 1].subscribers;
+      const diff = lastSubs - firstSubs;
+      subsChangeAbsolute = diff >= 0 ? `+${new Intl.NumberFormat('es-ES', { notation: 'compact' }).format(diff)}` : `${new Intl.NumberFormat('es-ES', { notation: 'compact' }).format(diff)}`;
+      
+      const pct = firstSubs > 0 ? (diff / firstSubs) * 100 : 0;
+      subsChangePercent = `${pct >= 0 ? '↑' : '↓'} ${Math.abs(pct).toFixed(1)}%`;
+
+      const firstViews = data.snapshots[0].totalViews;
+      const lastViews = data.snapshots[data.snapshots.length - 1].totalViews;
+      const diffViews = lastViews - firstViews;
+      viewsChangeAbsolute = diffViews >= 0 ? `+${new Intl.NumberFormat('es-ES', { notation: 'compact' }).format(diffViews)}` : `${new Intl.NumberFormat('es-ES', { notation: 'compact' }).format(diffViews)}`;
+      
+      const pctViews = firstViews > 0 ? (diffViews / firstViews) * 100 : 0;
+      viewsChangePercent = `${pctViews >= 0 ? '↑' : '↓'} ${Math.abs(pctViews).toFixed(1)}%`;
+    }
+
     if (data.snapshots && data.snapshots.length >= 7) {
       // 1. Process Subscribers
       subsData = data.snapshots.map((s: any) => {
@@ -149,14 +167,6 @@ export function CreatorAnalyticsPage({
         };
       });
 
-      const firstSubs = data.snapshots[0].subscribers;
-      const lastSubs = data.snapshots[data.snapshots.length - 1].subscribers;
-      const diff = lastSubs - firstSubs;
-      subsChangeAbsolute = diff >= 0 ? `+${new Intl.NumberFormat('es-ES', { notation: 'compact' }).format(diff)}` : `${new Intl.NumberFormat('es-ES', { notation: 'compact' }).format(diff)}`;
-      
-      const pct = firstSubs > 0 ? (diff / firstSubs) * 100 : 0;
-      subsChangePercent = `${pct >= 0 ? '↑' : '↓'} ${Math.abs(pct).toFixed(1)}%`;
-
       // 2. Process Views
       viewsData = data.snapshots.map((s: any) => {
         const dateObj = new Date(s.snapshotDate);
@@ -166,14 +176,6 @@ export function CreatorAnalyticsPage({
           value: s.totalViews
         };
       });
-
-      const firstViews = data.snapshots[0].totalViews;
-      const lastViews = data.snapshots[data.snapshots.length - 1].totalViews;
-      const diffViews = lastViews - firstViews;
-      viewsChangeAbsolute = diffViews >= 0 ? `+${new Intl.NumberFormat('es-ES', { notation: 'compact' }).format(diffViews)}` : `${new Intl.NumberFormat('es-ES', { notation: 'compact' }).format(diffViews)}`;
-      
-      const pctViews = firstViews > 0 ? (diffViews / firstViews) * 100 : 0;
-      viewsChangePercent = `${pctViews >= 0 ? '↑' : '↓'} ${Math.abs(pctViews).toFixed(1)}%`;
     }
 
     return { subsData, viewsData, subsChangePercent, subsChangeAbsolute, viewsChangePercent, viewsChangeAbsolute };
