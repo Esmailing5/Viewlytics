@@ -458,9 +458,6 @@ export function CreatorAnalyticsPage({
               <p className="text-2xl font-black text-[var(--vl-text-primary)] mt-1">
                 {new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 2 }).format(data.growth?.views_30d || 0)}
               </p>
-              <p className="text-[10px] text-[var(--vl-text-tertiary)] uppercase tracking-wider font-semibold mt-0.5">
-                Vistas acumuladas de videos publicados en los últimos 30 días
-              </p>
             </div>
           </div>
 
