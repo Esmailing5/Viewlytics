@@ -95,14 +95,16 @@ export function VideoAnalyticsSummary({ growth }: { growth?: GrowthProps }) {
 
   return (
     <div className="vl-card-dashboard p-6 h-full flex flex-col border border-[var(--vl-border)] rounded-2xl bg-[var(--vl-bg-surface)]/60 backdrop-blur-md">
-      <div className="flex items-center gap-2 mb-6">
-        <Activity className="w-5 h-5 text-[var(--vl-cyan)]" />
-        <h3 className="text-lg font-bold text-[var(--vl-text-primary)]">
-          Impacto Reciente{' '}
-          <span className="text-xs font-semibold text-[var(--vl-text-secondary)] lowercase">
-            / últimos 30 días
+      <div className="flex items-start gap-2.5 mb-6">
+        <Activity className="w-5 h-5 text-[var(--vl-cyan)] mt-1 shrink-0" />
+        <div>
+          <h3 className="text-lg font-bold text-[var(--vl-text-primary)] leading-tight">
+            Impacto Reciente
+          </h3>
+          <span className="text-xs font-semibold text-[var(--vl-text-secondary)] lowercase block mt-0.5">
+            últimos 30 días
           </span>
-        </h3>
+        </div>
       </div>
 
       <div className="space-y-3.5 flex-1 flex flex-col justify-center">
