@@ -6,6 +6,7 @@ import {
   MessageCircle,
   Users,
   Activity,
+  Eye,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -32,6 +33,18 @@ export function VideoAnalyticsSummary({ growth }: { growth?: GrowthProps }) {
   const totalSubs = growth?.subscribers_30d || 0;
 
   const metrics = [
+    {
+      label: 'Views 30 días',
+      value: new Intl.NumberFormat('es-ES', { notation: 'compact' }).format(
+        growth?.views_30d || 0
+      ),
+      color: 'text-[var(--vl-cyan)]',
+      bg: 'bg-[var(--vl-cyan-soft)] border-[var(--vl-cyan)]/25',
+      icon: <Eye className="w-4.5 h-4.5" />,
+      change: growth?.views_change_pct !== undefined 
+        ? `${growth.views_change_pct >= 0 ? '↑' : '↓'} ${Math.abs(growth.views_change_pct)}%`
+        : '—',
+    },
     {
       label: `Promedio Vistas (${growth?.videos_30d || 0} videos)`,
       value: new Intl.NumberFormat('es-ES', { notation: 'compact' }).format(
