@@ -181,6 +181,34 @@ export function CreatorAnalyticsPage({
     return { subsData, viewsData, subsChangePercent, subsChangeAbsolute, viewsChangePercent, viewsChangeAbsolute };
   }, [data]);
 
+  const recentViewsChartData = useMemo(() => {
+    if (!data || !data.recentVideos) return [];
+
+    const chartData = [];
+    const today = new Date();
+
+    for (let i = 29; i >= 0; i--) {
+      const date = new Date(today);
+      date.setDate(date.getDate() - i);
+      const dateKey = date.toISOString().split('T')[0];
+      const dateLabel = date.toLocaleDateString('es-ES', { day: '2-digit', month: 'short' });
+
+      const videosOnDay = data.recentVideos.filter((v: any) => {
+        const pubDate = v.published_at || v.publishedAt;
+        return pubDate && pubDate.startsWith(dateKey);
+      });
+
+      const dailyViewsSum = videosOnDay.reduce((acc: number, v: any) => acc + (v.views || 0), 0);
+
+      chartData.push({
+        date: dateLabel,
+        value: dailyViewsSum,
+      });
+    }
+
+    return chartData;
+  }, [data]);
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-32">
@@ -426,69 +454,64 @@ export function CreatorAnalyticsPage({
         <div className="vl-card-dashboard p-5 border border-[var(--vl-border)] rounded-2xl bg-[var(--vl-bg-surface)]/60 backdrop-blur-md">
           <div className="flex justify-between items-start mb-6">
             <div>
-              <h3 className="text-sm font-bold text-[var(--vl-text-secondary)]">Vistas Totales</h3>
-              <p className="text-2xl font-black text-[var(--vl-text-primary)] mt-1">{growthChartsData.viewsChangeAbsolute}</p>
-              <p className="text-[10px] text-[var(--vl-text-tertiary)] uppercase tracking-wider font-semibold mt-0.5">Nuevas vistas</p>
+              <h3 className="text-sm font-bold text-[var(--vl-text-secondary)]">Views últimos 30 días</h3>
+              <p className="text-2xl font-black text-[var(--vl-text-primary)] mt-1">
+                {new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 2 }).format(data.growth?.views_30d || 0)}
+              </p>
+              <p className="text-[10px] text-[var(--vl-text-tertiary)] uppercase tracking-wider font-semibold mt-0.5">
+                Vistas acumuladas de videos publicados en los últimos 30 días
+              </p>
             </div>
-            <span className="text-xs font-bold text-[var(--vl-success)] bg-green-500/10 px-2 py-0.5 rounded border border-green-500/20">
-              {growthChartsData.viewsChangePercent} <span className="text-[var(--vl-text-secondary)] font-medium text-[10px]">vs 30 días</span>
-            </span>
           </div>
 
           <div className="h-[220px] w-full">
-            {data.snapshots && data.snapshots.length >= 7 ? (
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={growthChartsData.viewsData} margin={{ top: 10, right: 10, left: -15, bottom: 5 }}>
-                  <defs>
-                    <linearGradient id="colorViews" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="var(--vl-red)" stopOpacity={0.18}/>
-                      <stop offset="95%" stopColor="var(--vl-red)" stopOpacity={0}/>
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="4 4" vertical={false} stroke="rgba(255,255,255,0.02)" />
-                  <XAxis 
-                    dataKey="date" 
-                    axisLine={false}
-                    tickLine={false}
-                    tick={{ fill: '#667085', fontSize: 9, fontWeight: 600 }}
-                  />
-                  <YAxis 
-                    axisLine={false}
-                    tickLine={false}
-                    tick={{ fill: '#667085', fontSize: 9, fontWeight: 600 }}
-                    tickFormatter={(val) => `${new Intl.NumberFormat('es-ES', { notation: "compact" }).format(val)}`}
-                  />
-                  <Tooltip
-                    content={({ active, payload, label }) => {
-                      if (active && payload && payload.length) {
-                        return (
-                          <div className="bg-[#0b0c10]/90 backdrop-blur-md border border-white/[0.08] rounded-xl px-3.5 py-2.5 shadow-2xl">
-                            <p className="text-[var(--vl-text-tertiary)] font-bold text-[9px] uppercase tracking-wider mb-0.5">{label}</p>
-                            <p className="font-extrabold text-[var(--vl-text-primary)] text-sm tracking-tight">Vistas: <span className="text-red-500">{new Intl.NumberFormat('es-ES', { notation: "compact" }).format(payload[0].value as number)}</span></p>
-                          </div>
-                        );
-                      }
-                      return null;
-                    }}
-                    cursor={{ stroke: 'rgba(255, 255, 255, 0.08)', strokeWidth: 1, strokeDasharray: '3 3' }}
-                  />
-                  <Area 
-                    type="monotone" 
-                    dataKey="value" 
-                    stroke="var(--vl-red)" 
-                    strokeWidth={2}
-                    fillOpacity={1} 
-                    fill="url(#colorViews)" 
-                    dot={false}
-                    activeDot={{ r: 4.5, fill: 'var(--vl-red)', stroke: '#06070A', strokeWidth: 2 }}
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
-            ) : (
-              <div className="w-full h-full flex items-center justify-center border border-dashed border-[var(--vl-border)] rounded-xl bg-white/[0.01]">
-                <p className="text-xs font-semibold text-[var(--vl-text-tertiary)] uppercase tracking-wider">Recolectando historial</p>
-              </div>
-            )}
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={recentViewsChartData} margin={{ top: 10, right: 10, left: -15, bottom: 5 }}>
+                <defs>
+                  <linearGradient id="colorViews" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="var(--vl-red)" stopOpacity={0.18}/>
+                    <stop offset="95%" stopColor="var(--vl-red)" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="4 4" vertical={false} stroke="rgba(255,255,255,0.02)" />
+                <XAxis 
+                  dataKey="date" 
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fill: '#667085', fontSize: 9, fontWeight: 600 }}
+                />
+                <YAxis 
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fill: '#667085', fontSize: 9, fontWeight: 600 }}
+                  tickFormatter={(val) => `${new Intl.NumberFormat('en-US', { notation: "compact" }).format(val)}`}
+                />
+                <Tooltip
+                  content={({ active, payload, label }) => {
+                    if (active && payload && payload.length) {
+                      return (
+                        <div className="bg-[#0b0c10]/90 backdrop-blur-md border border-white/[0.08] rounded-xl px-3.5 py-2.5 shadow-2xl">
+                          <p className="text-[var(--vl-text-tertiary)] font-bold text-[9px] uppercase tracking-wider mb-0.5">{label}</p>
+                          <p className="font-extrabold text-[var(--vl-text-primary)] text-sm tracking-tight">Vistas: <span className="text-red-500">{new Intl.NumberFormat('en-US', { notation: "compact" }).format(payload[0].value as number)}</span></p>
+                        </div>
+                      );
+                    }
+                    return null;
+                  }}
+                  cursor={{ stroke: 'rgba(255, 255, 255, 0.08)', strokeWidth: 1, strokeDasharray: '3 3' }}
+                />
+                <Area 
+                  type="monotone" 
+                  dataKey="value" 
+                  stroke="var(--vl-red)" 
+                  strokeWidth={2}
+                  fillOpacity={1} 
+                  fill="url(#colorViews)" 
+                  dot={false}
+                  activeDot={{ r: 4.5, fill: 'var(--vl-red)', stroke: '#06070A', strokeWidth: 2 }}
+                />
+              </AreaChart>
+            </ResponsiveContainer>
           </div>
         </div>
       </div>
