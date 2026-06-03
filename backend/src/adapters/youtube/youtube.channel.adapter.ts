@@ -91,6 +91,9 @@ export class YouTubeChannelAdapter {
       let likes30d = 0;
       let comments30d = 0;
       let videos30dCount = 0;
+      let shortsViews30d = 0;
+      let shortsCount30d = 0;
+      let totalViews30d = 0;
 
       if (uploadsPlaylistId) {
         const thirtyDaysAgo = Date.now() - 30 * 24 * 60 * 60 * 1000;
@@ -129,19 +132,24 @@ export class YouTubeChannelAdapter {
           
           const pageVideos = (videosData.items || [])
             .filter((video: any) => {
+              const liveBroadcastContent = video.snippet?.liveBroadcastContent;
+              return liveBroadcastContent !== 'upcoming';
+            })
+            .map((video: any) => {
               const duration = parseIsoDuration(video.contentDetails?.duration || '');
               const isLive = video.snippet?.liveBroadcastContent === 'live';
-              return duration > 65 || isLive;
-            })
-            .map((video: any) => ({
-              id: video.id,
-              title: video.snippet.title,
-              published_at: video.snippet.publishedAt,
-              thumbnail_url: video.snippet.thumbnails?.high?.url || video.snippet.thumbnails?.medium?.url || '',
-              views: parseInt(video.statistics?.viewCount || '0', 10),
-              likes: parseInt(video.statistics?.likeCount || '0', 10),
-              comments: parseInt(video.statistics?.commentCount || '0', 10),
-            }));
+              const isLong = duration > 65 || isLive;
+              return {
+                id: video.id,
+                title: video.snippet.title,
+                published_at: video.snippet.publishedAt,
+                thumbnail_url: video.snippet.thumbnails?.high?.url || video.snippet.thumbnails?.medium?.url || '',
+                views: parseInt(video.statistics?.viewCount || '0', 10),
+                likes: parseInt(video.statistics?.likeCount || '0', 10),
+                comments: parseInt(video.statistics?.commentCount || '0', 10),
+                is_long: isLong,
+              };
+            });
 
           recentVideos.push(...pageVideos);
 
@@ -157,24 +165,30 @@ export class YouTubeChannelAdapter {
         }
 
         // Filter exact 30d videos
-        const videos30d = recentVideos.filter(v => new Date(v.published_at).getTime() >= thirtyDaysAgo);
+        const videos30dAll = recentVideos.filter(v => new Date(v.published_at).getTime() >= thirtyDaysAgo);
+        const videos30dLong = videos30dAll.filter(v => v.is_long);
+        const videos30dShort = videos30dAll.filter(v => !v.is_long);
         
-        videos30dCount = videos30d.length;
-        views30d = videos30d.reduce((acc, v) => acc + v.views, 0);
-        likes30d = videos30d.reduce((acc, v) => acc + v.likes, 0);
-        comments30d = videos30d.reduce((acc, v) => acc + v.comments, 0);
+        videos30dCount = videos30dLong.length;
+        views30d = videos30dLong.reduce((acc, v) => acc + v.views, 0);
+        likes30d = videos30dLong.reduce((acc, v) => acc + v.likes, 0);
+        comments30d = videos30dLong.reduce((acc, v) => acc + v.comments, 0);
 
-        // Calculate Metrics based exclusively on 30d videos
-        if (videos30d.length > 0) {
-          avgViews = views30d / videos30d.length;
+        shortsViews30d = videos30dShort.reduce((acc, v) => acc + v.views, 0);
+        shortsCount30d = videos30dShort.length;
+        totalViews30d = views30d + shortsViews30d;
+
+        // Calculate Metrics based exclusively on 30d long videos
+        if (videos30dLong.length > 0) {
+          avgViews = views30d / videos30dLong.length;
           const total30dInteractions = likes30d + comments30d;
           engagementRate = views30d > 0 ? (total30dInteractions / views30d) * 100 : 0;
 
-          if (videos30d.length > 1) {
-            const newest = new Date(videos30d[0].published_at).getTime();
-            const oldest = new Date(videos30d[videos30d.length - 1].published_at).getTime();
+          if (videos30dLong.length > 1) {
+            const newest = new Date(videos30dLong[0].published_at).getTime();
+            const oldest = new Date(videos30dLong[videos30dLong.length - 1].published_at).getTime();
             const diffDays = (newest - oldest) / (1000 * 3600 * 24);
-            const daysPerVideo = diffDays / (videos30d.length - 1);
+            const daysPerVideo = diffDays / (videos30dLong.length - 1);
             if (daysPerVideo <= 1) uploadFreq = 'Daily';
             else if (daysPerVideo <= 3) uploadFreq = 'Multiple per week';
             else if (daysPerVideo <= 7) uploadFreq = 'Weekly';
@@ -184,7 +198,7 @@ export class YouTubeChannelAdapter {
         }
         
         // Output exactly what was published in the last 30 days
-        recentVideos = videos30d;
+        recentVideos = videos30dAll;
       }
 
       const metrics: ChannelMetrics = {
@@ -260,6 +274,9 @@ export class YouTubeChannelAdapter {
         likes_30d: likes30d,
         comments_30d: comments30d,
         videos_30d: videos30dCount,
+        shorts_views_30d: shortsViews30d,
+        shorts_count_30d: shortsCount30d,
+        total_views_30d: totalViews30d,
         subscribers_change_pct: subsChangePct,
         views_change_pct: viewsChangePct,
         videos_change_pct: videosChangePct,
@@ -270,7 +287,7 @@ export class YouTubeChannelAdapter {
       return {
         profile,
         metrics,
-        recentVideos: recentVideos.slice(0, 10), // only return top 10 to frontend to save bandwidth
+        recentVideos: recentVideos, // return all 30d videos to frontend for charts and tables
         growth,
         snapshots
       };

@@ -198,11 +198,18 @@ export function CreatorAnalyticsPage({
         return pubDate && pubDate.startsWith(dateKey);
       });
 
-      const dailyViewsSum = videosOnDay.reduce((acc: number, v: any) => acc + (v.views || 0), 0);
+      const longViewsSum = videosOnDay
+        .filter((v: any) => v.is_long || v.isLong)
+        .reduce((acc: number, v: any) => acc + (v.views || 0), 0);
+
+      const shortViewsSum = videosOnDay
+        .filter((v: any) => !(v.is_long || v.isLong))
+        .reduce((acc: number, v: any) => acc + (v.views || 0), 0);
 
       chartData.push({
         date: dateLabel,
-        value: dailyViewsSum,
+        longViews: longViewsSum,
+        shortViews: shortViewsSum,
       });
     }
 
@@ -454,9 +461,9 @@ export function CreatorAnalyticsPage({
         <div className="vl-card-dashboard p-5 border border-[var(--vl-border)] rounded-2xl bg-[var(--vl-bg-surface)]/60 backdrop-blur-md">
           <div className="flex justify-between items-start mb-6">
             <div>
-              <h3 className="text-sm font-bold text-[var(--vl-text-secondary)]">Views últimos 30 días</h3>
+              <h3 className="text-sm font-bold text-[var(--vl-text-secondary)]">Impacto Total · últimos 30 días</h3>
               <p className="text-2xl font-black text-[var(--vl-text-primary)] mt-1">
-                {new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 2 }).format(data.growth?.views_30d || 0)}
+                {new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 2 }).format(data.growth?.total_views_30d || 0)} Views
               </p>
             </div>
           </div>
@@ -465,9 +472,13 @@ export function CreatorAnalyticsPage({
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={recentViewsChartData} margin={{ top: 10, right: 10, left: -15, bottom: 5 }}>
                 <defs>
-                  <linearGradient id="colorViews" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="var(--vl-red)" stopOpacity={0.18}/>
-                    <stop offset="95%" stopColor="var(--vl-red)" stopOpacity={0}/>
+                  <linearGradient id="colorLongViews" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="var(--vl-cyan)" stopOpacity={0.18}/>
+                    <stop offset="95%" stopColor="var(--vl-cyan)" stopOpacity={0}/>
+                  </linearGradient>
+                  <linearGradient id="colorShortViews" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="var(--vl-purple)" stopOpacity={0.18}/>
+                    <stop offset="95%" stopColor="var(--vl-purple)" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="4 4" vertical={false} stroke="rgba(255,255,255,0.02)" />
@@ -486,10 +497,17 @@ export function CreatorAnalyticsPage({
                 <Tooltip
                   content={({ active, payload, label }) => {
                     if (active && payload && payload.length) {
+                      const longVal = payload.find((p: any) => p.dataKey === 'longViews')?.value || 0;
+                      const shortVal = payload.find((p: any) => p.dataKey === 'shortViews')?.value || 0;
                       return (
                         <div className="bg-[#0b0c10]/90 backdrop-blur-md border border-white/[0.08] rounded-xl px-3.5 py-2.5 shadow-2xl">
-                          <p className="text-[var(--vl-text-tertiary)] font-bold text-[9px] uppercase tracking-wider mb-0.5">{label}</p>
-                          <p className="font-extrabold text-[var(--vl-text-primary)] text-sm tracking-tight">Vistas: <span className="text-red-500">{new Intl.NumberFormat('en-US', { notation: "compact" }).format(payload[0].value as number)}</span></p>
+                          <p className="text-[var(--vl-text-tertiary)] font-bold text-[9px] uppercase tracking-wider mb-1">{label}</p>
+                          <p className="font-extrabold text-[var(--vl-text-primary)] text-xs tracking-tight">
+                            Videos largos: <span className="text-[var(--vl-cyan)]">{new Intl.NumberFormat('en-US', { notation: "compact" }).format(longVal as number)}</span>
+                          </p>
+                          <p className="font-extrabold text-[var(--vl-text-primary)] text-xs tracking-tight mt-0.5">
+                            Shorts: <span className="text-[var(--vl-purple)]">{new Intl.NumberFormat('en-US', { notation: "compact" }).format(shortVal as number)}</span>
+                          </p>
                         </div>
                       );
                     }
@@ -499,16 +517,44 @@ export function CreatorAnalyticsPage({
                 />
                 <Area 
                   type="monotone" 
-                  dataKey="value" 
-                  stroke="var(--vl-red)" 
+                  dataKey="longViews" 
+                  stroke="var(--vl-cyan)" 
                   strokeWidth={2}
                   fillOpacity={1} 
-                  fill="url(#colorViews)" 
+                  fill="url(#colorLongViews)" 
                   dot={false}
-                  activeDot={{ r: 4.5, fill: 'var(--vl-red)', stroke: '#06070A', strokeWidth: 2 }}
+                  activeDot={{ r: 4.5, fill: 'var(--vl-cyan)', stroke: '#06070A', strokeWidth: 2 }}
+                />
+                <Area 
+                  type="monotone" 
+                  dataKey="shortViews" 
+                  stroke="var(--vl-purple)" 
+                  strokeWidth={2}
+                  fillOpacity={1} 
+                  fill="url(#colorShortViews)" 
+                  dot={false}
+                  activeDot={{ r: 4.5, fill: 'var(--vl-purple)', stroke: '#06070A', strokeWidth: 2 }}
                 />
               </AreaChart>
             </ResponsiveContainer>
+          </div>
+
+          {/* Bottom Legend */}
+          <div className="flex items-center gap-6 mt-4 pl-2 text-xs font-semibold">
+            <div className="flex items-center gap-1.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-[var(--vl-cyan)]" />
+              <span className="text-[var(--vl-text-secondary)]">Videos largos</span>
+              <span className="text-[var(--vl-text-primary)] font-bold">
+                {new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 2 }).format(data.growth?.views_30d || 0)}
+              </span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-[var(--vl-purple)]" />
+              <span className="text-[var(--vl-text-secondary)]">Shorts</span>
+              <span className="text-[var(--vl-text-primary)] font-bold">
+                {new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 2 }).format(data.growth?.shorts_views_30d || 0)}
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -517,7 +563,7 @@ export function CreatorAnalyticsPage({
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Row 3: Recent Videos (span 2) + Video Analytics Summary (span 1) */}
         <div className="lg:col-span-2 min-h-[420px] flex flex-col">
-          <RecentVideosCard videos={data.recentVideos || []} />
+          <RecentVideosCard videos={data.recentVideos?.filter((v: any) => v.is_long || v.isLong) || []} />
         </div>
         <div className="min-h-[420px] flex flex-col">
           <VideoAnalyticsSummary growth={data.growth} />
