@@ -156,7 +156,7 @@ export function CreatorAnalyticsPage({
       viewsChangePercent = `${pctViews >= 0 ? '↑' : '↓'} ${Math.abs(pctViews).toFixed(1)}%`;
     }
 
-    if (data.snapshots && data.snapshots.length >= 7) {
+    if (data.snapshots && data.snapshots.length >= 2) {
       // 1. Process Subscribers
       subsData = data.snapshots.map((s: any) => {
         const dateObj = new Date(s.snapshotDate);
@@ -400,7 +400,7 @@ export function CreatorAnalyticsPage({
           </div>
 
           <div className="h-[220px] w-full">
-            {data.snapshots && data.snapshots.length >= 7 ? (
+            {data.snapshots && data.snapshots.length >= 2 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={growthChartsData.subsData} margin={{ top: 10, right: 10, left: -25, bottom: 5 }}>
                   <defs>
