@@ -559,7 +559,7 @@ export function CreatorAnalyticsPage({
       </div>
 
       {/* Latest Videos & Recent Impact */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
         {/* Row 3: Recent Videos (span 2) + Video Analytics Summary (span 1) */}
         <div className="lg:col-span-2 min-h-[420px] flex flex-col">
           <RecentVideosCard videos={data.recentVideos?.filter((v: any) => v.is_long || v.isLong) || []} />

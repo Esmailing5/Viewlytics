@@ -94,7 +94,7 @@ export function VideoAnalyticsSummary({ growth }: { growth?: GrowthProps }) {
   ];
 
   return (
-    <div className="vl-card-dashboard p-6 h-full flex flex-col border border-[var(--vl-border)] rounded-2xl bg-[var(--vl-bg-surface)]/60 backdrop-blur-md">
+    <div className="vl-card-dashboard p-5 h-full flex flex-col border border-[var(--vl-border)] rounded-2xl bg-[var(--vl-bg-surface)]/60 backdrop-blur-md">
       <div className="flex items-start gap-2.5 mb-6">
         <Activity className="w-5 h-5 text-[var(--vl-cyan)] mt-1 shrink-0" />
         <div>

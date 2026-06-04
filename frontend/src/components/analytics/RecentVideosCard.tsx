@@ -46,7 +46,7 @@ function formatDuration(seconds?: number) {
 export function RecentVideosCard({ videos }: { videos: VideoProps[] }) {
   if (!videos || videos.length === 0) {
     return (
-      <div className="vl-card-dashboard p-6 flex items-center justify-center h-full border border-[var(--vl-border)] rounded-2xl bg-[var(--vl-bg-surface)]/60">
+      <div className="vl-card-dashboard p-5 flex items-center justify-center h-full border border-[var(--vl-border)] rounded-2xl bg-[var(--vl-bg-surface)]/60">
         <p className="text-[var(--vl-text-secondary)] font-medium">No hay videos recientes disponibles.</p>
       </div>
     );
@@ -61,12 +61,12 @@ export function RecentVideosCard({ videos }: { videos: VideoProps[] }) {
           <h3 className="text-base font-bold text-[var(--vl-text-primary)]">Últimos Videos</h3>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-2">
           {displayedVideos.map((video) => {
             return (
               <div 
                 key={video.id} 
-                className="flex gap-4 p-2.5 rounded-xl bg-white/[0.01] hover:bg-white/[0.03] transition-all duration-300 border border-[var(--vl-border)]/40 hover:border-white/10 group cursor-pointer"
+                className="flex gap-4 p-1.5 rounded-xl bg-white/[0.01] hover:bg-white/[0.03] transition-all duration-300 border border-[var(--vl-border)]/40 hover:border-white/10 group cursor-pointer"
               >
                 {/* Thumbnail Wrapper */}
                 <a 
