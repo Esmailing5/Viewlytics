@@ -41,4 +41,16 @@ export class CreatorImpactRepository {
       orderBy: { snapshotDate: 'desc' },
     });
   }
+
+  /**
+   * Gets the most recent snapshotDate available in the CreatorImpact table.
+   */
+  static async getLatestSnapshotDate(): Promise<Date | null> {
+    const result = await prisma.creatorImpact.aggregate({
+      _max: {
+        snapshotDate: true,
+      },
+    });
+    return result._max.snapshotDate;
+  }
 }

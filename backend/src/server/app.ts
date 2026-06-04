@@ -3,6 +3,7 @@ import cors from '@fastify/cors';
 import { searchRoutes } from './routes/search.route';
 import { channelRoutes } from './routes/channel.route';
 import { adminRoutes } from './routes/admin.route';
+import { rankingsRoutes } from './routes/rankings.route';
 import { initSnapshotScheduler } from './jobs/snapshot-scheduler';
 
 const fastify: FastifyInstance = Fastify({
@@ -24,6 +25,7 @@ async function buildApp() {
   fastify.register(searchRoutes, { prefix: '/api/search' });
   fastify.register(channelRoutes, { prefix: '/api/channel' });
   fastify.register(adminRoutes, { prefix: '/api/admin' });
+  fastify.register(rankingsRoutes, { prefix: '/api/rankings' });
 
   // Initialize automatic snapshot scheduler
   initSnapshotScheduler(fastify);

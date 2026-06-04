@@ -1,0 +1,179 @@
+CREATORS AUDIT REPORT:
+
+Creator: El Dotol Nastra (eldotolnastra)
+  Videos 30d: 29
+  Views 30d: 2624026
+  Avg Views: 90483.6551724138
+  Formatted: 90 mil
+
+Creator: Luinny Corporation (luinnycorporation)
+  Error: Channel not found for slug: luinnycorporation
+
+Creator: Jessica Pereira (jessicapereira)
+  Videos 30d: 174
+  Views 30d: 4839139
+  Avg Views: 27811.14367816092
+  Formatted: 28 mil
+
+Creator: Sin Filtro Radio Show (sinfiltroradioshow)
+  Videos 30d: 94
+  Views 30d: 4786303
+  Avg Views: 50918.117021276594
+  Formatted: 51 mil
+
+Creator: Gallimbo Studios (gallimbostudios)
+  Videos 30d: 4
+  Views 30d: 16678
+  Avg Views: 4169.5
+  Formatted: 4,2 mil
+
+Creator: Esto No Es Radio (estonoesradio)
+  Videos 30d: 102
+  Views 30d: 8011012
+  Avg Views: 78539.33333333333
+  Formatted: 79 mil
+
+Creator: Santiago Matías (santiagomatias)
+  Videos 30d: 3
+  Views 30d: 572486
+  Avg Views: 190828.66666666666
+  Formatted: 191 mil
+
+Creator: DuckTapeTV (ducktapetv)
+  Videos 30d: 0
+  Views 30d: 0
+  Avg Views: 0
+  Formatted: 0
+
+Creator: Alofoke Radio Show (alofokeradioshow)
+  Error: Failed to search channel by slug. Status: 429
+
+Creator: Gallimbo (gallimbo)
+  Videos 30d: 32
+  Views 30d: 4405085
+  Avg Views: 137658.90625
+  Formatted: 138 mil
+
+Creator: El Show de Carlos Durán (elshowdecarlosduran)
+  Videos 30d: 0
+  Views 30d: 0
+  Avg Views: 0
+  Formatted: 0
+
+Creator: Carlos Durán (carlosduran)
+  Error: Failed to search channel by slug. Status: 429
+
+Creator: Capricornio TV (capricorniotv)
+  Videos 30d: 2
+  Views 30d: 411357
+  Avg Views: 205678.5
+  Formatted: 206 mil
+
+Creator: El Mañanero con Boli (elmananeroconboli)
+  Videos 30d: 0
+  Views 30d: 0
+  Avg Views: 0
+  Formatted: 0
+
+Creator: Duck Tape (ducktape)
+  Error: Failed to search channel by slug. Status: 429
+
+Creator: El Mañanero TV (elmananerotv)
+  Error: Failed to search channel by slug. Status: 429
+
+Creator: Somos Pueblo Media (somospueblomedia)
+  Videos 30d: 39
+  Views 30d: 697581
+  Avg Views: 17886.69230769231
+  Formatted: 18 mil
+
+Creator: Nany Flow (nanyflow)
+  Videos 30d: 3
+  Views 30d: 3873246
+  Avg Views: 1291082
+  Formatted: 1,3 M
+
+Creator: La Fiol (lafiol)
+  Error: Failed to search channel by slug. Status: 429
+
+Creator: Al Pelo Radio (alpeloradiord)
+  Videos 30d: 126
+  Views 30d: 2377699
+  Avg Views: 18870.626984126986
+  Formatted: 19 mil
+
+Creator: Fogarate Radio (fogarateradiord)
+  Videos 30d: 136
+  Views 30d: 2534665
+  Avg Views: 18637.242647058825
+  Formatted: 19 mil
+
+Creator: NOVELPOPPYS (novelpoppys)
+  Error: Failed to search channel by slug. Status: 429
+
+Creator: Brea Frank (breafrank)
+  Videos 30d: 2
+  Views 30d: 299015
+  Avg Views: 149507.5
+  Formatted: 150 mil
+
+Creator: José Peguero (josepeguero)
+  Error: Failed to search channel by slug. Status: 429
+
+Creator: LA UCA DEPORTES  (laucadeportes)
+  Error: Failed to search channel by slug. Status: 429
+
+Creator: RDjavi (rdjavi)
+  Error: Failed to search channel by slug. Status: 429
+
+Creator: Ritmo 96 (ritmo96fm)
+  Error: Failed to search channel by slug. Status: 429
+
+Creator: Sigan viendo 59 (jeancarlomtb791)
+  Error: Failed to search channel by slug. Status: 429
+
+Creator: Acción Positiva (acpositiva)
+  Videos 30d: 13
+  Views 30d: 6669165
+  Avg Views: 513012.6923076923
+  Formatted: 513 mil
+
+Creator: Altanto TV (altantotv_)
+  Error: Failed to search channel by slug. Status: 429
+
+Creator: AxelBuenisimo (axelbuenisimo)
+  Error: Failed to search channel by slug. Status: 429
+
+Creator: Brayan & Yecauri  (brayan23yecauri)
+  Error: Failed to search channel by slug. Status: 429
+
+Creator: BROMAS LA CHELCHA EL KUNi (bromaslachelchaelkuni5017)
+  Error: Failed to search channel by slug. Status: 429
+
+Creator: JESSICA EN PUNTO (jessicaenpunto)
+  Error: Failed to search channel by slug. Status: 429
+
+Creator: MARCIANOVLOG (marcianovlog)
+  Error: Failed to search channel by slug. Status: 429
+
+Creator: Los Beras Goico Podcast (losberasgoicopodcast)
+  Videos 30d: 4
+  Views 30d: 49730
+  Avg Views: 12432.5
+  Formatted: 12 mil
+
+Creator: CHITE TV (chitetv)
+  Error: Failed to search channel by slug. Status: 429
+
+Creator: El Mismo Golpe Con Jochy (elmismogolpeconjochy)
+  Error: Failed to search channel by slug. Status: 429
+
+Creator: ElShowdeLuinny (elshowdeluinny)
+  Error: Failed to search channel by slug. Status: 429
+
+Creator: MarcianoFinanzas (marcianofinanzas1)
+  Error: Failed to search channel by slug. Status: 429
+
+Creator: MARCIANOTECH (marcianotech)
+  Error: Failed to search channel by slug. Status: 429
+
