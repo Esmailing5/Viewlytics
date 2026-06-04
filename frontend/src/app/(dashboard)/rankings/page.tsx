@@ -169,8 +169,8 @@ function RankingsContent() {
 
       {/* ─── Pagination ─── */}
       {!isError && data && data.total > limit && (
-        <div className="flex items-center justify-between pt-4 border-t border-[var(--vl-border)]/20">
-          <p className="text-xs font-semibold text-[var(--vl-text-secondary)]">
+        <div className="flex flex-col sm:flex-row gap-4 items-center justify-between pt-4 border-t border-[var(--vl-border)]/20">
+          <p className="text-xs font-semibold text-[var(--vl-text-secondary)] text-center sm:text-left">
             Mostrando <span className="text-[var(--vl-text-primary)]">{(page - 1) * limit + 1}</span> a{' '}
             <span className="text-[var(--vl-text-primary)]">
               {Math.min(page * limit, data.total)}
@@ -178,7 +178,7 @@ function RankingsContent() {
             de <span className="text-[var(--vl-text-primary)]">{data.total}</span> creadores
           </p>
 
-          <div className="flex gap-2">
+          <div className="flex gap-2 shrink-0">
             <button
               onClick={() => handlePageChange(page - 1)}
               disabled={page <= 1 || isLoading}
@@ -186,7 +186,7 @@ function RankingsContent() {
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
-            <span className="flex items-center px-3.5 text-xs font-bold text-[var(--vl-text-primary)] bg-white/[0.04] border border-[var(--vl-border)] rounded-lg">
+            <span className="flex items-center px-3.5 text-xs font-bold text-[var(--vl-text-primary)] bg-white/[0.04] border border-[var(--vl-border)] rounded-lg whitespace-nowrap shrink-0">
               {page} / {totalPages}
             </span>
             <button
