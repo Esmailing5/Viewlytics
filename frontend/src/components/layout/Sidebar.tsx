@@ -193,6 +193,35 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
     const Icon = ICON_MAP[item.icon];
     const dynamicHref = getDynamicHref(item);
     const active = isActive(item, dynamicHref);
+    const isDashboardDisabled = item.id === 'dashboard' && !channelBasePath && !lastVisitedDashboard;
+
+    if (isDashboardDisabled) {
+      return (
+        <li key={item.id}>
+          <div
+            className={`
+              vl-nav-item
+              opacity-40
+              cursor-not-allowed
+              ${collapsed ? 'justify-center px-0' : ''}
+            `}
+            title="Visita un canal desde el buscador o rankings para habilitar el dashboard"
+          >
+            {Icon && (
+              <Icon
+                className={`
+                  vl-nav-icon flex-shrink-0
+                  ${collapsed ? 'w-[18px] h-[18px]' : 'w-4 h-4'}
+                `}
+              />
+            )}
+            {!collapsed && (
+              <span className="truncate">{item.label}</span>
+            )}
+          </div>
+        </li>
+      );
+    }
 
     return (
       <li key={item.id}>

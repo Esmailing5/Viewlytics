@@ -77,7 +77,7 @@ export const navigationConfig: NavigationConfig = {
       id: 'trending',
       label: 'Trending',
       href: '/trending',
-      enabled: true,
+      enabled: false,
       badge: 'New',
     },
     {
@@ -96,7 +96,7 @@ export const navigationConfig: NavigationConfig = {
       title: 'Platform',
       items: [
         { id: 'footer-rankings', label: 'Rankings', href: '/rankings', enabled: true },
-        { id: 'footer-trending', label: 'Trending', href: '/trending', enabled: true },
+        { id: 'footer-trending', label: 'Trending', href: '/trending', enabled: false },
         { id: 'footer-search', label: 'Search', href: '/search', enabled: true },
       ],
     },
