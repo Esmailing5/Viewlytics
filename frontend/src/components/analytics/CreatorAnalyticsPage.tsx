@@ -354,8 +354,7 @@ export function CreatorAnalyticsPage({
               </div>
             </div>
 
-            {/* Action buttons (Compartir / Favorite) */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               <button 
                 onClick={() => {
                   navigator.clipboard.writeText(window.location.href);
@@ -387,15 +386,15 @@ export function CreatorAnalyticsPage({
       {/* ── Dual Growth Charts Row ── */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Subscriber Growth Chart */}
-        <div className="vl-card-dashboard p-5 border border-[var(--vl-border)] rounded-2xl bg-[var(--vl-bg-surface)]/60 backdrop-blur-md">
-          <div className="flex justify-between items-start mb-6">
-            <div>
-              <h3 className="text-sm font-bold text-[var(--vl-text-secondary)]">Crecimiento de Suscriptores</h3>
-              <p className="text-2xl font-black text-[var(--vl-text-primary)] mt-1">{growthChartsData.subsChangeAbsolute}</p>
+        <div className="vl-card-dashboard p-4 md:p-5 border border-[var(--vl-border)] rounded-2xl bg-[var(--vl-bg-surface)]/60 backdrop-blur-md overflow-hidden">
+          <div className="flex justify-between items-start mb-4 md:mb-6 gap-2">
+            <div className="min-w-0">
+              <h3 className="text-xs md:text-sm font-bold text-[var(--vl-text-secondary)]">Crecimiento de Suscriptores</h3>
+              <p className="text-xl md:text-2xl font-black text-[var(--vl-text-primary)] mt-1">{growthChartsData.subsChangeAbsolute}</p>
               <p className="text-[10px] text-[var(--vl-text-tertiary)] uppercase tracking-wider font-semibold mt-0.5">Nuevos suscriptores</p>
             </div>
-            <span className="text-xs font-bold text-[var(--vl-success)] bg-green-500/10 px-2 py-0.5 rounded border border-green-500/20">
-              {growthChartsData.subsChangePercent} <span className="text-[var(--vl-text-secondary)] font-medium text-[10px]">vs 30 días</span>
+            <span className="text-[10px] md:text-xs font-bold text-[var(--vl-success)] bg-green-500/10 px-2 py-0.5 rounded border border-green-500/20 whitespace-nowrap shrink-0">
+              {growthChartsData.subsChangePercent} <span className="text-[var(--vl-text-secondary)] font-medium text-[9px] md:text-[10px]">vs 30d</span>
             </span>
           </div>
 

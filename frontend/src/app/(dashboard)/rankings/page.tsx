@@ -63,7 +63,7 @@ function RankingsContent() {
   const totalPages = data ? Math.ceil(data.total / limit) : 1;
 
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-8">
+    <div className="px-4 py-6 md:p-6 max-w-7xl mx-auto space-y-6 md:space-y-8">
       {/* ─── Hero Section ─── */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 pb-6 border-b border-[var(--vl-border)]/40">
         <div>
@@ -92,7 +92,7 @@ function RankingsContent() {
       </div>
 
       {/* ─── Tab Selection ─── */}
-      <div className="flex gap-2 overflow-x-auto pb-2 border-b border-[var(--vl-border)]/20">
+      <div className="flex gap-2 overflow-x-auto pb-2 border-b border-[var(--vl-border)]/20 scrollbar-none [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {[
           { id: 'impact-total', label: 'Impacto Total', icon: <Trophy className="w-4 h-4" /> },
           { id: 'videos-largos', label: 'Videos Largos', icon: <Video className="w-4 h-4" /> },
@@ -103,7 +103,7 @@ function RankingsContent() {
             <button
               key={tabInfo.id}
               onClick={() => handleTabChange(tabInfo.id as RankingTab)}
-              className={`flex items-center gap-2 px-5 py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-300 shrink-0 border ${
+              className={`flex items-center gap-2 px-4 py-2.5 md:px-5 md:py-3 rounded-xl text-[11px] md:text-xs font-bold uppercase tracking-wider transition-all duration-300 shrink-0 whitespace-nowrap border ${
                 isActive
                   ? 'bg-cyan-500/15 text-cyan-400 border-cyan-500/35 shadow-md shadow-cyan-500/5 scale-[1.02]'
                   : 'bg-[var(--vl-bg-surface)]/50 text-[var(--vl-text-secondary)] border-[var(--vl-border)] hover:text-[var(--vl-text-primary)] hover:border-[var(--vl-border-hover)]'

@@ -235,10 +235,10 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
         </ul>
       </nav>
 
-      {/* Bottom section */}
+      {/* Bottom section — pushed to bottom */}
       <div
         className={`
-          flex-shrink-0 pb-3 pt-2
+          flex-shrink-0 mt-auto pb-3 pt-2
           border-t border-[var(--vl-border)]
           ${collapsed ? 'px-2' : 'px-2'}
         `}
