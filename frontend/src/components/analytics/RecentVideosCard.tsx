@@ -52,10 +52,7 @@ export function RecentVideosCard({ videos }: { videos: VideoProps[] }) {
     );
   }
 
-  const displayedVideos = videos.slice(0, 10);
-  const avgViews = displayedVideos.length > 0
-    ? displayedVideos.reduce((acc, v) => acc + v.views, 0) / displayedVideos.length
-    : 0;
+  const displayedVideos = videos.filter(v => v.is_long === true).slice(0, 4);
 
   return (
     <div className="vl-card-dashboard p-5 flex flex-col h-full border border-[var(--vl-border)] rounded-2xl bg-[var(--vl-bg-surface)]/60 backdrop-blur-md justify-between">
@@ -66,19 +63,6 @@ export function RecentVideosCard({ videos }: { videos: VideoProps[] }) {
 
         <div className="space-y-4">
           {displayedVideos.map((video) => {
-            const ratio = avgViews > 0 ? video.views / avgViews : 1;
-            
-            let colorClass = 'text-[var(--vl-text-tertiary)]'; // ratio < 0.8
-            let barColor = 'bg-white/10';
-            
-            if (ratio >= 1.5) {
-              colorClass = 'text-[var(--vl-cyan)]'; // ratio >= 1.5
-              barColor = 'bg-[var(--vl-cyan)]';
-            } else if (ratio >= 0.8) {
-              colorClass = 'text-[var(--vl-text-secondary)]'; // ratio >= 0.8
-              barColor = 'bg-[var(--vl-text-secondary)]';
-            }
-
             return (
               <div 
                 key={video.id} 
@@ -133,22 +117,6 @@ export function RecentVideosCard({ videos }: { videos: VideoProps[] }) {
                     <span className="opacity-40">•</span>
                     <span className="text-[var(--vl-text-tertiary)]">{formatRealDate(video.published_at)}</span>
                   </div>
-
-                  {displayedVideos.length > 1 && (
-                    <div className="mt-2 flex flex-col gap-1">
-                      <div className="flex items-center justify-between text-[9px] sm:text-[10px] font-semibold">
-                        <span className={colorClass}>
-                          {ratio.toFixed(1)}x el promedio
-                        </span>
-                      </div>
-                      <div className="w-full h-1 bg-white/[0.04] rounded-full overflow-hidden">
-                        <div 
-                          className={`h-full rounded-full ${barColor}`} 
-                          style={{ width: `${Math.min(ratio * 50, 100)}%` }} 
-                        />
-                      </div>
-                    </div>
-                  )}
                 </div>
               </div>
             );
