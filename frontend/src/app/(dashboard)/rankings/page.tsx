@@ -32,16 +32,10 @@ function RankingsContent() {
 
   const formatDate = (dateStr: string | null) => {
     if (!dateStr) return 'Hoy';
-    try {
-      const date = new Date(dateStr + 'T00:00:00');
-      return date.toLocaleDateString('es-ES', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric'
-      });
-    } catch {
-      return dateStr;
-    }
+    const parts = dateStr.split('-');
+    if (parts.length !== 3) return dateStr;
+    const [year, month, day] = parts;
+    return `${day}/${month}/${year}`;
   };
 
   const totalPages = data ? Math.ceil(data.total / limit) : 1;
