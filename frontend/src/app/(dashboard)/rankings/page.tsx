@@ -92,7 +92,7 @@ function RankingsContent() {
       </div>
 
       {/* ─── Tab Selection ─── */}
-      <div className="flex gap-2 overflow-x-auto pb-2 border-b border-[var(--vl-border)]/20 scrollbar-none [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div className="flex gap-2 overflow-x-auto pt-1.5 pb-2.5 border-b border-[var(--vl-border)]/20 scrollbar-none [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {[
           { id: 'impact-total', label: 'Impacto Total', icon: <Trophy className="w-4 h-4" /> },
           { id: 'videos-largos', label: 'Videos Largos', icon: <Video className="w-4 h-4" /> },
