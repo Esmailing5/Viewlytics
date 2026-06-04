@@ -40,6 +40,14 @@ export const navigationConfig: NavigationConfig = {
       section: 'main',
     },
     {
+      id: 'rankings',
+      label: 'Rankings',
+      href: '/rankings',
+      icon: 'Rankings',
+      enabled: true,
+      section: 'main',
+    },
+    {
       id: 'audience',
       label: 'Audience',
       href: '/audience',

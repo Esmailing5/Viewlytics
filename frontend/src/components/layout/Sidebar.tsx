@@ -64,6 +64,12 @@ const IconAdmin = ({ className }: { className?: string }) => (
   </svg>
 );
 
+const IconRankings = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M4 15h12M10 12v3M7 3h6v4a3 3 0 01-3 3h0a3 3 0 01-3-3V3zM4 5a2 2 0 114 0v1H4V5zM16 5a2 2 0 10-4 0v1h4V5z" />
+  </svg>
+);
+
 const IconChevronLeft = ({ className }: { className?: string }) => (
   <svg className={className} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
     <path d="M10 4L6 8l4 4" />
@@ -91,6 +97,7 @@ const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
   FileText: IconReports,
   Settings: IconSettings,
   Admin: IconAdmin,
+  Rankings: IconRankings,
 };
 
 const COLLAPSED_KEY = 'viewlytics-sidebar-collapsed';
