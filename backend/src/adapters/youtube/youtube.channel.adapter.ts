@@ -146,6 +146,7 @@ export class YouTubeChannelAdapter {
                 comments: parseInt(video.statistics?.commentCount || '0', 10),
                 is_long: isLong,
                 live_broadcast_content: video.snippet?.liveBroadcastContent,
+                duration_seconds: parseIsoDuration(video.contentDetails?.duration || ''),
               };
             });
 

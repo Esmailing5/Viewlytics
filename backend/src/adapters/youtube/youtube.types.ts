@@ -121,6 +121,7 @@ export interface NormalizedVideo {
   comments: number;
   is_long?: boolean;
   live_broadcast_content?: string;
+  duration_seconds?: number;
 }
 
 export interface CreatorAnalyticsData {
