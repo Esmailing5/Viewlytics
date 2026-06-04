@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Search, Activity, Trophy, Eye, Clock, Users, ArrowUpRight } from 'lucide-react';
+import { Search, Trophy, Eye, Clock, Users, ArrowUpRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { homepageConfig } from '@/config/homepage';
 import { SearchInput } from '@/components/shared/SearchInput';
@@ -169,10 +169,6 @@ export function HeroSection({ globalStats }: HeroSectionProps) {
               <Trophy className="w-4 h-4 text-white" />
               <span>{homepageConfig.hero.secondaryCtaText}</span>
               <ArrowUpRight className="w-4 h-4" />
-            </Link>
-            <Link href="/trending" className="vl-btn vl-btn-secondary vl-btn-lg px-8">
-              <Activity className="w-4 h-4 text-[var(--vl-cyan)]" />
-              <span>En Tendencia</span>
             </Link>
           </motion.div>
 
