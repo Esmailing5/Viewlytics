@@ -3,7 +3,6 @@ import { brandConfig } from '@/config/branding';
 import { PublicLayout } from '@/components/layout/PublicLayout';
 
 import { HeroSection } from '@/components/homepage/HeroSection';
-import { TrendingPreview } from '@/components/homepage/TrendingPreview';
 import { RankingsPreview } from '@/components/homepage/RankingsPreview';
 import { PlatformSupport } from '@/components/homepage/PlatformSupport';
 import { FeatureGrid } from '@/components/homepage/FeatureGrid';
@@ -33,20 +32,6 @@ async function getGlobalStats() {
   }
 }
 
-async function getTrendingStats() {
-  try {
-    const res = await fetch(`${apiUrl}/api/stats/trending`, { cache: 'no-store' });
-    if (!res.ok) throw new Error('Failed to fetch trending stats');
-    return await res.json();
-  } catch (error) {
-    console.error('[Page Loader] Error loading trending stats:', error);
-    return {
-      updatedAt: new Date().toISOString().split('T')[0],
-      results: [],
-    };
-  }
-}
-
 async function getRankings() {
   try {
     const res = await fetch(`${apiUrl}/api/rankings/impact-total?limit=7`, { cache: 'no-store' });
@@ -65,16 +50,14 @@ async function getRankings() {
 }
 
 export default async function HomePage() {
-  const [globalStats, trendingStats, rankingsData] = await Promise.all([
+  const [globalStats, rankingsData] = await Promise.all([
     getGlobalStats(),
-    getTrendingStats(),
     getRankings(),
   ]);
 
   return (
     <PublicLayout>
       <HeroSection globalStats={globalStats} />
-      <TrendingPreview data={trendingStats} />
       <RankingsPreview data={rankingsData} />
       <PlatformSupport />
       <FeatureGrid />

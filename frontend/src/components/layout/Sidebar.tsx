@@ -117,11 +117,23 @@ interface SidebarProps {
 export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
+  const [lastVisitedDashboard, setLastVisitedDashboard] = useState<string | null>(null);
 
   useEffect(() => {
     try {
       const stored = localStorage.getItem(COLLAPSED_KEY);
       if (stored === 'true') setCollapsed(true);
+    } catch {
+      // localStorage unavailable
+    }
+  }, []);
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('viewlytics-last-visited-dashboard');
+      if (saved) {
+        setLastVisitedDashboard(saved);
+      }
     } catch {
       // localStorage unavailable
     }
@@ -146,9 +158,22 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
   const channelMatch = pathname.match(/^(\/channel\/[^/]+\/[^/]+)/);
   const channelBasePath = channelMatch ? channelMatch[1] : null;
 
-  const getDynamicHref = (item: SidebarItem) => {
+  useEffect(() => {
     if (channelBasePath) {
-      if (item.id === 'dashboard') return channelBasePath;
+      try {
+        localStorage.setItem('viewlytics-last-visited-dashboard', channelBasePath);
+        setLastVisitedDashboard(channelBasePath);
+      } catch {
+        // localStorage unavailable
+      }
+    }
+  }, [channelBasePath]);
+
+  const getDynamicHref = (item: SidebarItem) => {
+    if (item.id === 'dashboard') {
+      return channelBasePath || lastVisitedDashboard || item.href;
+    }
+    if (channelBasePath) {
       if (['analytics', 'audience', 'reports'].includes(item.id)) {
         return `${channelBasePath}/${item.id}`;
       }
