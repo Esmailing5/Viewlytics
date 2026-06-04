@@ -1,10 +1,10 @@
 'use client';
 
-import { Suspense } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useRankings, RankingTab } from '@/hooks/useRankings';
 import { RankingTable } from '@/components/rankings/RankingTable';
-import { Trophy, Flame, Video, Activity, AlertCircle, ChevronLeft, ChevronRight, Calendar } from 'lucide-react';
+import { Trophy, Flame, Video, Activity, AlertCircle, ChevronLeft, ChevronRight, Calendar, Search } from 'lucide-react';
 
 function RankingsContent() {
   const router = useRouter();
@@ -13,9 +13,17 @@ function RankingsContent() {
   // Obtener parámetros de la URL con valores por defecto
   const activeTab = (searchParams.get('tab') || 'impact-total') as RankingTab;
   const page = parseInt(searchParams.get('page') || '1', 10);
-  const limit = 20;
+  const limit = parseInt(searchParams.get('limit') || '20', 10);
 
   const { data, isLoading, isError, errorMsg } = useRankings(activeTab, page, limit);
+
+  // Estado local para búsqueda client-side
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Limpiar búsqueda al cambiar de pestaña
+  useEffect(() => {
+    setSearchQuery('');
+  }, [activeTab]);
 
   const handleTabChange = (newTab: RankingTab) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -30,6 +38,13 @@ function RankingsContent() {
     router.push(`/rankings?${params.toString()}`);
   };
 
+  const handleLimitChange = (newLimit: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('limit', newLimit.toString());
+    params.set('page', '1'); // Reiniciar a página 1 al cambiar el límite
+    router.push(`/rankings?${params.toString()}`);
+  };
+
   const formatDate = (dateStr: string | null) => {
     if (!dateStr) return 'Hoy';
     const parts = dateStr.split('-');
@@ -37,6 +52,13 @@ function RankingsContent() {
     const [year, month, day] = parts;
     return `${day}/${month}/${year}`;
   };
+
+  // Filtrado client-side de creadores por nombre visible
+  const filteredResults = data
+    ? data.results.filter((creator) =>
+        creator.displayName.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : [];
 
   const totalPages = data ? Math.ceil(data.total / limit) : 1;
 
@@ -94,6 +116,35 @@ function RankingsContent() {
         })}
       </div>
 
+      {/* ─── Search & Limit Selector Toolbar ─── */}
+      <div className="flex flex-col sm:flex-row gap-4 items-center justify-between p-4 bg-[var(--vl-bg-surface)]/30 border border-[var(--vl-border)]/40 rounded-2xl backdrop-blur-md">
+        {/* Search */}
+        <div className="relative w-full sm:max-w-xs">
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--vl-text-tertiary)]" />
+          <input
+            type="text"
+            placeholder="Buscar canal..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-10 pr-4 py-2.5 bg-white/[0.02] border border-[var(--vl-border)]/60 rounded-xl text-sm font-medium text-[var(--vl-text-primary)] focus:outline-none focus:border-cyan-500/40 transition-colors placeholder-[var(--vl-text-disabled)]"
+          />
+        </div>
+
+        {/* Limit Selector */}
+        <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
+          <span className="text-xs font-bold text-[var(--vl-text-tertiary)] uppercase tracking-wider">Mostrar:</span>
+          <select
+            value={limit}
+            onChange={(e) => handleLimitChange(parseInt(e.target.value, 10))}
+            className="bg-white/[0.02] border border-[var(--vl-border)]/60 text-xs font-semibold text-[var(--vl-text-secondary)] rounded-xl py-2.5 px-3.5 focus:outline-none focus:border-cyan-500/40 cursor-pointer"
+          >
+            <option value={10}>10 por página</option>
+            <option value={20}>20 por página</option>
+            <option value={50}>50 por página</option>
+          </select>
+        </div>
+      </div>
+
       {/* ─── Error Message ─── */}
       {isError && (
         <div className="flex items-center gap-3 bg-red-500/10 border border-red-500/20 text-red-400 text-sm px-5 py-4 rounded-2xl max-w-2xl mx-auto">
@@ -109,7 +160,7 @@ function RankingsContent() {
       {!isError && (
         <div className="vl-card-dashboard overflow-hidden border border-[var(--vl-border)]/45 bg-[var(--vl-bg-surface)]/30 rounded-2xl backdrop-blur-md">
           <RankingTable 
-            results={data?.results || []} 
+            results={filteredResults} 
             tab={activeTab} 
             isLoading={isLoading} 
           />
@@ -131,7 +182,7 @@ function RankingsContent() {
             <button
               onClick={() => handlePageChange(page - 1)}
               disabled={page <= 1 || isLoading}
-              className="p-2 rounded-lg border border-[var(--vl-border)] bg-white/[0.02] hover:bg-white/[0.04] text-[var(--vl-text-secondary)] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              className="p-2.5 rounded-lg border border-[var(--vl-border)] bg-white/[0.02] hover:bg-white/[0.04] text-[var(--vl-text-secondary)] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
@@ -141,7 +192,7 @@ function RankingsContent() {
             <button
               onClick={() => handlePageChange(page + 1)}
               disabled={page >= totalPages || isLoading}
-              className="p-2 rounded-lg border border-[var(--vl-border)] bg-white/[0.02] hover:bg-white/[0.04] text-[var(--vl-text-secondary)] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              className="p-2.5 rounded-lg border border-[var(--vl-border)] bg-white/[0.02] hover:bg-white/[0.04] text-[var(--vl-text-secondary)] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
               <ChevronRight className="w-4 h-4" />
             </button>
