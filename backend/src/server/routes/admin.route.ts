@@ -198,4 +198,85 @@ export const adminRoutes: FastifyPluginAsync = async (fastify: FastifyInstance) 
       }
     }
   );
+
+  // GET creator impact audit records
+  // TODO: proteger con API key
+  fastify.get<{ Querystring: { date?: string; creatorId?: string } }>(
+    '/creator-impact',
+    async (request, reply) => {
+      const { date, creatorId } = request.query;
+
+      let targetDate: Date;
+      if (date) {
+        // Validar formato YYYY-MM-DD
+        const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+        if (!dateRegex.test(date)) {
+          return reply.status(400).send({
+            success: false,
+            error: 'Formato de fecha inválido. Se esperaba YYYY-MM-DD.'
+          });
+        }
+        targetDate = new Date(date + 'T00:00:00Z');
+        if (isNaN(targetDate.getTime())) {
+          return reply.status(400).send({
+            success: false,
+            error: 'Valor de fecha inválido.'
+          });
+        }
+      } else {
+        const now = new Date();
+        targetDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+      }
+
+      try {
+        const whereClause: any = {
+          snapshotDate: targetDate
+        };
+
+        if (creatorId) {
+          whereClause.creatorId = creatorId;
+        }
+
+        const impacts = await prisma.creatorImpact.findMany({
+          where: whereClause,
+          include: {
+            creator: {
+              select: {
+                displayName: true
+              }
+            }
+          },
+          orderBy: {
+            impactTotal30d: 'desc'
+          }
+        });
+
+        const dateStr = targetDate.toISOString().split('T')[0];
+
+        const results = impacts.map((imp) => ({
+          creatorId: imp.creatorId,
+          displayName: imp.creator.displayName,
+          viewsVideos30d: Number(imp.viewsVideos30d),
+          viewsShorts30d: Number(imp.viewsShorts30d),
+          impactTotal30d: Number(imp.impactTotal30d),
+          videos30d: imp.videos30d,
+          shorts30d: imp.shorts30d,
+          snapshotDate: imp.snapshotDate.toISOString().split('T')[0]
+        }));
+
+        return reply.send({
+          date: dateStr,
+          total: results.length,
+          results
+        });
+      } catch (error) {
+        fastify.log.error(error);
+        return reply.status(500).send({
+          success: false,
+          error: 'Error al obtener registros de auditoría de impacto',
+          details: error instanceof Error ? error.message : String(error)
+        });
+      }
+    }
+  );
 };

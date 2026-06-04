@@ -3,15 +3,8 @@ import { YouTubeChannelMapper } from './youtube.channel.mapper';
 import { YouTubePlaylistItemsResponse, YouTubeVideosResponse, NormalizedVideo } from './youtube.types';
 import { prisma } from '../../lib/prisma';
 import { HistoricalAnalyticsService } from '../../server/analytics/historical-analytics.service';
-
-function parseIsoDuration(duration: string): number {
-  const match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
-  if (!match) return 0;
-  const hours = parseInt(match[1] || '0', 10);
-  const minutes = parseInt(match[2] || '0', 10);
-  const seconds = parseInt(match[3] || '0', 10);
-  return hours * 3600 + minutes * 60 + seconds;
-}
+import { classifyVideo, parseIsoDuration } from '../../services/video-classifier';
+import { CreatorImpactRepository } from '../../repositories/creator-impact.repository';
 
 export class YouTubeChannelAdapter {
   private apiKey: string;
@@ -132,13 +125,17 @@ export class YouTubeChannelAdapter {
           
           const pageVideos = (videosData.items || [])
             .filter((video: any) => {
-              const liveBroadcastContent = video.snippet?.liveBroadcastContent;
-              return liveBroadcastContent !== 'upcoming';
+              const { isUpcoming } = classifyVideo({
+                duration: video.contentDetails?.duration,
+                liveBroadcastContent: video.snippet?.liveBroadcastContent,
+              });
+              return !isUpcoming;
             })
             .map((video: any) => {
-              const duration = parseIsoDuration(video.contentDetails?.duration || '');
-              const isLive = video.snippet?.liveBroadcastContent === 'live';
-              const isLong = duration > 65 || isLive;
+              const { isLong } = classifyVideo({
+                duration: video.contentDetails?.duration,
+                liveBroadcastContent: video.snippet?.liveBroadcastContent,
+              });
               return {
                 id: video.id,
                 title: video.snippet.title,
@@ -148,6 +145,7 @@ export class YouTubeChannelAdapter {
                 likes: parseInt(video.statistics?.likeCount || '0', 10),
                 comments: parseInt(video.statistics?.commentCount || '0', 10),
                 is_long: isLong,
+                live_broadcast_content: video.snippet?.liveBroadcastContent,
               };
             });
 
@@ -164,8 +162,13 @@ export class YouTubeChannelAdapter {
           if (!nextPageToken) keepFetching = false;
         }
 
-        // Filter exact 30d videos
-        const videos30dAll = recentVideos.filter(v => new Date(v.published_at).getTime() >= thirtyDaysAgo);
+        // Filter exact 30d videos (except active live streams, which are always included)
+        const videos30dAll = recentVideos.filter(v => {
+          if (v.live_broadcast_content === 'live') {
+            return true;
+          }
+          return new Date(v.published_at).getTime() >= thirtyDaysAgo;
+        });
         const videos30dLong = videos30dAll.filter(v => v.is_long);
         const videos30dShort = videos30dAll.filter(v => !v.is_long);
         
@@ -218,8 +221,9 @@ export class YouTubeChannelAdapter {
       let likesChangePct = 4.1; // Fallback mock value matching original UI
       let commentsChangePct = 8.3; // Fallback mock value matching original UI
 
+      let creator: any = null;
       try {
-        const creator = await prisma.creator.findFirst({
+        creator = await prisma.creator.findFirst({
           where: {
             OR: [
               { channelId: channelId },
@@ -266,6 +270,29 @@ export class YouTubeChannelAdapter {
         }
       } catch (dbErr) {
         console.error('[YouTube Channel Adapter] Error fetching snapshots/growth metrics:', dbErr);
+      }
+
+      // Obtener el último CreatorImpact para este creador
+      let usedCreatorImpact = false;
+      if (creator) {
+        try {
+          const latestImpact = await CreatorImpactRepository.getLatestByCreator(creator.id);
+          if (latestImpact) {
+            console.log(`[CreatorImpact] Using persisted CreatorImpact metrics for: ${profile.display_name}`);
+            views30d = Number(latestImpact.viewsVideos30d);
+            shortsViews30d = Number(latestImpact.viewsShorts30d);
+            totalViews30d = Number(latestImpact.impactTotal30d);
+            videos30dCount = latestImpact.videos30d;
+            shortsCount30d = latestImpact.shorts30d;
+            usedCreatorImpact = true;
+          }
+        } catch (impactErr) {
+          console.error('[YouTube Channel Adapter] Error fetching CreatorImpact:', impactErr);
+        }
+      }
+
+      if (!usedCreatorImpact) {
+        console.log(`[Fallback] Sin CreatorImpact para: ${profile.display_name}, usando cálculo en tiempo real`);
       }
 
       const growth = {

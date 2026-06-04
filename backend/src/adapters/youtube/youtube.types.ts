@@ -120,6 +120,7 @@ export interface NormalizedVideo {
   likes: number;
   comments: number;
   is_long?: boolean;
+  live_broadcast_content?: string;
 }
 
 export interface CreatorAnalyticsData {

@@ -48,6 +48,7 @@ model Creator {
   snapshots      CreatorSnapshot[]
   videos         Video[]
   dailyRankings  DailyRanking[]
+  impacts        CreatorImpact[]
 
   @@map("creators")
   @@index([slug])
@@ -104,4 +105,26 @@ model DailyRanking {
 
   @@map("daily_rankings")
   @@index([rankingType, rankingDate])
+}
+
+/// Stores the calculated impact metrics for creators on specific snapshot dates.
+model CreatorImpact {
+  id             String   @id @default(uuid())
+  creatorId      String   @map("creator_id")
+  snapshotDate   DateTime @db.Date @map("snapshot_date")
+  viewsVideos30d BigInt   @default(0) @map("views_videos_30d")
+  viewsShorts30d BigInt   @default(0) @map("views_shorts_30d")
+  impactTotal30d BigInt   @default(0) @map("impact_total_30d")
+  videos30d      Int      @default(0) @map("videos_30d")
+  shorts30d      Int      @default(0) @map("shorts_30d")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  creator Creator @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+
+  @@unique([creatorId, snapshotDate])
+  @@index([impactTotal30d(sort: Desc)])
+  @@index([viewsVideos30d(sort: Desc)])
+  @@index([viewsShorts30d(sort: Desc)])
+  @@index([snapshotDate])
+  @@map("creator_impacts")
 }
