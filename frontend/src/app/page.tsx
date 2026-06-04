@@ -1,10 +1,3 @@
-/**
- * Viewlytics — Public Homepage (Phase 1.5)
- *
- * Modern SaaS marketing landing page.
- * Acts as the entry point to the Creator Analytics platform.
- */
-
 import type { Metadata } from 'next';
 import { brandConfig } from '@/config/branding';
 import { PublicLayout } from '@/components/layout/PublicLayout';
@@ -21,12 +14,68 @@ export const metadata: Metadata = {
   description: 'Descubre analíticas, crecimiento y tendencias de creadores en YouTube, Twitch y Kick.',
 };
 
-export default function HomePage() {
+const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+
+async function getGlobalStats() {
+  try {
+    const res = await fetch(`${apiUrl}/api/stats/global`, { cache: 'no-store' });
+    if (!res.ok) throw new Error('Failed to fetch global stats');
+    return await res.json();
+  } catch (error) {
+    console.error('[Page Loader] Error loading global stats:', error);
+    return {
+      totalCreators: 0,
+      trackedCreators: 0,
+      totalSubscribers: 0,
+      totalViews30d: 0,
+      updatedAt: new Date().toISOString().split('T')[0],
+    };
+  }
+}
+
+async function getTrendingStats() {
+  try {
+    const res = await fetch(`${apiUrl}/api/stats/trending`, { cache: 'no-store' });
+    if (!res.ok) throw new Error('Failed to fetch trending stats');
+    return await res.json();
+  } catch (error) {
+    console.error('[Page Loader] Error loading trending stats:', error);
+    return {
+      updatedAt: new Date().toISOString().split('T')[0],
+      results: [],
+    };
+  }
+}
+
+async function getRankings() {
+  try {
+    const res = await fetch(`${apiUrl}/api/rankings/impact-total?limit=7`, { cache: 'no-store' });
+    if (!res.ok) throw new Error('Failed to fetch rankings');
+    return await res.json();
+  } catch (error) {
+    console.error('[Page Loader] Error loading rankings:', error);
+    return {
+      snapshotDate: new Date().toISOString().split('T')[0],
+      total: 0,
+      page: 1,
+      limit: 7,
+      results: [],
+    };
+  }
+}
+
+export default async function HomePage() {
+  const [globalStats, trendingStats, rankingsData] = await Promise.all([
+    getGlobalStats(),
+    getTrendingStats(),
+    getRankings(),
+  ]);
+
   return (
     <PublicLayout>
-      <HeroSection />
-      <TrendingPreview />
-      <RankingsPreview />
+      <HeroSection globalStats={globalStats} />
+      <TrendingPreview data={trendingStats} />
+      <RankingsPreview data={rankingsData} />
       <PlatformSupport />
       <FeatureGrid />
       <CtaSection />

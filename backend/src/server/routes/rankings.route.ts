@@ -47,6 +47,8 @@ export const rankingsRoutes: FastifyPluginAsync = async (fastify: FastifyInstanc
             select: {
               displayName: true,
               avatarUrl: true,
+              platform: true,
+              slug: true,
             },
           },
         },
@@ -65,6 +67,8 @@ export const rankingsRoutes: FastifyPluginAsync = async (fastify: FastifyInstanc
         creatorId: rec.creatorId,
         displayName: rec.creator.displayName,
         avatarUrl: rec.creator.avatarUrl,
+        platform: rec.creator.platform,
+        slug: rec.creator.slug,
         impactTotal30d: Number(rec.impactTotal30d),
         viewsVideos30d: Number(rec.viewsVideos30d),
         viewsShorts30d: Number(rec.viewsShorts30d),

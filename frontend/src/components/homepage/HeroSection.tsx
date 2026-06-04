@@ -6,7 +6,33 @@ import { motion } from 'framer-motion';
 import { homepageConfig } from '@/config/homepage';
 import { SearchInput } from '@/components/shared/SearchInput';
 
-export function HeroSection() {
+interface HeroSectionProps {
+  globalStats?: {
+    totalCreators: number;
+    trackedCreators: number;
+    totalSubscribers: number;
+    totalViews30d: number;
+    updatedAt: string;
+  };
+}
+
+export function HeroSection({ globalStats }: HeroSectionProps) {
+  const formatSubscribers = (val: number) => {
+    return new Intl.NumberFormat('en-US', {
+      notation: 'compact',
+      compactDisplay: 'short',
+      maximumFractionDigits: 1,
+    }).format(val);
+  };
+
+  const totalSubscribersFormatted = globalStats?.totalSubscribers
+    ? formatSubscribers(globalStats.totalSubscribers)
+    : '0';
+
+  const trackedCreatorsFormatted = globalStats?.trackedCreators
+    ? new Intl.NumberFormat('es-ES').format(globalStats.trackedCreators)
+    : '0';
+
   return (
     <section className="relative overflow-hidden pt-28 pb-36 vl-noise-container bg-[var(--vl-bg-primary)]">
       {/* ── Background Gradients & Mesh ── */}
@@ -103,7 +129,7 @@ export function HeroSection() {
                 </div>
                 <span className="text-[10px] font-bold text-[var(--vl-success)] px-1.5 py-0.5 rounded bg-green-500/10">+12.4%</span>
               </div>
-              <p className="text-2xl font-black text-[var(--vl-text-primary)] tracking-tight">2.86M</p>
+              <p className="text-2xl font-black text-[var(--vl-text-primary)] tracking-tight">{totalSubscribersFormatted}</p>
               <p className="text-xs text-[var(--vl-text-secondary)] font-medium mt-1">Audiencia Total Monitoreada</p>
             </div>
 
@@ -115,7 +141,7 @@ export function HeroSection() {
                 </div>
                 <span className="text-[10px] font-bold text-[var(--vl-text-secondary)] px-1.5 py-0.5 rounded bg-white/5">RD Ecosistema</span>
               </div>
-              <p className="text-2xl font-black text-[var(--vl-text-primary)] tracking-tight">1,247</p>
+              <p className="text-2xl font-black text-[var(--vl-text-primary)] tracking-tight">{trackedCreatorsFormatted}</p>
               <p className="text-xs text-[var(--vl-text-secondary)] font-medium mt-1">Canales y Streamers Activos</p>
             </div>
 
