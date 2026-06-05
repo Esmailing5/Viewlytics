@@ -60,6 +60,30 @@ export const rankingsRoutes: FastifyPluginAsync = async (fastify: FastifyInstanc
         take: limit,
       });
 
+      const creatorIds = records.map((rec) => rec.creatorId);
+
+      const latestSnapshots = await prisma.creatorSnapshot.findMany({
+        where: {
+          creatorId: {
+            in: creatorIds,
+          },
+        },
+        orderBy: [
+          { creatorId: 'asc' },
+          { snapshotDate: 'desc' },
+        ],
+        distinct: ['creatorId'],
+        select: {
+          creatorId: true,
+          subscribers: true,
+        },
+      });
+
+      const subscribersMap = new Map<string, number>();
+      for (const snap of latestSnapshots) {
+        subscribersMap.set(snap.creatorId, Number(snap.subscribers));
+      }
+
       const snapshotDateStr = latestDate.toISOString().split('T')[0];
 
       const results = records.map((rec, index) => ({
@@ -72,6 +96,7 @@ export const rankingsRoutes: FastifyPluginAsync = async (fastify: FastifyInstanc
         impactTotal30d: Number(rec.impactTotal30d),
         viewsVideos30d: Number(rec.viewsVideos30d),
         viewsShorts30d: Number(rec.viewsShorts30d),
+        subscribers: subscribersMap.get(rec.creatorId) || 0,
       }));
 
       console.timeEnd('[Performance] GET /api/rankings/impact-total');
