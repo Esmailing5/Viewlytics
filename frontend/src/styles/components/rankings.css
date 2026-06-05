@@ -56,7 +56,7 @@
 
 /* Rank-Specific Podiums */
 .vl-podium-1st {
-  height: 320px;
+  height: 380px;
   border-color: rgba(234, 179, 8, 0.25);
   z-index: 10;
 }
@@ -75,7 +75,7 @@
 }
 
 .vl-podium-2nd {
-  height: 290px;
+  height: 345px;
   border-color: rgba(148, 163, 184, 0.2);
   z-index: 5;
 }
@@ -94,7 +94,7 @@
 }
 
 .vl-podium-3rd {
-  height: 270px;
+  height: 325px;
   border-color: rgba(180, 83, 9, 0.2);
   z-index: 4;
 }
@@ -118,9 +118,9 @@
   align-items: center;
   justify-content: center;
   font-weight: 900;
-  font-size: 14px;
-  width: 32px;
-  height: 32px;
+  font-size: 16px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
   margin-bottom: var(--space-4);
   border: 2px solid currentColor;

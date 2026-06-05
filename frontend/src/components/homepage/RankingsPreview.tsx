@@ -126,12 +126,12 @@ export function RankingsPreview({ data }: RankingsPreviewProps) {
                   : 'bg-amber-600/10';
 
                 const cardClass = isFirst
-                  ? 'vl-podium-card vl-podium-1st group scale-[1.03]'
+                  ? 'vl-podium-card vl-podium-1st group scale-[1.03] p-6'
                   : isSecond
-                  ? 'vl-podium-card vl-podium-2nd group'
-                  : 'vl-podium-card vl-podium-3rd group';
+                  ? 'vl-podium-card vl-podium-2nd group p-6'
+                  : 'vl-podium-card vl-podium-3rd group p-6';
 
-                const avatarSize = isFirst ? 'w-16 h-16' : 'w-14 h-14';
+                const avatarSize = isFirst ? 'w-24 h-24' : 'w-20 h-20';
 
                 return (
                   <Link
@@ -152,21 +152,21 @@ export function RankingsPreview({ data }: RankingsPreviewProps) {
                         getInitials(entry.displayName)
                       )}
                     </div>
-                    <h4 className="font-black text-sm text-[var(--vl-text-primary)] mt-2 text-center truncate w-full group-hover:text-[var(--vl-red)] transition-colors">
+                    <h4 className={`font-black text-center truncate w-full group-hover:text-[var(--vl-red)] transition-colors mt-3 ${isFirst ? 'text-base' : 'text-sm text-[var(--vl-text-primary)]'}`}>
                       {entry.displayName}
                     </h4>
-                    <p className="text-[10px] font-bold text-[var(--vl-text-secondary)] uppercase mt-1">
+                    <p className="text-xs font-bold text-[var(--vl-text-secondary)] uppercase mt-1">
                       {entry.platform}
                     </p>
 
-                    <div className="mt-3 grid grid-cols-2 gap-2 w-full">
+                    <div className="mt-4 grid grid-cols-2 gap-2 w-full">
                       <div className="flex flex-col items-center">
-                        <p className="text-[9px] font-bold text-[var(--vl-text-tertiary)] uppercase tracking-wider">Vistas (30d)</p>
-                        <p className="text-xs font-black text-[var(--vl-text-primary)] mt-0.5">{formatStat(entry.impactTotal30d)}</p>
+                        <p className="text-[10px] font-bold text-[var(--vl-text-tertiary)] uppercase tracking-wider">Vistas (30d)</p>
+                        <p className="text-sm font-black text-[var(--vl-text-primary)] mt-0.5">{formatStat(entry.impactTotal30d)}</p>
                       </div>
                       <div className="flex flex-col items-center">
-                        <p className="text-[9px] font-bold text-[var(--vl-text-tertiary)] uppercase tracking-wider">Suscriptores</p>
-                        <p className="text-xs font-black text-[var(--vl-text-primary)] mt-0.5">{formatStat(entry.subscribers ?? 0)}</p>
+                        <p className="text-[10px] font-bold text-[var(--vl-text-tertiary)] uppercase tracking-wider">Suscriptores</p>
+                        <p className="text-sm font-black text-[var(--vl-text-primary)] mt-0.5">{formatStat(entry.subscribers ?? 0)}</p>
                       </div>
                     </div>
                   </Link>
