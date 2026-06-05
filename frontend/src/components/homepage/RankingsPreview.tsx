@@ -102,7 +102,7 @@ export function RankingsPreview({ data }: RankingsPreviewProps) {
 
           <div className="p-6 sm:p-8">
             {/* ─── Premium Podium Showcase (Top 3) ─── */}
-            <div className="hidden sm:grid grid-cols-3 gap-4 items-end mb-10 max-w-3xl mx-auto">
+            <div className="hidden sm:grid grid-cols-3 gap-3 items-end mb-10 max-w-3xl mx-auto">
               {top3Ordered.map((entry) => {
                 const isFirst = entry.position === 1;
                 const isSecond = entry.position === 2;
@@ -152,18 +152,22 @@ export function RankingsPreview({ data }: RankingsPreviewProps) {
                         getInitials(entry.displayName)
                       )}
                     </div>
-                    <h4 className="font-black text-sm text-[var(--vl-text-primary)] mt-4 text-center truncate w-full group-hover:text-[var(--vl-red)] transition-colors">
+                    <h4 className="font-black text-sm text-[var(--vl-text-primary)] mt-2 text-center truncate w-full group-hover:text-[var(--vl-red)] transition-colors">
                       {entry.displayName}
                     </h4>
                     <p className="text-[10px] font-bold text-[var(--vl-text-secondary)] uppercase mt-1">
                       {entry.platform}
                     </p>
 
-                    <div className="mt-5 flex flex-col items-center justify-center w-full">
-                      <p className="text-[9px] font-bold text-[var(--vl-text-tertiary)] uppercase tracking-wider">Vistas (30d)</p>
-                      <p className="text-xs font-black text-[var(--vl-text-primary)] mt-1">{formatStat(entry.impactTotal30d)}</p>
-                      <p className="text-[9px] font-bold text-[var(--vl-text-tertiary)] uppercase tracking-wider mt-3">SUSCRIPTORES</p>
-                      <p className="text-xs font-black text-[var(--vl-text-primary)] mt-1">{formatStat(entry.subscribers ?? 0)}</p>
+                    <div className="mt-3 grid grid-cols-2 gap-2 w-full">
+                      <div className="flex flex-col items-center">
+                        <p className="text-[9px] font-bold text-[var(--vl-text-tertiary)] uppercase tracking-wider">Vistas (30d)</p>
+                        <p className="text-xs font-black text-[var(--vl-text-primary)] mt-0.5">{formatStat(entry.impactTotal30d)}</p>
+                      </div>
+                      <div className="flex flex-col items-center">
+                        <p className="text-[9px] font-bold text-[var(--vl-text-tertiary)] uppercase tracking-wider">Suscriptores</p>
+                        <p className="text-xs font-black text-[var(--vl-text-primary)] mt-0.5">{formatStat(entry.subscribers ?? 0)}</p>
+                      </div>
                     </div>
                   </Link>
                 );
@@ -184,7 +188,7 @@ export function RankingsPreview({ data }: RankingsPreviewProps) {
                   <Link
                     key={entry.creatorId}
                     href={`/channel/${entry.platform}/${entry.slug}`}
-                    className="flex flex-col p-4 rounded-2xl bg-[var(--vl-bg-surface)] border border-[var(--vl-border)] hover:border-[var(--vl-border-hover)] transition-all duration-300 group"
+                    className="flex flex-col p-3.5 rounded-2xl bg-[var(--vl-bg-surface)] border border-[var(--vl-border)] hover:border-[var(--vl-border-hover)] transition-all duration-300 group"
                   >
                     {/* Header: Rank, Avatar, Creator Info & Platform */}
                     <div className="flex items-center justify-between border-b border-[var(--vl-border)]/45 pb-3">
@@ -215,7 +219,7 @@ export function RankingsPreview({ data }: RankingsPreviewProps) {
                     </div>
 
                     {/* Stats Grid: Views & Subscribers */}
-                    <div className="flex flex-col items-center justify-center pt-3 text-center gap-2">
+                    <div className="grid grid-cols-2 gap-3 pt-3 text-center">
                       <div>
                         <p className="text-[8px] font-bold text-[var(--vl-text-tertiary)] uppercase tracking-wider">Vistas (30d)</p>
                         <p className="text-xs font-black text-[var(--vl-text-primary)] mt-1">{formatStat(entry.impactTotal30d)}</p>
@@ -262,7 +266,7 @@ export function RankingsPreview({ data }: RankingsPreviewProps) {
                       </p>
                     </div>
                   </div>
-                  <div className="flex flex-col items-center justify-center pt-3 xs:pt-0 border-t border-[var(--vl-border)]/45 xs:border-0 text-center xs:text-right gap-2">
+                  <div className="grid grid-cols-2 gap-3 pt-3 xs:pt-0 xs:border-0 text-center xs:text-right">
                     <div>
                       <p className="text-[8px] font-bold text-[var(--vl-text-tertiary)] uppercase tracking-wider">Vistas (30d)</p>
                       <p className="text-xs font-black text-[var(--vl-text-primary)] mt-1">{formatStat(entry.impactTotal30d)}</p>
