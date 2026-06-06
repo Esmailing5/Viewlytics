@@ -492,10 +492,10 @@ export function CreatorAnalyticsPage({
                         <div className="bg-[#0b0c10]/90 backdrop-blur-md border border-white/[0.08] rounded-xl px-3.5 py-2.5 shadow-2xl">
                           <p className="text-[var(--vl-text-tertiary)] font-bold text-[9px] uppercase tracking-wider mb-1">{label}</p>
                           <p className="font-extrabold text-[var(--vl-text-primary)] text-xs tracking-tight">
-                            Videos largos: <span className="text-[var(--vl-cyan)]">{new Intl.NumberFormat('en-US', { notation: "compact" }).format(longVal as number)}</span>
+                            Videos largos: <span className="text-[var(--vl-red)]">{new Intl.NumberFormat('en-US', { notation: "compact" }).format(longVal as number)}</span>
                           </p>
                           <p className="font-extrabold text-[var(--vl-text-primary)] text-xs tracking-tight mt-0.5">
-                            Shorts: <span className="text-[var(--vl-purple)]">{new Intl.NumberFormat('en-US', { notation: "compact" }).format(shortVal as number)}</span>
+                            Shorts: <span className="text-[var(--vl-warning)]">{new Intl.NumberFormat('en-US', { notation: "compact" }).format(shortVal as number)}</span>
                           </p>
                         </div>
                       );
@@ -504,8 +504,8 @@ export function CreatorAnalyticsPage({
                   }}
                   cursor={{ fill: 'rgba(255, 255, 255, 0.05)' }}
                 />
-                <Bar dataKey="longViews" stackId="a" fill="var(--vl-cyan)" name="Videos largos" />
-                <Bar dataKey="shortViews" stackId="a" fill="var(--vl-purple)" name="Shorts" radius={[3, 3, 0, 0]} />
+                <Bar dataKey="longViews" stackId="a" fill="var(--vl-red)" name="Videos largos" />
+                <Bar dataKey="shortViews" stackId="a" fill="var(--vl-warning)" name="Shorts" radius={[3, 3, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -513,14 +513,14 @@ export function CreatorAnalyticsPage({
           {/* Bottom Legend */}
           <div className="flex items-center gap-6 mt-4 pl-2 text-xs font-semibold">
             <div className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-[var(--vl-cyan)]" />
+              <span className="w-2.5 h-2.5 rounded-full bg-[var(--vl-red)]" />
               <span className="text-[var(--vl-text-secondary)]">Videos largos</span>
               <span className="text-[var(--vl-text-primary)] font-bold">
                 {new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 2 }).format(data.growth?.views_30d || 0)}
               </span>
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-[var(--vl-purple)]" />
+              <span className="w-2.5 h-2.5 rounded-full bg-[var(--vl-warning)]" />
               <span className="text-[var(--vl-text-secondary)]">Shorts</span>
               <span className="text-[var(--vl-text-primary)] font-bold">
                 {new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 2 }).format(data.growth?.shorts_views_30d || 0)}
