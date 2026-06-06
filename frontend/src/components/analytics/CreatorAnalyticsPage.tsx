@@ -2,7 +2,7 @@
 
 import { Suspense, lazy, useEffect, useState, useMemo } from 'react';
 import { Eye, Clock, Users, PlaySquare, TrendingUp, Sparkles, Share2, Star, Check } from 'lucide-react';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 
 // Lazy-loaded chart components for performance
 const EstimatedIncomeChart = lazy(() =>
@@ -469,17 +469,7 @@ export function CreatorAnalyticsPage({
 
           <div className="h-[220px] w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={recentViewsChartData} margin={{ top: 10, right: 10, left: -15, bottom: 5 }}>
-                <defs>
-                  <linearGradient id="colorLongViews" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="var(--vl-cyan)" stopOpacity={0.18}/>
-                    <stop offset="95%" stopColor="var(--vl-cyan)" stopOpacity={0}/>
-                  </linearGradient>
-                  <linearGradient id="colorShortViews" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="var(--vl-purple)" stopOpacity={0.18}/>
-                    <stop offset="95%" stopColor="var(--vl-purple)" stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
+              <BarChart data={recentViewsChartData} margin={{ top: 10, right: 10, left: -15, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="4 4" vertical={false} stroke="rgba(255,255,255,0.02)" />
                 <XAxis 
                   dataKey="date" 
@@ -512,29 +502,11 @@ export function CreatorAnalyticsPage({
                     }
                     return null;
                   }}
-                  cursor={{ stroke: 'rgba(255, 255, 255, 0.08)', strokeWidth: 1, strokeDasharray: '3 3' }}
+                  cursor={{ fill: 'rgba(255, 255, 255, 0.05)' }}
                 />
-                <Area 
-                  type="monotone" 
-                  dataKey="longViews" 
-                  stroke="var(--vl-cyan)" 
-                  strokeWidth={2}
-                  fillOpacity={1} 
-                  fill="url(#colorLongViews)" 
-                  dot={false}
-                  activeDot={{ r: 4.5, fill: 'var(--vl-cyan)', stroke: '#06070A', strokeWidth: 2 }}
-                />
-                <Area 
-                  type="monotone" 
-                  dataKey="shortViews" 
-                  stroke="var(--vl-purple)" 
-                  strokeWidth={2}
-                  fillOpacity={1} 
-                  fill="url(#colorShortViews)" 
-                  dot={false}
-                  activeDot={{ r: 4.5, fill: 'var(--vl-purple)', stroke: '#06070A', strokeWidth: 2 }}
-                />
-              </AreaChart>
+                <Bar dataKey="longViews" stackId="a" fill="#00E5FF" name="Videos largos" />
+                <Bar dataKey="shortViews" stackId="a" fill="#A855F7" name="Shorts" radius={[3, 3, 0, 0]} />
+              </BarChart>
             </ResponsiveContainer>
           </div>
 
