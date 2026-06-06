@@ -189,8 +189,12 @@
 
   --vl-purple:         #6B47FF;
   --vl-purple-hover:   #5A3AE6;
+  --vl-purple-dark:    #4C1D95;
   --vl-purple-soft:    rgba(107, 71, 255, 0.08);
   --vl-purple-glow:    rgba(107, 71, 255, 0.12);
+
+  --vl-blue:           #2563EB;
+  --vl-blue-dark:      #1E3A8A;
 
   --vl-success:        #16A34A;
   --vl-success-soft:   rgba(22, 163, 74, 0.08);

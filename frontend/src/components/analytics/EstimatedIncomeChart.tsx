@@ -88,10 +88,10 @@ export function EstimatedIncomeChart({ growth, recentVideos = [] }: ChartProps) 
     if (active && payload && payload.length) {
       return (
         <div className="bg-[#0b0c10]/90 backdrop-blur-md border border-white/[0.08] rounded-xl px-3.5 py-2.5 shadow-2xl">
-          <p className="text-[var(--vl-text-tertiary)] font-bold text-[9px] uppercase tracking-wider mb-0.5">{label}</p>
+          <p className="text-gray-400 font-bold text-[9px] uppercase tracking-wider mb-0.5">{label}</p>
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-[var(--vl-success)]" />
-            <p className="text-sm font-black text-[var(--vl-text-primary)]">
+            <p className="text-sm font-black text-white">
               Estimado: <span className="text-[var(--vl-success)]">{formatMoney(payload[0].value)}</span>
             </p>
           </div>

@@ -50,8 +50,13 @@
   /* ── Accent Purple (Tertiary) ── */
   --vl-purple:         #7C5CFF;
   --vl-purple-hover:   #917AFF;
+  --vl-purple-dark:    #5B21B6;
   --vl-purple-soft:    rgba(124, 92, 255, 0.12);
   --vl-purple-glow:    rgba(124, 92, 255, 0.12);
+
+  /* ── Accent Blue (Custom) ── */
+  --vl-blue:           #3B82F6;
+  --vl-blue-dark:      #1D4ED8;
 
   /* ── Semantic Colors ── */
   --vl-success:        #22C55E;
