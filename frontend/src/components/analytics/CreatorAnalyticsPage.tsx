@@ -504,8 +504,8 @@ export function CreatorAnalyticsPage({
                   }}
                   cursor={{ fill: 'rgba(255, 255, 255, 0.05)' }}
                 />
-                <Bar dataKey="longViews" stackId="a" fill="#00E5FF" name="Videos largos" />
-                <Bar dataKey="shortViews" stackId="a" fill="#A855F7" name="Shorts" radius={[3, 3, 0, 0]} />
+                <Bar dataKey="longViews" stackId="a" fill="var(--vl-cyan)" name="Videos largos" />
+                <Bar dataKey="shortViews" stackId="a" fill="var(--vl-purple)" name="Shorts" radius={[3, 3, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
