@@ -471,13 +471,13 @@ export function CreatorAnalyticsPage({
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={recentViewsChartData} margin={{ top: 10, right: 10, left: -15, bottom: 5 }}>
                 <defs>
-                  <linearGradient id="cyanLong" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="var(--vl-cyan)" />
-                    <stop offset="100%" stopColor="#008BBB" />
+                  <linearGradient id="rgbBlue" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#0052FF" />
+                    <stop offset="100%" stopColor="#002299" />
                   </linearGradient>
-                  <linearGradient id="cyanShort" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#80F3FF" />
-                    <stop offset="100%" stopColor="var(--vl-cyan)" />
+                  <linearGradient id="rgbCyan" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#00FFFF" />
+                    <stop offset="100%" stopColor="#00A3B8" />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="4 4" vertical={false} stroke="rgba(255,255,255,0.02)" />
@@ -502,10 +502,10 @@ export function CreatorAnalyticsPage({
                         <div className="bg-[#0b0c10]/90 backdrop-blur-md border border-white/[0.08] rounded-xl px-3.5 py-2.5 shadow-2xl">
                           <p className="text-[var(--vl-text-tertiary)] font-bold text-[9px] uppercase tracking-wider mb-1">{label}</p>
                           <p className="font-extrabold text-[var(--vl-text-primary)] text-xs tracking-tight">
-                            Videos largos: <span className="text-[var(--vl-cyan)]">{new Intl.NumberFormat('en-US', { notation: "compact" }).format(longVal as number)}</span>
+                            Videos largos: <span className="text-[#0052FF]">{new Intl.NumberFormat('en-US', { notation: "compact" }).format(longVal as number)}</span>
                           </p>
                           <p className="font-extrabold text-[var(--vl-text-primary)] text-xs tracking-tight mt-0.5">
-                            Shorts: <span className="text-[#80F3FF]">{new Intl.NumberFormat('en-US', { notation: "compact" }).format(shortVal as number)}</span>
+                            Shorts: <span className="text-[#00FFFF]">{new Intl.NumberFormat('en-US', { notation: "compact" }).format(shortVal as number)}</span>
                           </p>
                         </div>
                       );
@@ -514,8 +514,8 @@ export function CreatorAnalyticsPage({
                   }}
                   cursor={{ fill: 'rgba(255, 255, 255, 0.05)' }}
                 />
-                <Bar dataKey="longViews" stackId="a" fill="url(#cyanLong)" name="Videos largos" />
-                <Bar dataKey="shortViews" stackId="a" fill="url(#cyanShort)" name="Shorts" radius={[3, 3, 0, 0]} />
+                <Bar dataKey="longViews" stackId="a" fill="url(#rgbBlue)" name="Videos largos" />
+                <Bar dataKey="shortViews" stackId="a" fill="url(#rgbCyan)" name="Shorts" radius={[3, 3, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -523,14 +523,14 @@ export function CreatorAnalyticsPage({
           {/* Bottom Legend */}
           <div className="flex items-center gap-6 mt-4 pl-2 text-xs font-semibold">
             <div className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-[var(--vl-cyan)]" />
+              <span className="w-2.5 h-2.5 rounded-full bg-[#0052FF]" />
               <span className="text-[var(--vl-text-secondary)]">Videos largos</span>
               <span className="text-[var(--vl-text-primary)] font-bold">
                 {new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 2 }).format(data.growth?.views_30d || 0)}
               </span>
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#80F3FF]" />
+              <span className="w-2.5 h-2.5 rounded-full bg-[#00FFFF]" />
               <span className="text-[var(--vl-text-secondary)]">Shorts</span>
               <span className="text-[var(--vl-text-primary)] font-bold">
                 {new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 2 }).format(data.growth?.shorts_views_30d || 0)}
