@@ -5,8 +5,10 @@ import { schedulerStatus } from '../jobs/snapshot-scheduler';
 import { prisma } from '../../lib/prisma';
 import { TrackingStatus } from '@prisma/client';
 import { YouTubeChannelAdapter } from '../../adapters/youtube/youtube.channel.adapter';
+import { requireAdmin } from '../../middleware/auth.middleware';
 
 export const adminRoutes: FastifyPluginAsync = async (fastify: FastifyInstance) => {
+  fastify.addHook('preHandler', requireAdmin);
   // Archivar automáticamente los 4 registros seed detectados al registrar las rutas de admin
   const seedsToArchive = ['UC_Gallimbo_Seed', 'UC_ShowCarlosDuran_Seed', 'UC_ElMananero_Seed', 'UC_DuckTape_Seed'];
   prisma.creator.updateMany({

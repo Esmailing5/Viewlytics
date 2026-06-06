@@ -55,3 +55,9 @@ export type {
   Theme,
   ThemeContextValue,
 } from './theme.types';
+
+export type {
+  User,
+  AuthState,
+} from './auth.types';
+

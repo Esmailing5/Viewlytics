@@ -7,6 +7,8 @@ import { navigationConfig } from '@/config/navigation';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
 import { Logo } from '@/components/shared/Logo';
 import type { SidebarItem } from '@/types';
+import { useAuth } from '@/providers/AuthProvider';
+import { LogOut } from 'lucide-react';
 
 /**
  * Premium SVG icon set for sidebar — hand-crafted, 1.5 stroke-width.
@@ -151,7 +153,13 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
     });
   }, []);
 
-  const enabledItems = navigationConfig.sidebar.filter((item) => item.enabled);
+  const { user, logout } = useAuth();
+
+  const enabledItems = navigationConfig.sidebar.filter((item) => {
+    if (!item.enabled) return false;
+    if (item.id === 'admin' && user?.role !== 'ADMIN') return false;
+    return true;
+  });
   const mainItems = enabledItems.filter((item) => item.section === 'main');
   const bottomItems = enabledItems.filter((item) => item.section === 'bottom');
 
@@ -300,6 +308,29 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
         <ul className="space-y-0.5 mb-2" role="list">
           {bottomItems.map(renderNavItem)}
         </ul>
+        {user && (
+          <div className="mb-2">
+            {!collapsed && (
+              <div className="px-3 py-1 text-[11px] text-[var(--vl-text-tertiary)] truncate font-mono select-none" title={user.email}>
+                {user.email}
+              </div>
+            )}
+            <button
+              onClick={logout}
+              title={collapsed ? `Cerrar sesión (${user.email})` : undefined}
+              className={`
+                flex items-center gap-2 w-full px-3 py-1.5 rounded-md
+                text-xs font-medium text-[var(--vl-text-secondary)]
+                hover:text-[var(--vl-red)] hover:bg-[rgba(255,59,48,0.06)]
+                transition-colors duration-150
+                ${collapsed ? 'justify-center px-0' : ''}
+              `}
+            >
+              <LogOut className={`flex-shrink-0 ${collapsed ? 'w-[18px] h-[18px]' : 'w-4 h-4'}`} />
+              {!collapsed && <span>Cerrar sesión</span>}
+            </button>
+          </div>
+        )}
         <div className={`${collapsed ? 'flex justify-center' : ''}`}>
           <ThemeToggle showLabel={!collapsed} />
         </div>
