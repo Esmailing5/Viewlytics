@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { Menu, Bell, Search, X } from 'lucide-react';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
 import { SearchInput } from '@/components/shared/SearchInput';
+import { useAuth } from '@/providers/AuthProvider';
+import { UserAvatar } from '@/components/shared/UserAvatar';
 
 interface TopbarProps {
   onMobileMenuToggle: () => void;
@@ -16,6 +18,7 @@ interface TopbarProps {
  * Premium blur, minimal visual noise, functional controls.
  */
 export function Topbar({ onMobileMenuToggle }: TopbarProps) {
+  const { user } = useAuth();
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
 
   return (
@@ -124,21 +127,19 @@ export function Topbar({ onMobileMenuToggle }: TopbarProps) {
         />
 
         {/* Profile avatar */}
-        <button
-          id="topbar-profile"
-          aria-label="Profile menu"
-          className="
-            flex items-center justify-center
-            w-7 h-7 rounded-full
-            text-white text-xs font-bold
-            transition-opacity duration-150
-            hover:opacity-80
-            flex-shrink-0
-          "
-          style={{ background: 'var(--vl-gradient-brand)' }}
-        >
-          V
-        </button>
+        {user && (
+          <button
+            id="topbar-profile"
+            aria-label="Profile menu"
+            className="
+              transition-opacity duration-150
+              hover:opacity-80
+              flex-shrink-0
+            "
+          >
+            <UserAvatar user={user} size="sm" />
+          </button>
+        )}
       </div>
     </header>
   );

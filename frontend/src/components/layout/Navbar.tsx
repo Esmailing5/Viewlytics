@@ -20,6 +20,7 @@ import { brandConfig } from '@/config/branding';
 import { Logo } from '@/components/shared/Logo';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
 import { useAuth } from '@/providers/AuthProvider';
+import { UserAvatar } from '@/components/shared/UserAvatar';
 
 /**
  * Navbar — Sticky premium navigation bar.
@@ -116,12 +117,7 @@ export function Navbar() {
 
             {user ? (
               <div className="flex items-center gap-2 ml-1">
-                <div 
-                  className="w-8 h-8 rounded-full bg-[var(--vl-red)] flex items-center justify-center text-[var(--vl-text-primary)] font-semibold text-xs select-none" 
-                  title={user.email}
-                >
-                  {user.email.substring(0, 2).toUpperCase()}
-                </div>
+                <UserAvatar user={user} size="md" />
                 <button
                   onClick={logout}
                   className="text-xs font-semibold text-[var(--vl-text-secondary)] hover:text-[var(--vl-red)] transition-colors py-1.5 px-3 rounded-lg border border-[var(--vl-border)] hover:bg-[rgba(255,59,48,0.06)]"
