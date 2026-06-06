@@ -15,6 +15,7 @@ import {
   ExternalLink,
   Loader2
 } from 'lucide-react';
+import { useAuth } from '@/providers/AuthProvider';
 
 interface Creator {
   id: string;
@@ -31,6 +32,7 @@ interface Creator {
 }
 
 export default function AdminPage() {
+  const { authFetch } = useAuth();
   const [creators, setCreators] = useState<Creator[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -49,7 +51,7 @@ export default function AdminPage() {
   const fetchCreators = async () => {
     try {
       setLoading(true);
-      const res = await fetch(`${apiUrl}/api/admin/channels`);
+      const res = await authFetch(`${apiUrl}/api/admin/channels`);
       if (!res.ok) throw new Error('Error al obtener la lista de canales');
       const data = await res.json();
       setCreators(data);
@@ -70,7 +72,7 @@ export default function AdminPage() {
     
     try {
       setUpdatingId(id);
-      const res = await fetch(`${apiUrl}/api/admin/channels/${id}/status`, {
+      const res = await authFetch(`${apiUrl}/api/admin/channels/${id}/status`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json'

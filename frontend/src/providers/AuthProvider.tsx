@@ -15,6 +15,7 @@ interface AuthContextType {
   isLoading: boolean;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
+  authFetch: (url: string, options?: RequestInit) => Promise<Response>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -96,10 +97,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const authFetch = async (url: string, options: RequestInit = {}) => {
+    return fetch(url, {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...options.headers,
+      },
+    });
+  };
+
   const isAuthenticated = !!user;
 
   return (
-    <AuthContext.Provider value={{ user, token, isAuthenticated, isLoading, login, logout }}>
+    <AuthContext.Provider value={{ user, token, isAuthenticated, isLoading, login, logout, authFetch }}>
       {children}
     </AuthContext.Provider>
   );
