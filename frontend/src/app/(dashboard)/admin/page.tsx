@@ -32,7 +32,7 @@ interface Creator {
 }
 
 export default function AdminPage() {
-  const { authFetch } = useAuth();
+  const { authFetch, isLoading, token } = useAuth();
   const [creators, setCreators] = useState<Creator[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -64,8 +64,10 @@ export default function AdminPage() {
   };
 
   useEffect(() => {
+    if (isLoading) return; // esperar a que auth se restaure
+    if (!token) return;    // sin token no hacer fetch
     fetchCreators();
-  }, []);
+  }, [isLoading, token]);
 
   const handleUpdateStatus = async (id: string, newStatus: 'searched' | 'tracked' | 'archived') => {
     const oldStatus = creators.find(c => c.id === id)?.trackingStatus;
@@ -262,7 +264,7 @@ export default function AdminPage() {
       {/* Channels Table Container */}
       <div className="vl-card-dashboard overflow-hidden border border-[var(--vl-border)]/45 bg-[var(--vl-bg-surface)]/40 rounded-2xl backdrop-blur-md">
         
-        {loading ? (
+        {isLoading || loading ? (
           <div className="flex flex-col items-center justify-center py-20 space-y-3">
             <Loader2 className="w-8 h-8 text-red-500 animate-spin" />
             <p className="text-xs font-semibold text-[var(--vl-text-tertiary)] uppercase tracking-wider">Cargando canales...</p>
