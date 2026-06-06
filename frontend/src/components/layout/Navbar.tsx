@@ -118,12 +118,6 @@ export function Navbar() {
             {user ? (
               <div className="flex items-center gap-2 ml-1">
                 <UserAvatar user={user} size="md" />
-                <button
-                  onClick={logout}
-                  className="text-xs font-semibold text-[var(--vl-text-secondary)] hover:text-[var(--vl-red)] transition-colors py-1.5 px-3 rounded-lg border border-[var(--vl-border)] hover:bg-[rgba(255,59,48,0.06)]"
-                >
-                  Cerrar sesión
-                </button>
               </div>
             ) : (
               <Link

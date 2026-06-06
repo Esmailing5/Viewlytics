@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { Menu, Bell, Search, X } from 'lucide-react';
+import Link from 'next/link';
+import { Menu, Bell, Search, X, LogIn } from 'lucide-react';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
 import { SearchInput } from '@/components/shared/SearchInput';
 import { useAuth } from '@/providers/AuthProvider';
@@ -126,19 +127,17 @@ export function Topbar({ onMobileMenuToggle }: TopbarProps) {
           aria-hidden="true"
         />
 
-        {/* Profile avatar */}
-        {user && (
-          <button
-            id="topbar-profile"
-            aria-label="Profile menu"
-            className="
-              transition-opacity duration-150
-              hover:opacity-80
-              flex-shrink-0
-            "
+        {/* Profile avatar / login button */}
+        {user ? (
+          <UserAvatar user={user} size="sm" />
+        ) : (
+          <Link
+            href="/login"
+            className="flex items-center gap-1.5 text-xs font-semibold text-[var(--vl-text-secondary)] hover:text-[var(--vl-text-primary)] transition-colors py-1.5 px-3 rounded-lg border border-[var(--vl-border)] hover:bg-[rgba(255,255,255,0.04)]"
           >
-            <UserAvatar user={user} size="sm" />
-          </button>
+            <LogIn className="w-3.5 h-3.5" />
+            <span>Entrar</span>
+          </Link>
         )}
       </div>
     </header>
