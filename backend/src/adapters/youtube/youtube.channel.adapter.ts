@@ -186,7 +186,8 @@ export class YouTubeChannelAdapter {
         if (videos30dLong.length > 0) {
           avgViews = views30d / videos30dLong.length;
           const total30dInteractions = likes30d + comments30d;
-          engagementRate = views30d > 0 ? (total30dInteractions / views30d) * 100 : 0;
+          const subscribers = profile.subscribers;
+          engagementRate = subscribers > 0 ? (total30dInteractions / subscribers) * 100 : 0;
 
           if (videos30dLong.length > 1) {
             const newest = new Date(videos30dLong[0].published_at).getTime();
