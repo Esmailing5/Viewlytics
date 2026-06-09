@@ -8,7 +8,7 @@ import { ThemeToggle } from '@/components/theme/ThemeToggle';
 import { Logo } from '@/components/shared/Logo';
 import type { SidebarItem } from '@/types';
 import { useAuth } from '@/providers/AuthProvider';
-import { LogOut } from 'lucide-react';
+import { LogOut, GitCompareArrows } from 'lucide-react';
 
 /**
  * Premium SVG icon set for sidebar — hand-crafted, 1.5 stroke-width.
@@ -100,6 +100,7 @@ const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
   Settings: IconSettings,
   Admin: IconAdmin,
   Rankings: IconRankings,
+  GitCompareArrows: GitCompareArrows,
 };
 
 const COLLAPSED_KEY = 'viewlytics-sidebar-collapsed';
@@ -158,6 +159,7 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
   const enabledItems = navigationConfig.sidebar.filter((item) => {
     if (!item.enabled) return false;
     if (item.id === 'admin' && user?.role !== 'ADMIN') return false;
+    if (item.id === 'compare' && !user) return false;
     return true;
   });
   const mainItems = enabledItems.filter((item) => item.section === 'main');

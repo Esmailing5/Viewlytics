@@ -27,7 +27,7 @@ import { UserAvatar } from '@/components/shared/UserAvatar';
  * Desktop: logo + links + CTA. Mobile: hamburger → full-panel drawer.
  */
 export function Navbar() {
-  const { user, logout } = useAuth();
+  const { user, logout, isAuthenticated } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
@@ -54,7 +54,11 @@ export function Navbar() {
     return () => { document.body.style.overflow = ''; };
   }, [mobileOpen]);
 
-  const enabledNavItems = navigationConfig.navbar.filter((item) => item.enabled);
+  const enabledNavItems = navigationConfig.navbar.filter((item) => {
+    if (!item.enabled) return false;
+    if (item.id === 'compare' && !isAuthenticated) return false;
+    return true;
+  });
 
   const isActivePath = (href: string) => {
     if (href === '/') return pathname === '/';

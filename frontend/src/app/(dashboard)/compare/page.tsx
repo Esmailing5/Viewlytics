@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { GitCompareArrows, Sparkles } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 import { ChannelSlot } from '@/components/compare/ChannelSlot';
 import { ComparisonTable } from '@/components/compare/ComparisonTable';
 import type { ChannelData } from '@/components/compare/ChannelSlot';
@@ -169,15 +169,6 @@ function ComparePageContent() {
           onClear={handleClearB}
         />
       </div>
-
-      {/* ── VS Divider between slots ── */}
-      {(channelA || channelB) && (
-        <div className="flex items-center justify-center -mt-4 -mb-4">
-          <div className="w-12 h-12 rounded-full bg-[var(--vl-bg-elevated)] border border-[var(--vl-border)] flex items-center justify-center shadow-lg">
-            <GitCompareArrows className="w-5 h-5 text-[var(--vl-cyan)]" />
-          </div>
-        </div>
-      )}
 
       {/* ── Comparison Table ── */}
       {bothLoaded && (

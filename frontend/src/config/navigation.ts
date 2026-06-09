@@ -40,6 +40,14 @@ export const navigationConfig: NavigationConfig = {
       section: 'main',
     },
     {
+      id: 'compare',
+      label: 'Comparar',
+      href: '/compare',
+      icon: 'GitCompareArrows',
+      enabled: true,
+      section: 'main',
+    },
+    {
       id: 'admin',
       label: 'Admin',
       href: '/admin',
@@ -71,6 +79,12 @@ export const navigationConfig: NavigationConfig = {
       id: 'rankings',
       label: 'Rankings',
       href: '/rankings',
+      enabled: true,
+    },
+    {
+      id: 'compare',
+      label: 'Comparar',
+      href: '/compare',
       enabled: true,
     },
     {
