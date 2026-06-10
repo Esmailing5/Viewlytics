@@ -203,58 +203,67 @@ export function ProjectionPanel({ slug, isOpen }: ProjectionPanelProps) {
     }
 
     let cancelled = false;
-    const fetchProjection = async () => {
-      setLoading(true);
-      setError(null);
 
+    const attemptFetch = async (): Promise<ProjectionResult | null> => {
       const apiUrl =
         process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
       const url = `${apiUrl}/api/projection/by-slug/youtube/${slug}`;
 
-      let attempts = 0;
-      let lastError: Error = new Error('fetch_failed');
-
-      while (attempts < 2) {
+      for (let attempt = 0; attempt < 2; attempt++) {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 15000);
+        const timeoutId = setTimeout(() => controller.abort(), 25000);
+
+        let response: Response;
         try {
-          const response = await fetch(url, { signal: controller.signal });
+          response = await fetch(url, { signal: controller.signal });
           clearTimeout(timeoutId);
-
-          if (!response.ok) {
-            const body = await response.json().catch(() => ({}));
-            if (
-              body.message === 'Historial insuficiente para proyectar' ||
-              response.status === 400
-            ) {
-              lastError = new Error('insufficient_history');
-              break; // no reintentar error de negocio
-            }
-            throw new Error('fetch_failed');
-          }
-
-          const json: ProjectionResult = await response.json();
-          if (!cancelled) setData(json);
-          lastError = new Error('none'); // éxito
-          break;
-        } catch (err) {
+        } catch {
+          // Error de red o timeout (AbortError)
           clearTimeout(timeoutId);
-          lastError = err as Error;
-          attempts++;
-          if (attempts < 2 && !cancelled) {
+          if (attempt < 1 && !cancelled) {
             await new Promise((r) => setTimeout(r, 3000));
+            continue; // reintentar
           }
+          throw new Error('fetch_failed');
         }
-      }
 
-      if (!cancelled && lastError.message !== 'none') {
-        setError(
-          lastError.message === 'insufficient_history'
-            ? 'insufficient_history'
-            : 'fetch_failed'
-        );
+        if (!response.ok) {
+          const body = await response.json().catch(() => ({}));
+          if (
+            body.message === 'Historial insuficiente para proyectar' ||
+            response.status === 400
+          ) {
+            throw new Error('insufficient_history');
+          }
+          if (attempt < 1 && !cancelled) {
+            await new Promise((r) => setTimeout(r, 3000));
+            continue; // reintentar errores 5xx
+          }
+          throw new Error('fetch_failed');
+        }
+
+        return await response.json();
       }
-      if (!cancelled) setLoading(false);
+      throw new Error('fetch_failed');
+    };
+
+    const fetchProjection = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const json = await attemptFetch();
+        if (!cancelled && json) setData(json);
+      } catch (err) {
+        if (!cancelled) {
+          setError(
+            (err as Error).message === 'insufficient_history'
+              ? 'insufficient_history'
+              : 'fetch_failed'
+          );
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
     };
 
     fetchProjection();
