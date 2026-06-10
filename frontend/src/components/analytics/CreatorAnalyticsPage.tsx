@@ -32,6 +32,8 @@ const EstimatedIncomeChart = lazy(() =>
 );
 import { RecentVideosCard } from './RecentVideosCard';
 import { VideoAnalyticsSummary } from './VideoAnalyticsSummary';
+import { ProjectionPanel } from './ProjectionPanel';
+import { useAuth } from '@/providers/AuthProvider';
 
 /** Icon map for stat cards */
 const STAT_ICON_MAP: Record<
@@ -122,6 +124,8 @@ export function CreatorAnalyticsPage({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isFavorited, setIsFavorited] = useState(false);
+  const [isProjOpen, setIsProjOpen] = useState(false);
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -414,6 +418,15 @@ export function CreatorAnalyticsPage({
             </div>
 
             <div className="flex items-center gap-2">
+              {isAuthenticated && (
+                <button
+                  onClick={() => setIsProjOpen(!isProjOpen)}
+                  className={`vl-header-btn !text-white ${isProjOpen ? 'bg-cyan-500/20 border-cyan-500/40' : ''}`}
+                >
+                  <TrendingUp className="w-4 h-4 text-white/95" />
+                  <span className="!text-white">Proyección</span>
+                </button>
+              )}
               <button
                 onClick={() => {
                   navigator.clipboard.writeText(window.location.href);
@@ -443,6 +456,11 @@ export function CreatorAnalyticsPage({
           <StatCard key={metric.id} metric={metric} platform={platform} />
         ))}
       </div>
+
+      {/* ── Projection Panel (auth-gated) ── */}
+      {isAuthenticated && (
+        <ProjectionPanel slug={channelId} isOpen={isProjOpen} />
+      )}
 
       {/* ── Dual Growth Charts Row ── */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">

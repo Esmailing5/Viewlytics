@@ -247,3 +247,15 @@
   height: 28px;
   flex-shrink: 0;
 }
+
+/* ── projection panel entrance ── */
+@keyframes vl-projection-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

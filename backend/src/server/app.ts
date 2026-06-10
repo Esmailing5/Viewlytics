@@ -7,6 +7,7 @@ import { adminRoutes } from './routes/admin.route';
 import { rankingsRoutes } from './routes/rankings.route';
 import { statsRoutes } from './routes/stats.route';
 import { authRoutes } from './routes/auth.route';
+import { projectionRoutes } from './routes/projection.route';
 import { initSnapshotScheduler } from './jobs/snapshot-scheduler';
 
 const fastify: FastifyInstance = Fastify({
@@ -35,6 +36,7 @@ async function buildApp() {
   fastify.register(rankingsRoutes, { prefix: '/api/rankings' });
   fastify.register(statsRoutes, { prefix: '/api/stats' });
   fastify.register(authRoutes, { prefix: '/api/auth' });
+  fastify.register(projectionRoutes, { prefix: '/api/projection' });
 
   // Initialize automatic snapshot scheduler
   initSnapshotScheduler(fastify);
