@@ -206,37 +206,55 @@ export function ProjectionPanel({ slug, isOpen }: ProjectionPanelProps) {
     const fetchProjection = async () => {
       setLoading(true);
       setError(null);
-      try {
-        const apiUrl =
-          process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
-        const response = await fetch(
-          `${apiUrl}/api/projection/by-slug/youtube/${slug}`
-        );
 
-        if (!response.ok) {
-          const body = await response.json().catch(() => ({}));
-          if (
-            body.message === 'Historial insuficiente para proyectar' ||
-            response.status === 400
-          ) {
-            throw new Error('insufficient_history');
+      const apiUrl =
+        process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+      const url = `${apiUrl}/api/projection/by-slug/youtube/${slug}`;
+
+      let attempts = 0;
+      let lastError: Error = new Error('fetch_failed');
+
+      while (attempts < 2) {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000);
+        try {
+          const response = await fetch(url, { signal: controller.signal });
+          clearTimeout(timeoutId);
+
+          if (!response.ok) {
+            const body = await response.json().catch(() => ({}));
+            if (
+              body.message === 'Historial insuficiente para proyectar' ||
+              response.status === 400
+            ) {
+              lastError = new Error('insufficient_history');
+              break; // no reintentar error de negocio
+            }
+            throw new Error('fetch_failed');
           }
-          throw new Error('fetch_failed');
-        }
 
-        const json: ProjectionResult = await response.json();
-        if (!cancelled) setData(json);
-      } catch (err) {
-        if (!cancelled) {
-          setError(
-            (err as Error).message === 'insufficient_history'
-              ? 'insufficient_history'
-              : 'fetch_failed'
-          );
+          const json: ProjectionResult = await response.json();
+          if (!cancelled) setData(json);
+          lastError = new Error('none'); // éxito
+          break;
+        } catch (err) {
+          clearTimeout(timeoutId);
+          lastError = err as Error;
+          attempts++;
+          if (attempts < 2 && !cancelled) {
+            await new Promise((r) => setTimeout(r, 3000));
+          }
         }
-      } finally {
-        if (!cancelled) setLoading(false);
       }
+
+      if (!cancelled && lastError.message !== 'none') {
+        setError(
+          lastError.message === 'insufficient_history'
+            ? 'insufficient_history'
+            : 'fetch_failed'
+        );
+      }
+      if (!cancelled) setLoading(false);
     };
 
     fetchProjection();
@@ -303,6 +321,18 @@ export function ProjectionPanel({ slug, isOpen }: ProjectionPanelProps) {
         className="border border-[var(--vl-border)] bg-[var(--vl-bg-secondary)] rounded-2xl p-5 sm:p-6 backdrop-blur-md"
         style={{ animation: 'vl-projection-fade-in 0.35s ease-out' }}
       >
+        <div className="flex items-center gap-3 mb-5">
+          <div className="p-2 rounded-xl bg-cyan-500/10 border border-cyan-500/20">
+            <BarChart3 className="w-5 h-5 text-cyan-400" />
+          </div>
+          <div>
+            <p className="text-sm font-bold text-[var(--vl-text-primary)]">Calculando proyección...</p>
+            <p className="text-[10px] text-[var(--vl-text-tertiary)] font-semibold mt-0.5">
+              Analizando historial y aplicando regresión lineal
+            </p>
+          </div>
+          <span className="ml-auto inline-flex h-2 w-2 rounded-full bg-cyan-400 animate-ping" />
+        </div>
         <ProjectionSkeleton />
       </div>
     );
