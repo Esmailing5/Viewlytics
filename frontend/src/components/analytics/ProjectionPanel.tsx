@@ -425,7 +425,7 @@ export function ProjectionPanel({ slug, isOpen }: ProjectionPanelProps) {
           </div>
         </div>
 
-        <div className="h-[260px] sm:h-[280px] w-full">
+        <div style={{ width: '100%', height: 300 }}>
           <ResponsiveContainer width="100%" height="100%">
             <ComposedChart
               data={chartData}
