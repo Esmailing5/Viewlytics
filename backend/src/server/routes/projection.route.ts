@@ -4,7 +4,7 @@ import { prisma } from '../../lib/prisma';
 import { z } from 'zod';
 
 const projectionParamsSchema = z.object({
-  creatorId: z.string().uuid(),
+  creatorId: z.string(),
 });
 
 const slugParamsSchema = z.object({
@@ -17,7 +17,27 @@ export const projectionRoutes: FastifyPluginAsync = async (fastify: FastifyInsta
   fastify.get('/:creatorId', async (request, reply) => {
     try {
       const { creatorId } = projectionParamsSchema.parse(request.params);
-      const result = await ProjectionService.calculateProjection(creatorId);
+      
+      const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(creatorId);
+      let creator = null;
+
+      if (isUuid) {
+        creator = await prisma.creator.findUnique({
+          where: { id: creatorId },
+        });
+      }
+
+      if (!creator) {
+        creator = await prisma.creator.findUnique({
+          where: { channelId: creatorId },
+        });
+      }
+
+      if (!creator) {
+        return reply.status(404).send({ error: 'NotFound', message: 'Creator not found' });
+      }
+
+      const result = await ProjectionService.calculateProjection(creator.id);
       return reply.send(result);
     } catch (error) {
       if (error instanceof z.ZodError) {

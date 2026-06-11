@@ -41,7 +41,7 @@ interface ProjectionResult {
 }
 
 interface ProjectionPanelProps {
-  slug: string;
+  creatorId: string;
   isOpen: boolean;
 }
 
@@ -191,7 +191,7 @@ function ChartTooltip({
 }
 
 /* ── Main Component ── */
-export function ProjectionPanel({ slug, isOpen }: ProjectionPanelProps) {
+export function ProjectionPanel({ creatorId, isOpen }: ProjectionPanelProps) {
   const [data, setData] = useState<ProjectionResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -207,7 +207,8 @@ export function ProjectionPanel({ slug, isOpen }: ProjectionPanelProps) {
     const attemptFetch = async (): Promise<ProjectionResult | null> => {
       const apiUrl =
         process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
-      const url = `${apiUrl}/api/projection/by-slug/youtube/${slug}`;
+      const url = `${apiUrl}/api/projection/${creatorId}`;
+      console.log('PROJECTION_SLUG:', creatorId);
 
       for (let attempt = 0; attempt < 2; attempt++) {
         const controller = new AbortController();
@@ -270,7 +271,7 @@ export function ProjectionPanel({ slug, isOpen }: ProjectionPanelProps) {
     return () => {
       cancelled = true;
     };
-  }, [isOpen, slug]);
+  }, [isOpen, creatorId]);
 
   if (!isOpen) return null;
 

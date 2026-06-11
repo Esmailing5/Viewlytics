@@ -459,7 +459,7 @@ export function CreatorAnalyticsPage({
 
       {/* ── Projection Panel (auth-gated) ── */}
       {isAuthenticated && (
-        <ProjectionPanel slug={channelId} isOpen={isProjOpen} />
+        <ProjectionPanel creatorId={data.profile?.id} isOpen={isProjOpen} />
       )}
 
       {/* ── Dual Growth Charts Row ── */}
