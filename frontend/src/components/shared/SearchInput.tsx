@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { Search, Loader2, ArrowRight } from 'lucide-react';
+import { Search, Loader2, ArrowRight, Plus, Check } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/providers/AuthProvider';
 
 interface SearchResult {
   id: string;
@@ -17,61 +18,79 @@ interface SearchResult {
 }
 
 const PLACEHOLDERS = [
-  "Busca un creador (ej. Alofoke Radio Show)...",
-  "Busca un podcast (ej. Capricornio TV)...",
-  "Busca un streamer (ej. Mata Lluvia)...",
-  "Analiza métricas de YouTube, Twitch y Kick...",
-  "Busca a tu creador favorito..."
+  'Busca un creador (ej. Alofoke Radio Show)...',
+  'Busca un podcast (ej. Capricornio TV)...',
+  'Busca un streamer (ej. Mata Lluvia)...',
+  'Analiza métricas de YouTube, Twitch y Kick...',
+  'Busca a tu creador favorito...',
 ];
 
-export function SearchInput({ variant = 'default', onSelect }: { variant?: 'default' | 'minimal', onSelect?: () => void }) {
+export function SearchInput({
+  variant = 'default',
+  onSelect,
+}: {
+  variant?: 'default' | 'minimal';
+  onSelect?: () => void;
+}) {
+  const { authFetch, isAuthenticated } = useAuth();
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<SearchResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
-  const [importStates, setImportStates] = useState<Record<string, 'idle' | 'importing' | 'imported' | 'alreadyExists'>>({});
+  const [importStates, setImportStates] = useState<
+    Record<string, 'idle' | 'importing' | 'imported' | 'alreadyExists'>
+  >({});
   const dropdownRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
   const handleImport = async (e: React.MouseEvent, result: SearchResult) => {
     e.stopPropagation();
-    setImportStates(prev => ({ ...prev, [result.channel_id]: 'importing' }));
+    setImportStates((prev) => ({ ...prev, [result.channel_id]: 'importing' }));
 
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
-      const res = await fetch(`${apiUrl}/api/admin/channels/import`, {
+      const res = await authFetch(`${apiUrl}/api/admin/channels/import`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           channelId: result.channel_id,
-          platform: 'youtube'
-        })
+          platform: 'youtube',
+        }),
       });
 
       if (!res.ok) throw new Error('Import failed');
 
       const data = await res.json();
       if (data.alreadyExists) {
-        setImportStates(prev => ({ ...prev, [result.channel_id]: 'alreadyExists' }));
+        setImportStates((prev) => ({
+          ...prev,
+          [result.channel_id]: 'alreadyExists',
+        }));
       } else {
-        setImportStates(prev => ({ ...prev, [result.channel_id]: 'imported' }));
+        setImportStates((prev) => ({
+          ...prev,
+          [result.channel_id]: 'imported',
+        }));
       }
-      
+
       router.refresh();
     } catch (error) {
       console.error('Error importing channel:', error);
-      setImportStates(prev => ({ ...prev, [result.channel_id]: 'idle' }));
+      setImportStates((prev) => ({ ...prev, [result.channel_id]: 'idle' }));
     }
   };
 
   useEffect(() => {
     // Handle clicking outside to close dropdown
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setShowDropdown(false);
       }
     };
@@ -82,10 +101,12 @@ export function SearchInput({ variant = 'default', onSelect }: { variant?: 'defa
   // Keyboard shortcut: Focus search on '/'
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === '/' && 
-          document.activeElement !== inputRef.current && 
-          document.activeElement?.tagName !== 'INPUT' && 
-          document.activeElement?.tagName !== 'TEXTAREA') {
+      if (
+        e.key === '/' &&
+        document.activeElement !== inputRef.current &&
+        document.activeElement?.tagName !== 'INPUT' &&
+        document.activeElement?.tagName !== 'TEXTAREA'
+      ) {
         e.preventDefault();
         inputRef.current?.focus();
       }
@@ -111,11 +132,14 @@ export function SearchInput({ variant = 'default', onSelect }: { variant?: 'defa
 
       setIsSearching(true);
       try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
-        const res = await fetch(`${apiUrl}/api/search?q=${encodeURIComponent(query)}`);
-        
+        const apiUrl =
+          process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+        const res = await fetch(
+          `${apiUrl}/api/search?q=${encodeURIComponent(query)}`
+        );
+
         if (!res.ok) throw new Error('Search failed');
-        
+
         const data = await res.json();
         setResults(data.results || []);
         setShowDropdown(true);
@@ -163,33 +187,39 @@ export function SearchInput({ variant = 'default', onSelect }: { variant?: 'defa
     <div className="relative w-full" ref={dropdownRef}>
       {/* Outer glow container */}
       <div className="absolute -inset-[1px] bg-gradient-to-r from-red-500/30 via-purple-500/20 to-cyan-500/30 rounded-2xl blur-md opacity-0 group-focus-within:opacity-100 group-hover:opacity-60 transition duration-500" />
-      
-      <form 
-        onSubmit={handleAnalyze} 
+
+      <form
+        onSubmit={handleAnalyze}
         className={`relative flex items-center bg-[var(--vl-bg-surface)] border border-[var(--vl-border)] overflow-hidden z-20 group-focus-within:border-[var(--vl-red)] transition-all duration-300 ${
-          variant === 'minimal' 
-            ? 'h-9 rounded-xl hover:bg-[var(--vl-bg-elevated)]' 
+          variant === 'minimal'
+            ? 'h-9 rounded-xl hover:bg-[var(--vl-bg-elevated)]'
             : 'flex-col sm:flex-row p-1.5 sm:p-0 rounded-2xl shadow-2xl gap-2 sm:gap-0'
         }`}
       >
         <div className="flex w-full sm:flex-1 items-center relative">
-          <Search className={`${variant === 'minimal' ? 'w-4 h-4 ml-3' : 'w-5 h-5 md:w-6 md:h-6 ml-3 md:ml-6'} text-[var(--vl-text-tertiary)] shrink-0`} />
-          <input 
+          <Search
+            className={`${variant === 'minimal' ? 'w-4 h-4 ml-3' : 'w-5 h-5 md:w-6 md:h-6 ml-3 md:ml-6'} text-[var(--vl-text-tertiary)] shrink-0`}
+          />
+          <input
             ref={inputRef}
-            type="text" 
+            type="text"
             value={query}
             onChange={(e) => {
               setQuery(e.target.value);
               if (e.target.value.length < 2) setShowDropdown(false);
             }}
-            placeholder={PLACEHOLDERS[placeholderIndex]} 
+            placeholder={PLACEHOLDERS[placeholderIndex]}
             className={`flex-1 bg-transparent text-[var(--vl-text-primary)] placeholder:text-[var(--vl-text-tertiary)] placeholder:transition-opacity placeholder:duration-500 focus:outline-none min-w-0 ${
-              variant === 'minimal' ? 'h-9 px-3 text-sm' : 'h-12 sm:h-14 md:h-16 px-3 md:px-6 text-base md:text-lg'
+              variant === 'minimal'
+                ? 'h-9 px-3 text-sm'
+                : 'h-12 sm:h-14 md:h-16 px-3 md:px-6 text-base md:text-lg'
             }`}
           />
           {variant !== 'minimal' && !query && (
             <div className="absolute right-4 hidden md:flex items-center gap-1.5 pointer-events-none">
-              <span className="text-[10px] text-[var(--vl-text-tertiary)] uppercase tracking-wider font-semibold">Presiona</span>
+              <span className="text-[10px] text-[var(--vl-text-tertiary)] uppercase tracking-wider font-semibold">
+                Presiona
+              </span>
               <kbd className="vl-kbd">/</kbd>
             </div>
           )}
@@ -197,9 +227,9 @@ export function SearchInput({ variant = 'default', onSelect }: { variant?: 'defa
             <Loader2 className="w-4 h-4 mr-3 vl-animate-spin text-[var(--vl-text-secondary)]" />
           )}
         </div>
-        
+
         {variant !== 'minimal' && (
-          <button 
+          <button
             type="submit"
             disabled={isSearching}
             className="w-full sm:w-auto h-12 sm:h-14 md:h-16 px-8 md:px-10 bg-[var(--vl-red)] hover:bg-[var(--vl-red-hover)] text-white font-semibold text-base md:text-lg transition-all duration-300 flex items-center justify-center gap-2 rounded-xl sm:rounded-none shrink-0 disabled:opacity-70 group/btn"
@@ -223,56 +253,96 @@ export function SearchInput({ variant = 'default', onSelect }: { variant?: 'defa
             <button
               key={result.id}
               onClick={() => handleSelect(result)}
-              className="w-full text-left px-5 py-3.5 flex items-center gap-4 hover:bg-white/[0.02] transition-colors duration-200"
+              className="w-full text-left px-5 py-3.5 flex items-center gap-2 hover:bg-white/[0.02] transition-colors duration-200"
             >
               {result.avatar_url ? (
-                <img src={result.avatar_url} alt={result.display_name} className="w-10 h-10 rounded-full object-cover ring-1 ring-[var(--vl-border)] bg-[var(--vl-bg-secondary)]" />
+                <img
+                  src={result.avatar_url}
+                  alt={result.display_name}
+                  className="w-10 h-10 rounded-full object-cover ring-1 ring-[var(--vl-border)] bg-[var(--vl-bg-secondary)]"
+                />
               ) : (
                 <div className="w-10 h-10 rounded-full bg-[var(--vl-bg-secondary)] border border-[var(--vl-border)] flex items-center justify-center text-[var(--vl-text-tertiary)] font-bold text-sm">
-                  {result.display_name.slice(0,2).toUpperCase()}
+                  {result.display_name.slice(0, 2).toUpperCase()}
                 </div>
               )}
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-1.5">
-                  <p className="font-semibold text-[var(--vl-text-primary)] truncate text-sm md:text-base">{result.display_name}</p>
+                <div className="flex items-center gap-1.5 min-w-0">
+                  <p className="font-semibold text-[var(--vl-text-primary)] truncate text-sm md:text-base flex-1 min-w-0">
+                    {result.display_name}
+                  </p>
                   {result.verified && (
-                    <span className="w-3.5 h-3.5 rounded-full bg-blue-500 flex items-center justify-center text-[10px] text-white font-bold" title="Verificado">✓</span>
+                    <span
+                      className="w-3.5 h-3.5 rounded-full bg-blue-500 flex items-center justify-center text-[10px] text-white font-bold shrink-0"
+                      title="Verificado"
+                    >
+                      ✓
+                    </span>
                   )}
                 </div>
                 <div className="flex items-center gap-2 text-xs text-[var(--vl-text-secondary)] mt-0.5">
-                  <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
-                    result.platform === 'youtube' ? 'bg-red-500/10 text-red-500' :
-                    result.platform === 'twitch' ? 'bg-purple-500/10 text-purple-500' : 'bg-green-500/10 text-green-500'
-                  }`}>{result.platform}</span>
+                  <span
+                    className={`px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
+                      result.platform === 'youtube'
+                        ? 'bg-red-500/10 text-red-500'
+                        : result.platform === 'twitch'
+                          ? 'bg-purple-500/10 text-purple-500'
+                          : 'bg-green-500/10 text-green-500'
+                    }`}
+                  >
+                    {result.platform}
+                  </span>
                   <span>•</span>
-                  <span>{new Intl.NumberFormat('es-ES', { notation: "compact", compactDisplay: "short" }).format(result.subscribers)} subs</span>
+                  <span>
+                    {new Intl.NumberFormat('es-ES', {
+                      notation: 'compact',
+                      compactDisplay: 'short',
+                    }).format(result.subscribers)}{' '}
+                    subs
+                  </span>
                 </div>
               </div>
-              {result.platform === 'youtube' && (
+              {result.platform === 'youtube' && isAuthenticated && (
                 <button
                   onClick={(e) => handleImport(e, result)}
-                  disabled={importStates[result.channel_id] === 'importing' || result.alreadyExists || importStates[result.channel_id] === 'imported' || importStates[result.channel_id] === 'alreadyExists'}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 shrink-0 ${
-                    result.alreadyExists || importStates[result.channel_id] === 'alreadyExists'
+                  disabled={
+                    importStates[result.channel_id] === 'importing' ||
+                    result.alreadyExists ||
+                    importStates[result.channel_id] === 'imported' ||
+                    importStates[result.channel_id] === 'alreadyExists'
+                  }
+                  className={`p-2 sm:px-3 sm:py-1.5 rounded-lg text-xs font-bold transition-all duration-200 shrink-0 ${
+                    result.alreadyExists ||
+                    importStates[result.channel_id] === 'alreadyExists'
                       ? 'bg-white/[0.04] text-[var(--vl-text-tertiary)] border border-[var(--vl-border)]/50 cursor-not-allowed'
                       : importStates[result.channel_id] === 'imported'
-                      ? 'bg-green-500/10 text-green-400 border border-green-500/20'
-                      : importStates[result.channel_id] === 'importing'
-                      ? 'bg-red-500/10 text-red-400 border border-red-500/20 cursor-wait'
-                      : 'bg-[var(--vl-red)] hover:bg-[var(--vl-red-hover)] text-white'
+                        ? 'bg-green-500/10 text-green-400 border border-green-500/20'
+                        : importStates[result.channel_id] === 'importing'
+                          ? 'bg-red-500/10 text-red-400 border border-red-500/20 cursor-wait'
+                          : 'bg-[var(--vl-red)] hover:bg-[var(--vl-red-hover)] text-white'
                   }`}
                 >
                   {importStates[result.channel_id] === 'importing' ? (
                     <span className="flex items-center gap-1.5">
-                      <Loader2 className="w-3 h-3 animate-spin" />
-                      <span>Importando</span>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span className="hidden sm:inline">Importando</span>
                     </span>
                   ) : importStates[result.channel_id] === 'imported' ? (
-                    <span>Agregado</span>
-                  ) : result.alreadyExists || importStates[result.channel_id] === 'alreadyExists' ? (
-                    <span>Ya existe</span>
+                    <span className="flex items-center gap-1.5">
+                      <Check className="w-4 h-4 text-green-400" />
+                      <span className="hidden sm:inline">Agregado</span>
+                    </span>
+                  ) : result.alreadyExists ||
+                    importStates[result.channel_id] === 'alreadyExists' ? (
+                    <span className="flex items-center gap-1.5">
+                      <Check className="w-4 h-4 text-[var(--vl-text-tertiary)]" />
+                      <span className="hidden sm:inline">Ya existe</span>
+                    </span>
                   ) : (
-                    <span>Agregar a Viewlytics</span>
+                    <span className="flex items-center gap-1.5">
+                      <Plus className="w-4 h-4" />
+                      <span className="hidden sm:inline">Agregar</span>
+                    </span>
                   )}
                 </button>
               )}
@@ -281,11 +351,18 @@ export function SearchInput({ variant = 'default', onSelect }: { variant?: 'defa
         </div>
       )}
 
-      {showDropdown && results.length === 0 && !isSearching && query.length >= 2 && (
-        <div className="absolute top-full left-0 right-0 mt-3 bg-[var(--vl-bg-elevated)] border border-[var(--vl-border)] rounded-2xl shadow-2xl z-30 p-6 text-center text-[var(--vl-text-secondary)] animate-in fade-in slide-in-from-top-2 duration-300">
-          No se encontraron resultados para &quot;<span className="text-[var(--vl-text-primary)] font-semibold">{query}</span>&quot;
-        </div>
-      )}
+      {showDropdown &&
+        results.length === 0 &&
+        !isSearching &&
+        query.length >= 2 && (
+          <div className="absolute top-full left-0 right-0 mt-3 bg-[var(--vl-bg-elevated)] border border-[var(--vl-border)] rounded-2xl shadow-2xl z-30 p-6 text-center text-[var(--vl-text-secondary)] animate-in fade-in slide-in-from-top-2 duration-300">
+            No se encontraron resultados para &quot;
+            <span className="text-[var(--vl-text-primary)] font-semibold">
+              {query}
+            </span>
+            &quot;
+          </div>
+        )}
     </div>
   );
 }
