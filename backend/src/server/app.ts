@@ -19,14 +19,8 @@ async function buildApp() {
   const allowedOrigins = process.env.ALLOWED_ORIGINS
     ? process.env.ALLOWED_ORIGINS.split(',').map((o) => o.trim())
     : ['http://localhost:3000', 'http://localhost:5173'];
-
   await fastify.register(cors, {
-    origin: (origin, callback) => {
-      // Permitir requests sin origin (ej. Postman, Railway health checks)
-      if (!origin) return callback(null, true);
-      if (allowedOrigins.includes(origin)) return callback(null, true);
-      callback(new Error(`CORS bloqueado para origen: ${origin}`), false);
-    },
+    origin: allowedOrigins,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     credentials: true,
   });
