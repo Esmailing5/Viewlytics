@@ -16,9 +16,22 @@ const fastify: FastifyInstance = Fastify({
 
 async function buildApp() {
   // Plugins
+  const isProduction = process.env.NODE_ENV === 'production';
+  const allowedOrigins = isProduction
+    ? (process.env.ALLOWED_ORIGINS || 'https://viewlytics.vercel.app')
+        .split(',')
+        .map((o) => o.trim())
+    : ['http://localhost:3000', 'http://localhost:5173'];
+
   await fastify.register(cors, {
-    origin: '*',
+    origin: (origin, callback) => {
+      // Permitir requests sin origin (ej. Postman, Railway health checks)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) return callback(null, true);
+      callback(new Error(`CORS bloqueado para origen: ${origin}`), false);
+    },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    credentials: true,
   });
 
   await fastify.register(fastifyJwt, {
