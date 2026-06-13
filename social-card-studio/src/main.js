@@ -16,6 +16,9 @@ import { renderSingleCardPreview, initSingleCardPreview } from './components/Sin
 import { renderTopRankingEditor, initTopRankingEditor } from './components/TopRankingEditor.js';
 import { renderTopRankingPreview, initTopRankingPreview } from './components/TopRankingPreview.js';
 import { renderTop11To20Preview, initTop11To20Preview } from './components/Top11To20Preview.js';
+import { renderTop21To30Preview, initTop21To30Preview } from './components/Top21To30Preview.js';
+import { renderTop31To40Preview, initTop31To40Preview } from './components/Top31To40Preview.js';
+import { renderTop41To50Preview, initTop41To50Preview } from './components/Top41To50Preview.js';
 import { renderBrandingEditor, initBrandingEditor, applyBrandingToRoot } from './components/BrandingEditor.js';
 import { renderTemplatesEditor, initTemplatesEditor, renderHistoryEditor, initHistoryEditor } from './components/PersistenceEditors.js';
 import { renderAvatarGenerator, initAvatarGenerator } from './components/AvatarGenerator.js';
@@ -146,6 +149,27 @@ function switchView(view) {
     previewContainer.innerHTML = renderTop11To20Preview();
     initTopRankingEditor();
     initTop11To20Preview();
+  }
+  else if (view === 'top-21-to-30') {
+    viewTitle.textContent = 'Top 21-30 Ranking';
+    editorContainer.innerHTML = renderTopRankingEditor();
+    previewContainer.innerHTML = renderTop21To30Preview();
+    initTopRankingEditor();
+    initTop21To30Preview();
+  }
+  else if (view === 'top-31-to-40') {
+    viewTitle.textContent = 'Top 31-40 Ranking';
+    editorContainer.innerHTML = renderTopRankingEditor();
+    previewContainer.innerHTML = renderTop31To40Preview();
+    initTopRankingEditor();
+    initTop31To40Preview();
+  }
+  else if (view === 'top-41-to-50') {
+    viewTitle.textContent = 'Top 41-50 Ranking';
+    editorContainer.innerHTML = renderTopRankingEditor();
+    previewContainer.innerHTML = renderTop41To50Preview();
+    initTopRankingEditor();
+    initTop41To50Preview();
   }
   else if (view === 'branding') {
     viewTitle.textContent = 'Branding Config';
