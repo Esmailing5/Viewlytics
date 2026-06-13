@@ -16,12 +16,13 @@ const fastify: FastifyInstance = Fastify({
 
 async function buildApp() {
   // Plugins
-  const allowedOrigins = process.env.ALLOWED_ORIGINS
-    ? process.env.ALLOWED_ORIGINS.split(',').map((o) => o.trim())
-    : ['http://localhost:3000', 'http://localhost:5173'];
+  // origin: true → Fastify refleja el Origin del request entrante.
+  // Compatible con credentials, cualquier dominio de Vercel (preview/prod)
+  // y Railway sin ninguna configuración adicional.
   await fastify.register(cors, {
-    origin: allowedOrigins,
+    origin: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
   });
 
