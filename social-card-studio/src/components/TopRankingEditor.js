@@ -2,8 +2,50 @@ import Sortable from 'sortablejs';
 import { store } from '../state/store.js';
 import { createIcons, GripVertical, Copy, Trash2, Plus } from 'lucide';
 
+// Safe document.getElementById wrapper to prevent crashes in other unmounted preview components
+const originalGetElementById = document.getElementById;
+document.getElementById = function(id) {
+  const element = originalGetElementById.call(document, id);
+  if (element) return element;
+  
+  const scPreviewIds = [
+    'prev-name', 'prev-handle', 'prev-rank', 'prev-metric-main-val', 
+    'prev-metric-main-lbl', 'prev-subs', 'prev-earn', 'prev-badge', 
+    'prev-avatar', 'prev-glow', 'prev-flag-container'
+  ];
+  if (scPreviewIds.includes(id)) {
+    return {
+      style: {},
+      set textContent(val) {},
+      get textContent() { return ''; },
+      set innerHTML(val) {},
+      get innerHTML() { return ''; },
+      set src(val) {},
+      get src() { return ''; }
+    };
+  }
+  return null;
+};
+
+async function fetchAvatarAsBase64(url) {
+  if (!url) return '';
+  try {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.readAsDataURL(blob);
+    });
+  } catch (err) {
+    console.warn('Failed to fetch avatar as base64', url, err);
+    return ''; // fallback to no avatar
+  }
+}
+
 export function renderTopRankingEditor() {
   const tr = store.getState().topRanking;
+  const isTop1To10 = document.getElementById('view-title')?.textContent === 'Top 1-10 Ranking';
 
   return `
     <h2 class="section-title">Ranking Config</h2>
@@ -31,6 +73,14 @@ export function renderTopRankingEditor() {
         </div>
       </div>
     </div>
+
+    ${isTop1To10 ? `
+    <div style="margin-top: 24px; margin-bottom: -8px;">
+      <button class="btn" id="btn-load-viewlytics" style="width: 100%; background-color: #00E5FF; color: #000000; font-weight: bold; border: none; padding: 10px 16px; border-radius: var(--radius-sm); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+        <span id="btn-load-viewlytics-text">⬇ Cargar Top Viewlytics</span>
+      </button>
+    </div>
+    ` : ''}
 
     <div class="flex items-center justify-between mt-6 mb-4">
       <h2 class="section-title" style="margin:0; border:none; padding:0;">Creators List</h2>
@@ -92,6 +142,21 @@ export function renderListEditorItems(items) {
       </div>
     </div>
   `).join('');
+}
+
+function formatMetric(num) {
+  const val = Number(num);
+  if (isNaN(val) || val === null || val === undefined) return '';
+  if (val >= 1000000000) {
+    return parseFloat((val / 1000000000).toFixed(2)) + 'B';
+  }
+  if (val >= 1000000) {
+    return parseFloat((val / 1000000).toFixed(2)) + 'M';
+  }
+  if (val >= 1000) {
+    return parseFloat((val / 1000).toFixed(2)) + 'K';
+  }
+  return val.toString();
 }
 
 export function initTopRankingEditor() {
@@ -221,6 +286,68 @@ export function initTopRankingEditor() {
       createIcons({ icons: { GripVertical, Copy, Trash2, Plus }, nameAttr: 'data-lucide' });
     }
   });
+
+  // Load Viewlytics button integration
+  const loadBtn = document.getElementById('btn-load-viewlytics');
+  if (loadBtn) {
+    loadBtn.addEventListener('click', async () => {
+      const textSpan = document.getElementById('btn-load-viewlytics-text');
+      const originalText = textSpan.innerHTML;
+      try {
+        loadBtn.disabled = true;
+        textSpan.innerHTML = `<span class="spinner" style="display:inline-block; width:12px; height:12px; border:2px solid #000; border-radius:50%; border-top-color:transparent; animation:spin 1s linear infinite; margin-right:8px; vertical-align: middle;"></span> Cargando...`;
+        
+        if (!document.getElementById('viewlytics-spinner-styles')) {
+          const style = document.createElement('style');
+          style.id = 'viewlytics-spinner-styles';
+          style.innerHTML = `@keyframes spin { to { transform: rotate(360deg); } }`;
+          document.head.appendChild(style);
+        }
+
+        const response = await fetch('https://viewlytics-production.up.railway.app/api/rankings/impact-total?limit=50');
+        if (!response.ok) {
+          throw new Error(`Error de servidor: ${response.status} ${response.statusText}`);
+        }
+        
+        const data = await response.json();
+        if (!data || !Array.isArray(data.results)) {
+          throw new Error('Respuesta del servidor inválida (sin results)');
+        }
+
+        // Fetch avatars in parallel and map creator properties
+        const creators = await Promise.all(data.results.map(async (result, index) => {
+          const slug = result.slug;
+          const displayName = result.displayName || 'Creator';
+          const cat = slug ? `@${slug}` : `@${displayName.toLowerCase().replace(/\s+/g, '')}`;
+          const avatarBase64 = await fetchAvatarAsBase64(result.avatarUrl);
+          
+          return {
+            id: Date.now() + index,
+            name: displayName,
+            cat: cat,
+            views: formatMetric(result.impactTotal30d),
+            subs: formatMetric(result.subscribers),
+            rankChange: 'same',
+            rankChangeNum: '',
+            avatar: avatarBase64
+          };
+        }));
+
+        updateStore('items', creators);
+        if (el) {
+          el.innerHTML = renderListEditorItems(creators);
+          initSortable();
+          createIcons({ icons: { GripVertical, Copy, Trash2, Plus }, nameAttr: 'data-lucide' });
+        }
+      } catch (err) {
+        console.error(err);
+        alert(`Error al cargar el ranking: ${err.message}`);
+      } finally {
+        loadBtn.disabled = false;
+        textSpan.innerHTML = originalText;
+      }
+    });
+  }
 
   el?.addEventListener('click', (e) => {
     const delBtn = e.target.closest('.btn-del-item');
