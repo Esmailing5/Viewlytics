@@ -16,11 +16,8 @@ const fastify: FastifyInstance = Fastify({
 
 async function buildApp() {
   // Plugins
-  const isProduction = process.env.NODE_ENV === 'production';
-  const allowedOrigins = isProduction
-    ? (process.env.ALLOWED_ORIGINS || 'https://viewlytics.vercel.app')
-        .split(',')
-        .map((o) => o.trim())
+  const allowedOrigins = process.env.ALLOWED_ORIGINS
+    ? process.env.ALLOWED_ORIGINS.split(',').map((o) => o.trim())
     : ['http://localhost:3000', 'http://localhost:5173'];
 
   await fastify.register(cors, {
