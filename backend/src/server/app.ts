@@ -45,10 +45,16 @@ async function buildApp() {
   // Initialize automatic snapshot scheduler
   initSnapshotScheduler(fastify);
 
-  // Error Handler
+  // Error Handler — añade cabeceras CORS manualmente para que los errores
+  // 500 no sean bloqueados por el browser como CORS errors.
   fastify.setErrorHandler((error, request, reply) => {
     fastify.log.error(error);
     const err = error as Error;
+    const origin = request.headers.origin;
+    if (origin) {
+      reply.header('Access-Control-Allow-Origin', origin);
+      reply.header('Access-Control-Allow-Credentials', 'true');
+    }
     reply.status(500).send({ error: 'Internal Server Error', message: err.message || 'Unknown Error' });
   });
 
